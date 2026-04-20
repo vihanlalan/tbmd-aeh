@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Data caches (regenerated on first run)
+price_cache.csv
+sentiment_cache.csv
+spy_cache.csv
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Generated outputs (keep results/ copies, ignore root-level regenerated ones)
+tbmd_validation_figures.png
+tbmd_multiple_testing.png
