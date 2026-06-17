@@ -1,0 +1,12 @@
+Category,BPC_proxy,Anomaly,SR_original,SR_replicated,years_elapsed,decay_rate_annual,half_life_months_empirical
+Momentum,Z_vr,12M momentum,0.78,0.31,15,0.062,135.216
+Momentum,Z_vr,6M momentum,0.61,0.28,12,0.065,128.184
+Momentum,Z_vr,UMD factor,0.65,0.29,18,0.045,185.505
+Herding,Z_herd,CSAD herding,0.55,0.3,10,0.061,137.226
+Herding,Z_herd,Beta herding,0.48,0.26,8,0.077,108.533
+Loss aversion,Z_asym,Downside beta,0.72,0.52,20,0.016,511.198
+Loss aversion,Z_asym,MAX effect,0.69,0.48,14,0.026,320.879
+Sentiment,Z_sent,Baker-Wurgler,0.51,0.29,12,0.047,176.808
+Sentiment,Z_sent,Short interest,0.63,0.35,10,0.059,141.51
+Illiquidity,Z_illiq,Amihud illiq.,0.59,0.44,18,0.016,510.383
+Illiquidity,Z_illiq,Bid-ask spread,0.55,0.41,15,0.02,424.721
