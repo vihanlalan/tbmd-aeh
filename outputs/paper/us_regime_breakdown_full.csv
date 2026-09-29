@@ -1,0 +1,4 @@
+regime,n_days,rcf_ann_return_pct,rcf_sharpe,unconditional_ann_return_pct,unconditional_sharpe,buyhold_ew_ann_return_pct,buyhold_ew_sharpe,pct_time
+Calm (<15),1539,-8.1,-0.55,-14.6,-0.62,44.4,5.39,32.2
+Transitional (15-25),2372,-0.8,-0.07,-5.8,-0.21,18.4,1.26,49.6
+Stressed (>=25),868,-0.4,-0.03,-18.3,-0.62,-39.0,-1.04,18.2

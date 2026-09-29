@@ -1,147 +1,52 @@
-# TBMD Framework
+# TBMD: Testing an Operationalization of the Adaptive Markets Hypothesis
 
-**Operationalizing the Adaptive Markets Hypothesis: Observable Behavioral Proxies, Real-Time Efficiency Scoring, and Regime-Conditional Alpha Generation**
+**Can the Adaptive Markets Hypothesis Be Operationalized? A Pre-Specified, Out-of-Sample Test of Behavioral Regime Detection and Regime-Conditional Trading**
 
-*Vihan Lalan — March 2026*
+*Vihan Lalan*
 
----
+This repository contains the code behind the paper `Revised_Paper_TBMD_Operationalizing_AMH.docx`. Every table and in-text number in the paper is generated from the analysis outputs by `src/build_paper.py`.
 
-## Overview
+## What is tested
 
-This repository contains the complete empirical framework for the TBMD paper. The framework provides a testable, computable operationalization of Lo's (2004, 2017) **Adaptive Markets Hypothesis (AMH)** by replacing unobservable behavioral equations with five literature-grounded proxies.
+1. **Real-Time Efficiency Score (RES):** rolling Hurst, Lo-MacKinlay variance-ratio and Ljung-Box statistics on the market return.
+2. **Behavioral Proxy Composite (BPC):** equal-weighted Z-scores of herding, autocorrelation, loss-aversion, VIX-based sentiment and Amihud illiquidity proxies.
+3. **Regime-Conditional Filter (RCF):** a long/short decile strategy that is held only when RES is below a trailing threshold. It is compared with the identical strategy deployed unconditionally.
 
-### Core Contributions
+Design: 12 pre-declared configurations; selection on 2005–2020 only; a single evaluation on a 2021–2025 lockbox; unchanged application to DAX constituents; four independent U.S. stress definitions; transaction-cost sensitivity.
 
-1. **Behavioral Proxy Composite (BPC)** — Five observable proxies that replace the abstract BAM equation:
-   - Herding (Christie & Huang 1995)
-   - Loss Aversion (Ang et al. 2006)
-   - Momentum Bias (Lo & MacKinlay 1988)
-   - Investor Sentiment (Baker & Wurgler 2007)
-   - Volatility Regime (Schwert 1989)
+## Key results
 
-2. **Real-Time Efficiency Score (RES)** — A composite of Hurst exponent, Variance Ratio, and Ljung-Box test that quantifies market efficiency on a 0-to-1 scale in real time.
+| | Result |
+|---|---|
+| RES AUC vs. U.S. stress (VIX, realized vol, drawdown, NBER) | 0.44–0.58; every 95% CI includes 0.5 |
+| RES AUC in Hamilton simulation (20 seeds) | mean 0.545 |
+| Selected RCF Sharpe, development 2005–2020 | 0.14 (DSR 0.35) |
+| Selected RCF Sharpe, lockbox 2021–2025 | −1.08 (95% CI −1.74 to −0.40) |
+| RCF − Unconditional Sharpe (lockbox / full / Germany) | −0.56 / +0.19 / −0.41; none significant |
+| Illiquidity proxy AUC vs. stress | 0.82–0.96 |
 
-3. **Regime-Conditional Filter (RCF)** — A trading strategy that only deploys signals when the efficiency score indicates an inefficient regime, sitting in cash otherwise.
+The regime-conditional filter does not survive out-of-sample testing. See the paper for the full results and limitations; survivorship bias is the main one, because constituents are current members.
 
-### Core Claim
-
-> The Regime-Conditional Filter (RCF) produces a higher risk-adjusted return than deploying the same BPC signal unconditionally.
-
-This is validated on both synthetic data (with ground-truth regime labels) and real S&P 100 data (2005–2024).
-
----
-
-## Repository Structure
-
-```
-tbmd-aeh/
-├── src/                          # Modular source code
-│   ├── config.py                 # All hyperparameters
-│   ├── simulation.py             # Hamilton (1989) regime-switching
-│   ├── bpc.py                    # Behavioral Proxy Composite
-│   ├── res.py                    # Real-Time Efficiency Score
-│   ├── validation.py             # Walk-forward engine
-│   ├── statistics.py             # DSR, VR test, BH correction
-│   ├── data_ingestion.py         # Yahoo Finance, FRED data
-│   └── visualization.py          # Publication-quality figures
-│
-├── scripts/                      # Entry points
-│   ├── run_synthetic.py          # Synthetic validation pipeline
-│   └── run_realdata.py           # Real S&P 100 validation pipeline
-│
-├── results/                      # Output figures and tables
-│   └── realdata/
-│       ├── tbmd_realdata_figures.png
-│       ├── tbmd_realdata_comparison.png
-│       └── tbmd_realdata_results.csv
-│
-├── data/                         # Data documentation
-│   └── README.md
-│
-├── docs/                         # Methodology and reproducibility
-│   ├── methodology.md
-│   └── reproducibility.md
-│
-├── tbmd_framework.py             # Original monolithic synthetic code
-├── tbmd_realdata.py              # Original monolithic real-data code
-├── requirements.txt
-└── LICENSE
-```
-
----
-
-## Quick Start
-
-### Installation
+## Reproduce
 
 ```bash
-git clone https://github.com/vihanlalan/tbmd-aeh.git
-cd tbmd-aeh
 pip install -r requirements.txt
+python src/build_dataset.py        # downloads Yahoo Finance + FRED data to data/cache/
+python src/run_paper_analysis.py   # writes outputs/paper/*.csv
+python src/build_paper.py          # regenerates the manuscript from those outputs
 ```
 
-### Run Synthetic Validation
+Yahoo Finance data is not redistributed. The paper's results use data downloaded on 26 September 2026, and re-downloads may differ slightly because of revisions to adjusted prices.
 
-```bash
-python scripts/run_synthetic.py
-```
+## Files
 
-This generates all figures and prints performance statistics for the Hamilton (1989) regime-switching simulation.
-
-### Run Real-Data Validation
-
-```bash
-python scripts/run_realdata.py
-```
-
-Downloads S&P 100 data from Yahoo Finance (cached after first run), then runs the full walk-forward validation. Runtime: ~15-25 minutes.
-
----
-
-## Key Results
-
-### Synthetic Validation
-
-| Strategy | Sharpe | DSR | P-value |
-|----------|--------|-----|---------|
-| RCF Strategy | 0.43 | 0.71 | 0.040 |
-| Unconditional BPC | -2.47 | 0.00 | — |
-| Buy & Hold | 0.24 | 0.70 | — |
-
-### Real Data Validation (S&P 100, 2005–2024)
-
-| Strategy | Sharpe | DSR | P-value |
-|----------|--------|-----|---------|
-| RCF Strategy | 0.610 | 0.980 | 0.040 |
-| Unconditional BPC | 0.451 | 0.972 | 0.056 |
-| Buy & Hold | 0.520 | 0.989 | 0.024 |
-
-**Core claim: RCF Sharpe (0.610) > Unconditional Sharpe (0.451) ✓ PASS**
-
-⚠️ *Survivorship bias warning: Results use current S&P 100 constituents. Actual returns likely 1-3% lower annualized.*
-
----
-
-## Design Principles
-
-- **Zero lookahead bias**: Every signal is lagged by ≥1 day before use
-- **Walk-forward only**: No in-sample performance is reported
-- **Multiple-testing corrected**: Benjamini-Hochberg FDR at 5%
-- **Deflated Sharpe Ratio** (Bailey & Lopez de Prado 2014) is the primary metric
-- **All parameters stated explicitly** in `src/config.py`
-
----
-
-## Key References
-
-- Lo, A. W. (2004). "The Adaptive Markets Hypothesis." *Journal of Portfolio Management*.
-- Lo, A. W. (2017). *Adaptive Markets: Financial Evolution at the Speed of Thought*. Princeton University Press.
-- Bailey, D. H., & Lopez de Prado, M. (2014). "The Deflated Sharpe Ratio." *Journal of Portfolio Management*, 40(5), 94–107.
-- Hamilton, J. D. (1989). "A New Approach to the Economic Analysis of Nonstationary Time Series." *Econometrica*, 57(2), 357–384.
-- Lo, A. W., & MacKinlay, A. C. (1988). "Stock market prices do not follow random walks." *Review of Financial Studies*, 1(1), 41–66.
-
----
+- `src/build_dataset.py`: data download and cache.
+- `src/run_paper_analysis.py`: all analyses reported in the paper.
+- `src/build_paper.py`: manuscript generator.
+- `src/behavioral_proxies.py`, `src/efficiency_score.py`, `src/backtest_engine.py`: framework components.
+- `src/tbmd_framework.py`: Hamilton (1989) regime-switching simulator (the paper uses only its simulator).
+- `src/main_analysis.py`, `src/tbmd_realdata.py`, `outputs/*.csv`: earlier exploratory pipeline, not used for the paper's results.
 
 ## License
 
-MIT License — see [LICENSE](LICENSE) for details.
+MIT. See [LICENSE](LICENSE).

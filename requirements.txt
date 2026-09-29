@@ -8,3 +8,4 @@ seaborn>=0.11.0
 # Real data ingestion (required for run_realdata.py)
 yfinance>=0.2.0
 pandas-datareader>=0.10.0
+statsmodels>=0.14.0

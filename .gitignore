@@ -34,3 +34,7 @@ Thumbs.db
 # Generated outputs (keep results/ copies, ignore root-level regenerated ones)
 tbmd_validation_figures.png
 tbmd_multiple_testing.png
+
+# Downloaded market data (Yahoo Finance data is not redistributable)
+data/cache/
+outputs/paper_run.log

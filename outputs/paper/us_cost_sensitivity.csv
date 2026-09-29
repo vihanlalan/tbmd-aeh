@@ -1,0 +1,9 @@
+cost_bps,strategy,full_sharpe,lockbox_sharpe
+0,RCF,0.084,-0.795
+0,Unconditional,-0.256,-0.378
+5,RCF,-0.071,-0.939
+5,Unconditional,-0.333,-0.453
+10,RCF,-0.226,-1.082
+10,Unconditional,-0.411,-0.527
+20,RCF,-0.532,-1.361
+20,Unconditional,-0.564,-0.675

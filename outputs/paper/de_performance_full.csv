@@ -1,0 +1,4 @@
+,start,end,n_days,ann_return_pct,ann_vol_pct,sharpe,sharpe_ci_low,sharpe_ci_high,psr_vs_0,t_stat_mean,p_value_mean,max_drawdown_pct,pct_days_active,win_rate_active_pct,alpha_ann_pct,alpha_t_nw,beta
+RCF,2006-12-13,2025-12-30,4835,-2.56,16.09,-0.159,-0.649,0.264,0.242,-0.7,0.485,-77.5,26.3,44.2,-2.83,-0.75,0.029
+Unconditional,2006-12-13,2025-12-30,4835,7.06,28.18,0.25,-0.196,0.718,0.864,1.1,0.2728,-83.6,82.1,49.7,6.66,0.98,0.043
+Buy & Hold (equal weight),2006-12-13,2025-12-30,4835,12.65,20.73,0.61,0.126,1.098,0.996,2.67,0.0075,-59.8,99.9,54.1,4.11,3.53,0.931

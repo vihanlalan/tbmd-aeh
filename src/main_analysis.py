@@ -28,7 +28,7 @@ warnings.filterwarnings('ignore')
 sys.path.insert(0, os.path.dirname(__file__))
 
 from data_loader import load_real_data, load_calibrated_data
-from behavioral_proxies import compute_bpc
+from behavioral_proxies import compute_bpc, compute_per_stock_signal
 from efficiency_score import compute_res, validate_res
 from backtest_engine import walk_forward_backtest
 from srsdt_signal_decay import BPCSignalProfile, compute_empirical_decay_rates
@@ -123,12 +123,22 @@ def run_analysis(use_real_data: bool = False):
     val_df.to_csv(os.path.join(OUTPUT_DIR, 'res_validation.csv'), index=False)
 
     # ---- 5. Walk-Forward Backtest ----
+    print("\n[5/6] Computing per-stock ranking signal...")
+    stock_signal = compute_per_stock_signal(
+        returns=returns,
+        dollar_volumes=volumes,
+        mom_window=20,
+        asym_window=20,
+        illiq_window=20
+    )
+
     print("\n[5/6] Running walk-forward backtest...")
     results = walk_forward_backtest(
         returns=returns,
         bpc=bpc,
         res=res,
         vix=vix,
+        stock_signal=stock_signal,
         train_window=252,
         refit_freq=21,
         top_pct=0.20,
@@ -140,9 +150,9 @@ def run_analysis(use_real_data: bool = False):
     print(f"  Annual return :  {perf['ann_return_pct']:+.1f}%")
     print(f"  Annual vol    :  {perf['ann_vol_pct']:.1f}%")
     print(f"  Sharpe ratio  :  {perf['sharpe']:.3f}  95% CI: {perf['sharpe_ci_95']}")
-    print(f"  DSR           :  {perf['dsr']:.3f}")
+    print(f"  PSR (vs 0)    :  {perf['psr']:.3f}")
     print(f"  Max drawdown  :  {perf['max_drawdown']:.1f}%")
-    print(f"  Win rate      :  {perf['win_rate']:.1f}%")
+    print(f"  Win rate      :  {perf['win_rate_active_days']:.1f}% of active days")
     print(f"  Observations  :  {perf['n_obs']}")
 
     print("\nRegime-stratified returns:")

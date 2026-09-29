@@ -1,2 +1,2 @@
 ann_return_pct,ann_vol_pct,sharpe,dsr,max_drawdown,calmar,sharpe_ci_95,n_obs,skewness,excess_kurtosis,win_rate
--32.3,9.2,-3.503,0.0,-99.6,-0.324,"(np.float64(-4.236), np.float64(-2.79))",4277,-0.314,15.562,11.9
+-4.2,14.7,-0.286,0.0,-72.3,-0.058,"(np.float64(-0.76), np.float64(0.123))",4277,0.229,25.815,15.4

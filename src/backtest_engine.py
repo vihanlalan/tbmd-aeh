@@ -97,50 +97,49 @@ def bootstrap_sharpe_ci(returns: np.ndarray, n_boot: int = 1000,
     return (round(lower, 3), round(upper, 3))
 
 
-def deflated_sharpe_ratio(sr: float, n_obs: int, sr_benchmark: float = 0.0,
-                          skewness: float = 0.0, excess_kurtosis: float = 0.0,
-                          n_trials: int = 12) -> float:
+def probabilistic_sharpe_ratio(returns: np.ndarray, sr_benchmark: float = 0.0) -> float:
     """
-    Deflated Sharpe Ratio (Bailey & Lopez de Prado 2014).
-    Adjusts for:
-        - Non-normality (skewness and kurtosis of returns)
-        - Serial correlation (use Lo 2002 adjusted Sharpe)
-        - Multiple testing (expected maximum Sharpe under null)
-
-    Parameters
-    ----------
-    sr                : float  observed annualized Sharpe ratio
-    n_obs             : int    number of daily observations
-    sr_benchmark      : float  expected Sharpe under H0 (typically 0)
-    skewness          : float  return skewness
-    excess_kurtosis   : float  return excess kurtosis
-    n_trials          : int    number of strategy configurations tested
+    Probabilistic Sharpe Ratio (Bailey & Lopez de Prado 2012): probability
+    that the true per-period Sharpe exceeds sr_benchmark (also per-period),
+    given the sample's length, skewness and kurtosis.
     """
-    from scipy.special import ndtr  # normal CDF
+    r = np.asarray(returns, dtype=float)
+    r = r[~np.isnan(r)]
+    if len(r) < 10 or np.std(r, ddof=1) == 0:
+        return np.nan
+    sr = np.mean(r) / np.std(r, ddof=1)
+    g3 = stats.skew(r)
+    g4 = stats.kurtosis(r, fisher=False)  # raw (Pearson) kurtosis
+    denom = np.sqrt(max(1.0 - g3 * sr + (g4 - 1.0) / 4.0 * sr ** 2, 1e-12))
+    z = (sr - sr_benchmark) * np.sqrt(len(r) - 1) / denom
+    return float(stats.norm.cdf(z))
 
-    # Adjustment factor for non-normality
-    adj = np.sqrt(
-        1
-        - skewness * sr
-        + (excess_kurtosis - 1) / 4.0 * sr ** 2
-    )
 
-    # Expected max Sharpe under null hypothesis (multiple testing correction)
-    # Bailey & Lopez de Prado (2014), eq. 8
-    if n_trials > 1:
-        euler_mascheroni = 0.5772
-        E_max_sr = ((1 - euler_mascheroni) * ndtr(1 - 1.0 / n_trials) +
-                    euler_mascheroni * ndtr(1 - 1.0 / (n_trials * np.e)))
-        sr0 = E_max_sr
-    else:
-        sr0 = sr_benchmark
+def expected_max_sharpe(n_trials: int, var_trial_sharpes: float) -> float:
+    """
+    Expected maximum per-period Sharpe among n_trials unskilled strategies
+    whose Sharpe estimates have variance var_trial_sharpes
+    (Bailey & Lopez de Prado 2014, eq. 6).
+    """
+    if n_trials < 2:
+        return 0.0
+    gamma = 0.5772156649
+    return float(np.sqrt(var_trial_sharpes) * (
+        (1 - gamma) * stats.norm.ppf(1 - 1.0 / n_trials)
+        + gamma * stats.norm.ppf(1 - 1.0 / (n_trials * np.e))
+    ))
 
-    # DSR
-    sr_adj = sr * adj
-    z = (sr_adj - sr0) * np.sqrt(n_obs - 1) / np.sqrt(1.0)
 
-    dsr = float(stats.norm.cdf(z))
-    return round(dsr, 3)
+def deflated_sharpe_ratio(returns: np.ndarray, trial_sharpes: np.ndarray) -> float:
+    """
+    Deflated Sharpe Ratio (Bailey & Lopez de Prado 2014): the PSR of the
+    selected strategy against the expected maximum Sharpe of all
+    configurations tried. trial_sharpes are per-period (non-annualized)
+    Sharpe ratios of every configuration evaluated during selection.
+    """
+    trial_sharpes = np.asarray(trial_sharpes, dtype=float)
+    sr0 = expected_max_sharpe(len(trial_sharpes), np.var(trial_sharpes, ddof=1))
+    return probabilistic_sharpe_ratio(returns, sr0)
 
 
 def maximum_drawdown(returns: np.ndarray) -> tuple:
@@ -166,10 +165,12 @@ def walk_forward_backtest(returns: pd.DataFrame,
                           bpc: pd.DataFrame,
                           res: pd.DataFrame,
                           vix: pd.Series,
+                          stock_signal: pd.DataFrame = None,
                           train_window: int = 252,
                           refit_freq: int = 21,
                           top_pct: float = 0.20,
-                          tau_percentile: float = 40.0) -> dict:
+                          tau_percentile: float = 40.0,
+                          unconditional: bool = False) -> dict:
     """
     Walk-forward validation of the regime-conditional strategy.
 
@@ -184,9 +185,17 @@ def walk_forward_backtest(returns: pd.DataFrame,
         performance    : dict       summary statistics
         regime_perf    : dict       per-regime performance
     """
+    if stock_signal is None:
+        raise ValueError(
+            "stock_signal is required: per-stock cross-sectional ranking "
+            "signal from compute_per_stock_signal(). The market-level BPC "
+            "composite has no cross-sectional variation and cannot rank "
+            "individual assets."
+        )
+
     # Align all inputs to common dates
     common = returns.index
-    for df_in in [bpc, res]:
+    for df_in in [bpc, res, stock_signal]:
         common = common.intersection(df_in.index)
     common = common.intersection(vix.index)
     common = common.sort_values()
@@ -195,6 +204,7 @@ def walk_forward_backtest(returns: pd.DataFrame,
     B   = bpc.loc[common, 'BPC']   # (T,)
     RES = res.loc[common, 'RES']   # (T,)
     VIX = vix.loc[common]          # (T,)
+    S   = stock_signal.loc[common, R.columns]  # (T x N) per-stock ranking signal, lagged 1 day below
 
     # Regime label from real VIX (for stratified reporting only)
     regime = pd.Series(
@@ -224,6 +234,25 @@ def walk_forward_backtest(returns: pd.DataFrame,
         tau = estimate_threshold(train_res, None, tau_percentile)
         tau_history[common[fold_start]] = tau
 
+        # Stock selection is chosen ONCE per fold, using the per-stock
+        # signal as of the last day before the fold starts (fold_start - 1,
+        # so no lookahead into the fold being traded). This matches the
+        # stated monthly refit_freq: the identity of the long/short basket
+        # is fixed for the fold, and the RES filter only switches daily
+        # exposure to that fixed basket on/off -- it does not trigger a
+        # full re-rank/re-trade of the basket every day, which would incur
+        # transaction costs far beyond what refit_freq implies.
+        sig_asof = S.iloc[fold_start - 1].dropna() if fold_start > 0 else pd.Series(dtype=float)
+        if len(sig_asof) > 0:
+            n_long = max(1, int(len(sig_asof) * top_pct))
+            long_stocks = sig_asof.nlargest(n_long).index
+            short_stocks = sig_asof.nsmallest(n_long).index
+            fold_long_short = pd.Series(0.0, index=R.columns)
+            fold_long_short[long_stocks] = 1.0 / n_long
+            fold_long_short[short_stocks] = -1.0 / n_long
+        else:
+            fold_long_short = pd.Series(0.0, index=R.columns)
+
         # Apply signal for all days in this refit window
         for t in range(fold_start, fold_end):
             if t >= T:
@@ -236,27 +265,13 @@ def walk_forward_backtest(returns: pd.DataFrame,
                 pnl.iloc[t] = 0.0
                 continue
 
-            # Filter: only trade when RES < tau
-            filter_active = res_t < tau
-
-            if filter_active:
-                # Rank stocks by lagged BPC signal
-                # Here we use a simplified version: use same BPC for all stocks
-                # In full implementation: per-stock BPC signals
-                stock_signals = R.columns.map(
-                    lambda c: bpc_t + np.random.default_rng(hash(c) % 2**32 + t).normal(0, 0.1)
-                )
-                signal_series = pd.Series(stock_signals, index=R.columns)
-
-                n_long = max(1, int(N * top_pct))
-                long_stocks  = signal_series.nlargest(n_long).index
-                short_stocks = signal_series.nsmallest(n_long).index
-
-                new_pos = pd.Series(0.0, index=R.columns)
-                new_pos[long_stocks]  = 1.0 / n_long
-                new_pos[short_stocks] = -1.0 / n_long
-            else:
-                new_pos = pd.Series(0.0, index=R.columns)
+            # Filter: only trade when RES < tau. The basket composition
+            # (fold_long_short) is fixed for the fold; only whether it is
+            # deployed (vs. sitting in cash) varies day to day.
+            # unconditional=True deploys the same basket every day regardless
+            # of RES, for the RCF-vs-unconditional comparison.
+            filter_active = True if unconditional else (res_t < tau)
+            new_pos = fold_long_short.copy() if filter_active else pd.Series(0.0, index=R.columns)
 
             # Compute daily PnL
             ret_today = R.iloc[t]
@@ -283,13 +298,10 @@ def walk_forward_backtest(returns: pd.DataFrame,
     skew = float(stats.skew(pnl_clean.values))
     kurt = float(stats.kurtosis(pnl_clean.values))
 
-    dsr = deflated_sharpe_ratio(
-        sr=sr,
-        n_obs=len(pnl_clean),
-        skewness=skew,
-        excess_kurtosis=kurt,
-        n_trials=12
-    )
+    # PSR against zero; the multiple-testing-deflated version needs the Sharpe
+    # ratios of every configuration tried and is computed by the caller.
+    psr = probabilistic_sharpe_ratio(pnl_clean.values, 0.0)
+    active = pnl_clean[pnl_clean != 0]
 
     # Regime-stratified performance
     regime_aligned = regime.iloc[train_window:].reindex(pnl_clean.index)
@@ -308,14 +320,15 @@ def walk_forward_backtest(returns: pd.DataFrame,
         'ann_return_pct': round(ann_ret * 100, 1),
         'ann_vol_pct'   : round(ann_vol * 100, 1),
         'sharpe'        : round(sr, 3),
-        'dsr'           : dsr,
+        'psr'           : round(psr, 3),
         'max_drawdown'  : round(mdd * 100, 1),
         'calmar'        : round(calmar, 3) if calmar is not None and not np.isnan(calmar) else None,
         'sharpe_ci_95'  : (ci_low, ci_high),
         'n_obs'         : len(pnl_clean),
         'skewness'      : round(skew, 3),
         'excess_kurtosis': round(kurt, 3),
-        'win_rate'      : round(float((pnl_clean > 0).mean()) * 100, 1),
+        'win_rate_active_days': round(float((active > 0).mean()) * 100, 1) if len(active) else np.nan,
+        'pct_days_active': round(len(active) / len(pnl_clean) * 100, 1),
     }
 
     return {

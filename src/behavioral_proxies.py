@@ -247,3 +247,66 @@ def compute_bpc(returns: pd.DataFrame,
 
     print(f"BPC computed: {bpc_components.dropna().shape[0]} valid observations")
     return bpc_components
+
+
+# ------------------------------------------------------------------
+# Per-stock cross-sectional signal (for RCF long/short ranking)
+# ------------------------------------------------------------------
+
+def compute_per_stock_signal(returns: pd.DataFrame,
+                              dollar_volumes: pd.DataFrame,
+                              mom_window: int = 20,
+                              asym_window: int = 20,
+                              illiq_window: int = 20,
+                              min_periods: int = 252) -> pd.DataFrame:
+    """
+    Per-asset behavioral composite used to RANK individual stocks for the
+    long/short leg of the Regime-Conditional Filter.
+
+    The market-level BPC(t) in compute_bpc() is a single aggregate time
+    series (one value per day across the whole universe) -- it has no
+    cross-sectional variation and therefore cannot be used to decide
+    which individual stocks to go long or short. This function builds a
+    genuinely stock-level counterpart from the same three observable,
+    literature-grounded quantities, each computed independently per stock:
+
+        - Momentum: trailing mom_window-day cumulative return
+          (Jegadeesh & Titman 1993 cross-sectional momentum ranking)
+        - Loss-aversion asymmetry: per-stock downside/upside realized
+          vol ratio (Ang et al. 2006)
+        - Illiquidity: per-stock Amihud (2002) ratio, |r_t| / dollar_volume_t
+
+    Each is expanding-window Z-scored per stock (no lookahead) and
+    equal-weighted into a per-stock composite score(t, i). Ranking
+    assets by this score at time t replaces the placeholder random
+    cross-sectional noise previously used in the backtest engine.
+    """
+    # 1. Per-stock momentum: trailing cumulative return, lagged 1 day
+    mom_raw = returns.rolling(window=mom_window, min_periods=mom_window // 2).sum()
+
+    # 2. Per-stock volatility asymmetry: downside / upside realized vol
+    def _asym(col: pd.Series) -> pd.Series:
+        neg = col.where(col < 0)
+        pos = col.where(col >= 0)
+        down = neg.rolling(window=asym_window, min_periods=asym_window // 2).std()
+        up = pos.rolling(window=asym_window, min_periods=asym_window // 2).std()
+        return down / up.replace(0, np.nan)
+
+    asym_raw = returns.apply(_asym, axis=0)
+
+    # 3. Per-stock Amihud illiquidity ratio
+    illiq_raw = (returns.abs() / dollar_volumes.replace(0, np.nan)).rolling(
+        window=illiq_window, min_periods=illiq_window // 2
+    ).mean()
+
+    def _z(df: pd.DataFrame) -> pd.DataFrame:
+        mu = df.expanding(min_periods=min_periods).mean()
+        sigma = df.expanding(min_periods=min_periods).std()
+        return (df - mu) / sigma.replace(0, np.nan)
+
+    mom_z = _z(mom_raw)
+    asym_z = _z(asym_raw)
+    illiq_z = _z(illiq_raw)
+
+    composite = (mom_z + asym_z + illiq_z) / 3.0
+    return composite
