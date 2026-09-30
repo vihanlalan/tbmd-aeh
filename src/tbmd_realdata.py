@@ -134,6 +134,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import roc_auc_score, accuracy_score
+from efficiency_score import compute_res, validate_res
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -681,8 +682,10 @@ def build_bpc_real(
 
 # ==============================================================================
 # SECTION 5: REAL-TIME EFFICIENCY SCORE (RES)
-#            IDENTICAL to tbmd_framework.py — do not modify
+#            IMPORT from efficiency_score.py
 # ==============================================================================
+# (Redundant implementation removed to ensure single source of truth)
+
 
 def _hurst_exponent(ts: np.ndarray) -> float:
     """
@@ -768,38 +771,6 @@ def _ljung_box_pval(ts: np.ndarray, lags: int = RES_CONFIG['lb_lags']) -> float:
     return float(1.0 - stats.chi2.cdf(q_stat, df=lags))
 
 
-def compute_res(
-    market_factor: np.ndarray,
-    dates:         pd.DatetimeIndex,
-    cfg:           dict = RES_CONFIG,
-) -> pd.DataFrame:
-    """
-    Real-Time Efficiency Score (RES).
-    Formula IDENTICAL to synthetic version:
-
-        Hurst_eff(t)  = 1 - 2|H(t) - 0.5|
-        VR_eff(t)     = 1 / (1 + |VR(t) - 1.0|)
-        LB_eff(t)     = p-value of Ljung-Box at time t
-        RES(t)        = (1/3)[Hurst_eff + VR_eff + LB_eff]
-
-    Reference: Hurst (1951), Lo & MacKinlay (1988), Ljung & Box (1978).
-    """
-    window = cfg['window']
-    mkt    = pd.Series(market_factor, index=dates)
-    scores = pd.DataFrame(index=dates)
-
-    scores['hurst']          = mkt.rolling(window).apply(_hurst_exponent, raw=True)
-    scores['variance_ratio'] = mkt.rolling(window).apply(_variance_ratio,  raw=True)
-    scores['lb_pval']        = mkt.rolling(window).apply(_ljung_box_pval,  raw=True)
-
-    hurst_eff = 1.0 - 2.0 * np.abs(scores['hurst'] - 0.5)
-    vr_eff    = 1.0 / (1.0 + np.abs(scores['variance_ratio'] - 1.0))
-    lb_eff    = scores['lb_pval']
-
-    scores['efficiency_score']   = (hurst_eff + vr_eff + lb_eff) / 3.0
-    scores['inefficiency_score'] = 1.0 - scores['efficiency_score']
-
-    return scores
 
 
 # ==============================================================================
@@ -1635,7 +1606,7 @@ def main():
 
     # ── Step 6: RES ───────────────────────────────────────────────────────────
     print('\n[6/8]  Computing Real-Time Efficiency Score (RES)...')
-    res_scores = compute_res(market_factor, dates)
+    res_scores = compute_res(pd.Series(market_factor, index=dates))
     mean_hurst = res_scores['hurst'].mean()
     mean_res   = res_scores['efficiency_score'].mean()
     print(f'       Mean Hurst exponent:   {mean_hurst:.4f}')

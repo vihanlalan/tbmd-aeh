@@ -37,6 +37,52 @@ OUTPUT_DIR = os.path.join(os.path.dirname(__file__), '..', 'outputs')
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 
+def run_pipeline_for_period(returns, volumes, vix, period_name="Full Sample"):
+    """
+    Encapsulates the full BPC -> RES -> Backtest pipeline for a specific data subset.
+    """
+    print(f"\n--- Analyzing Period: {period_name} ---")
+
+    # 1. BPC
+    bpc = compute_bpc(
+        returns=returns,
+        dollar_volumes=volumes,
+        vix=vix,
+        vr_window=60,
+        herd_window=20,
+        asym_window=20,
+        illiq_window=20,
+        sent_window=5
+    )
+
+    # 2. RES
+    mkt_return = returns.mean(axis=1)
+    res = compute_res(returns=mkt_return)
+
+    # 3. Stock Signal
+    stock_signal = compute_per_stock_signal(
+        returns=returns,
+        dollar_volumes=volumes,
+        mom_window=20,
+        asym_window=20,
+        illiq_window=20
+    )
+
+    # 4. Backtest
+    results = walk_forward_backtest(
+        returns=returns,
+        bpc=bpc,
+        res=res,
+        vix=vix,
+        stock_signal=stock_signal,
+        train_window=252,
+        refit_freq=21,
+        top_pct=0.20,
+        tau_percentile=40.0
+    )
+
+    return results, bpc, res
+
 def run_analysis(use_real_data: bool = False):
     print("=" * 65)
     print("TBMD ANALYSIS: Operationalizing the Adaptive Markets Hypothesis")
@@ -55,6 +101,35 @@ def run_analysis(use_real_data: bool = False):
 
     # Daily simple returns
     returns = prices.pct_change().dropna(how='all')
+
+    # ── SUB-PERIOD ANALYSIS (SRSDT Validation) ───────────────────────────────────
+    print("\n--- Performing Sub-Period Analysis (Pre vs Post 2015) ---")
+    split_date = '2014-12-31'
+
+    # Pre-2015
+    ret_pre = returns.loc[:split_date]
+    vol_pre = volumes.loc[:split_date] if volumes is not None else None
+    vix_pre = vix.loc[:split_date]
+    res_pre, bpc_pre, res_score_pre = run_pipeline_for_period(ret_pre, vol_pre, vix_pre, "Pre-2015")
+
+    # Post-2015
+    ret_post = returns.loc[split_date:]
+    vol_post = volumes.loc[split_date:] if volumes is not None else None
+    vix_post = vix.loc[split_date:]
+    res_post, bpc_post, res_score_post = run_pipeline_for_period(ret_post, vol_post, vix_post, "Post-2015")
+
+    gap_pre = res_pre['performance']['sharpe'] - res_pre['performance'].get('uncond_sharpe', 0)
+    gap_post = res_post['performance']['sharpe'] - res_post['performance'].get('uncond_sharpe', 0)
+    print(f"\nSRSDT Validation Result:")
+    print(f"  Pre-2015  Sharpe Gap: {gap_pre:+.3f}")
+    print(f"  Post-2015 Sharpe Gap: {gap_post:+.3f}")
+    if gap_pre > gap_post:
+        print("  Verdict: PASS (Edge decayed over time as predicted by SRSDT)")
+    else:
+        print("  Verdict: FAIL (Edge did not decay or increased)")
+
+    # ---- 2. Compute BPC ----
+
 
     print(f"\nData summary:")
     print(f"  Period:   {returns.index[0].date()} to {returns.index[-1].date()}")

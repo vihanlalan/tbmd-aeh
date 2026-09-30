@@ -32,7 +32,6 @@ from scipy import stats
 import warnings
 warnings.filterwarnings('ignore')
 
-TRANSACTION_COST = 0.001  # 10 bps one-way
 
 
 # ------------------------------------------------------------------
@@ -58,6 +57,32 @@ def estimate_threshold(res_train: np.ndarray, regime_labels: np.ndarray,
 # ------------------------------------------------------------------
 # Sharpe ratio and DSR
 # ------------------------------------------------------------------
+
+def bootstrap_metric_ci(returns: np.ndarray, metric_fn, n_boot: int = 1000,
+                            ci: float = 0.95, block_size: int = 21) -> tuple:
+    """
+    Generic block bootstrap for confidence intervals of a performance metric.
+    """
+    r = np.asarray(returns)
+    r = r[~np.isnan(r)]
+    n = len(r)
+    if n < 50:
+        return (np.nan, np.nan)
+
+    boot_metrics = []
+    rng = np.random.default_rng(42)
+
+    for _ in range(n_boot):
+        n_blocks = int(np.ceil(n / block_size))
+        starts = rng.integers(0, n - block_size, size=n_blocks)
+        blocks = [r[s:s+block_size] for s in starts]
+        boot_sample = np.concatenate(blocks)[:n]
+        boot_metrics.append(metric_fn(boot_sample))
+
+    alpha = (1 - ci) / 2
+    lower = np.nanpercentile(boot_metrics, 100 * alpha)
+    upper = np.nanpercentile(boot_metrics, 100 * (1 - alpha))
+    return (round(lower, 3), round(upper, 3))
 
 def annualized_sharpe(returns: np.ndarray, freq: int = 252) -> float:
     """Annualized Sharpe ratio, assuming zero risk-free rate."""
@@ -170,7 +195,8 @@ def walk_forward_backtest(returns: pd.DataFrame,
                           refit_freq: int = 21,
                           top_pct: float = 0.20,
                           tau_percentile: float = 40.0,
-                          unconditional: bool = False) -> dict:
+                          unconditional: bool = False,
+                          transaction_cost: float = 0.001) -> dict:
     """
     Walk-forward validation of the regime-conditional strategy.
 
@@ -279,7 +305,7 @@ def walk_forward_backtest(returns: pd.DataFrame,
 
             # Transaction costs on position changes
             turnover = (new_pos - prev_pos).abs().sum()
-            cost = turnover * TRANSACTION_COST
+            cost = turnover * transaction_cost
 
             pnl.iloc[t] = gross_pnl - cost
             positions.iloc[t] = new_pos
@@ -293,7 +319,21 @@ def walk_forward_backtest(returns: pd.DataFrame,
     ann_vol = float(pnl_clean.std() * np.sqrt(252))
     sr = annualized_sharpe(pnl_clean.values)
     mdd, calmar = maximum_drawdown(pnl_clean.values)
+    # Confidence intervals
     ci_low, ci_high = bootstrap_sharpe_ci(pnl_clean.values)
+
+    # Bootstrap CI for Annualised Return
+    ret_ci = bootstrap_metric_ci(
+        pnl_clean.values,
+        lambda r: np.mean(r) * 252
+    )
+
+    # Bootstrap CI for Max Drawdown
+    mdd_ci = bootstrap_metric_ci(
+        pnl_clean.values,
+        lambda r: maximum_drawdown(r)[0]
+    )
+
 
     skew = float(stats.skew(pnl_clean.values))
     kurt = float(stats.kurtosis(pnl_clean.values))
@@ -318,17 +358,20 @@ def walk_forward_backtest(returns: pd.DataFrame,
 
     performance = {
         'ann_return_pct': round(ann_ret * 100, 1),
-        'ann_vol_pct'   : round(ann_vol * 100, 1),
-        'sharpe'        : round(sr, 3),
-        'psr'           : round(psr, 3),
-        'max_drawdown'  : round(mdd * 100, 1),
-        'calmar'        : round(calmar, 3) if calmar is not None and not np.isnan(calmar) else None,
-        'sharpe_ci_95'  : (ci_low, ci_high),
-        'n_obs'         : len(pnl_clean),
-        'skewness'      : round(skew, 3),
-        'excess_kurtosis': round(kurt, 3),
+        'ann_return_ci'   : ret_ci,
+        'ann_vol_pct'     : round(ann_vol * 100, 1),
+        'sharpe'          : round(sr, 3),
+        'psr'             : round(psr, 3),
+        'max_drawdown'     : round(mdd * 100, 1),
+        'max_drawdown_ci'  : mdd_ci,
+        'calmar'          : round(calmar, 3) if calmar is not None and not np.isnan(calmar) else None,
+        'sharpe_ci_95'    : (ci_low, ci_high),
+        'n_obs'           : len(pnl_clean),
+        'skewness'        : round(skew, 3),
+        'excess_kurtosis' : round(kurt, 3),
         'win_rate_active_days': round(float((active > 0).mean()) * 100, 1) if len(active) else np.nan,
-        'pct_days_active': round(len(active) / len(pnl_clean) * 100, 1),
+        'pct_days_active' : round(len(active) / len(pnl_clean) * 100, 1),
+        'uncond_sharpe'     : round(annualized_sharpe(uncond_pnl.dropna().values), 3),
     }
 
     return {

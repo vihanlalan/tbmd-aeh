@@ -183,8 +183,12 @@ def compute_res(returns: pd.Series,
     df['vr_eff']    = 1.0 / (1.0 + (df['vr'] - 1.0).abs())
     df['lb_eff']    = df['lb_pval'].clip(0, 1)
 
-    # Composite (equal-weighted)
+    # Composite magnitude (equal-weighted)
     df['RES'] = (df['hurst_eff'] + df['vr_eff'] + df['lb_eff']) / 3.0
+
+    # Directional Component: Signed average of Hurst and VR deviations
+    # Positive = trending/bubble, Negative = mean-reverting/panic
+    df['RES_direction'] = ((df['hurst'] - 0.5) + (df['vr'] - 1.0)) / 2.0
 
     # Ensure RES is in [0, 1]
     df['RES'] = df['RES'].clip(0, 1)
@@ -231,6 +235,7 @@ def validate_res(res_df: pd.DataFrame,
     # Align RES and VIX
     common = res_df.index.intersection(vix.index)
     res_aligned = res_df.loc[common, 'RES']
+    res_dir_aligned = res_df.loc[common, 'RES_direction']
     vix_aligned = vix.loc[common]
 
     # Binary label: 1 = behavioral/inefficient (VIX >= 20)
@@ -246,6 +251,7 @@ def validate_res(res_df: pd.DataFrame,
     y_true = y_true[mask]
     y_pred = y_pred[mask]
     res_vals = res_aligned.values[mask]
+    res_direction_vals = res_dir_aligned.values[mask]
 
     # AUC: note RES is INVERTED (low = inefficient), so we use 1 - RES
     auc = roc_auc_score(y_true, 1.0 - res_vals)
@@ -254,8 +260,12 @@ def validate_res(res_df: pd.DataFrame,
     prec = precision_score(y_true, y_pred, zero_division=0)
     rec  = recall_score(y_true, y_pred, zero_division=0)
 
-    # Correlation of RES with VIX (should be negative)
-    corr = np.corrcoef(res_vals, vix_aligned.values[mask])[0, 1]
+    # Correlation of RES_direction with -VIX
+    # We expect a positive correlation because:
+    # High VIX (Panic) -> Negative RES_direction
+    # Low VIX (Calm)   -> Positive RES_direction
+    # Thus, RES_direction and -VIX should move together.
+    corr = np.corrcoef(res_direction_vals, -vix_aligned.values[mask])[0, 1]
 
     results = {
         'tau'               : round(tau, 3),
@@ -263,7 +273,7 @@ def validate_res(res_df: pd.DataFrame,
         'auc'               : round(auc, 3),
         'precision'         : round(prec, 3),
         'recall'            : round(rec, 3),
-        'vix_res_corr'      : round(corr, 3),
+        'res_direction_vix_corr' : round(corr, 3),
         'n_observations'    : int(mask.sum()),
         'n_behavioral_days' : int(y_true.sum()),
         'pct_behavioral'    : round(float(y_true.mean()) * 100, 1),
