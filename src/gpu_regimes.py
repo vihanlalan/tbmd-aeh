@@ -2,8 +2,15 @@
 gpu_regimes.py
 --------------
 Batched, device-agnostic implementations of the regime models used in
-regime_identification.py. Runs on an NVIDIA GPU through CUDA when one is
-available and on the CPU otherwise.
+regime_identification.py. Runs on an Apple-silicon GPU (MacBook M1-M4)
+through PyTorch's Metal backend (MPS) when one is available and on the CPU
+otherwise.
+
+MPS has no float64, so on the GPU everything runs in float32. To keep that
+accurate over long series, emissions are rescaled by their per-step maximum
+before the log-space scans (the offsets are added back to the likelihood),
+and predictive densities are computed per step rather than by differencing
+a cumulative log likelihood.
 
   * Gaussian hidden Markov model (Baum-Welch EM). The forward-backward
     recursion is computed with a parallel prefix scan in the log semiring,
@@ -17,40 +24,70 @@ are right-padded and handled with a validity mask: padded steps emit
 nothing and carry the state forward unchanged.
 """
 
+import os
 import math
+import platform
 import numpy as np
+
+# run any operator MPS lacks on the CPU instead of raising
+os.environ.setdefault('PYTORCH_ENABLE_MPS_FALLBACK', '1')
 import torch
 
 _DEVICE = None
-DTYPE = torch.float64
+_DTYPE = None
+
+
+def mps_available():
+    return getattr(torch.backends, 'mps', None) is not None and torch.backends.mps.is_available()
 
 
 def get_device():
     global _DEVICE
     if _DEVICE is None:
-        _DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        _DEVICE = torch.device('mps' if mps_available() else 'cpu')
     return _DEVICE
 
 
-def set_device(name):
-    """'cuda', 'cpu', or None for automatic selection."""
-    global _DEVICE
-    if name == 'cuda' and not torch.cuda.is_available():
-        raise RuntimeError('CUDA requested but torch.cuda.is_available() is False. '
-                           'Install a CUDA build of PyTorch: https://pytorch.org/get-started/locally/')
+def get_dtype():
+    """float32 on MPS (no float64 support there), float64 on the CPU unless overridden."""
+    if _DTYPE is not None:
+        return _DTYPE
+    return torch.float32 if get_device().type == 'mps' else torch.float64
+
+
+def set_device(name, dtype=None):
+    """name: 'mps', 'cpu', or None for automatic selection.
+    dtype: 'float32' / 'float64' to override the default for the device."""
+    global _DEVICE, _DTYPE
+    if name == 'mps' and not mps_available():
+        raise RuntimeError('MPS requested but torch.backends.mps.is_available() is False. '
+                           'This needs an Apple-silicon Mac, macOS 12.3+ and an arm64 '
+                           '(not Rosetta) Python with PyTorch >= 2.1.')
     _DEVICE = torch.device(name) if name else None
+    _DTYPE = {None: None, 'float32': torch.float32, 'float64': torch.float64}[dtype]
+    if get_device().type == 'mps' and _DTYPE == torch.float64:
+        raise RuntimeError('MPS does not support float64.')
     return get_device()
 
 
 def device_summary():
     d = get_device()
-    if d.type == 'cuda':
-        return f'cuda ({torch.cuda.get_device_name(d)})'
-    return 'cpu (no CUDA device available)'
+    prec = str(get_dtype()).replace('torch.', '')
+    if d.type == 'mps':
+        return f'mps (Apple GPU, {platform.machine()}, {prec})'
+    return f'cpu ({prec}; no Apple GPU available)' if not mps_available() else f'cpu ({prec})'
+
+
+def _tiny():
+    return torch.finfo(get_dtype()).tiny
 
 
 def _t(a):
-    return torch.as_tensor(np.asarray(a), dtype=DTYPE, device=get_device())
+    return torch.as_tensor(np.asarray(a, dtype=np.float64), device='cpu').to(get_device(), get_dtype())
+
+
+def _mask_t(m):
+    return torch.as_tensor(np.asarray(m, bool)).to(get_device())
 
 
 def pad_batch(series):
@@ -98,40 +135,47 @@ def _scan(M, op, reverse=False):
 # ------------------------------------------------------------------
 
 def _log_emissions(x, mask, mu, var):
+    """Per-step rescaled log emissions (max over states = 0) and the offsets.
+    Padded steps have zero emissions and zero offset."""
     logb = -0.5 * (torch.log(2 * math.pi * var[:, None, :])
                    + (x[..., None] - mu[:, None, :]) ** 2 / var[:, None, :])
-    return logb * mask[..., None]
+    c = logb.amax(dim=-1) * mask
+    return (logb - c[..., None]) * mask[..., None], c
 
 
 def _log_identity(K):
-    eye = torch.full((K, K), -math.inf, dtype=DTYPE, device=get_device())
+    eye = torch.full((K, K), -math.inf, dtype=get_dtype(), device=get_device())
     eye.fill_diagonal_(0.0)
     return eye
 
 
 def _forward(x, mask, logpi, logA, mu, var):
-    """Log forward variables alpha (B, T, K) and the transition stack M."""
-    logb = _log_emissions(x, mask, mu, var)
+    """Log forward variables alpha (B, T, K) of the rescaled model, the
+    transition stack M, rescaled emissions and the emission offsets c.
+    True log likelihood = logsumexp(alpha[:, -1]) + c.sum(1)."""
+    logb, c = _log_emissions(x, mask, mu, var)
     K = mu.shape[1]
     M = logA[:, None] + logb[:, 1:, None, :]
     M = torch.where(mask[:, 1:, None, None], M, _log_identity(K))
     alpha0 = logpi + logb[:, 0]
     if x.shape[1] == 1:
-        return alpha0[:, None], M
+        return alpha0[:, None], M, logb, c
     P = _scan(M, _log_matmul)
     alpha_rest = torch.logsumexp(alpha0[:, None, :, None] + P, dim=-2)
-    return torch.cat([alpha0[:, None], alpha_rest], dim=1), M
+    return torch.cat([alpha0[:, None], alpha_rest], dim=1), M, logb, c
 
 
 def _estep(x, mask, logpi, logA, mu, var):
-    alpha, M = _forward(x, mask, logpi, logA, mu, var)
+    alpha, M, _, c = _forward(x, mask, logpi, logA, mu, var)
     B, T, K = alpha.shape
     S = _scan(M, _log_matmul, reverse=True)
-    beta = torch.cat([torch.logsumexp(S, dim=-1), torch.zeros(B, 1, K, dtype=DTYPE, device=x.device)], dim=1)
-    logZ = torch.logsumexp(alpha[:, -1], dim=-1)
-    log_gamma = alpha + beta - logZ[:, None, None]
-    log_xi = alpha[:, :-1, :, None] + M + beta[:, 1:, None, :] - logZ[:, None, None, None]
-    log_xi = torch.where(mask[:, 1:, None, None], log_xi, torch.tensor(-math.inf, dtype=DTYPE, device=x.device))
+    beta = torch.cat([torch.logsumexp(S, dim=-1), torch.zeros(B, 1, K, dtype=alpha.dtype, device=x.device)], dim=1)
+    logZs = torch.logsumexp(alpha[:, -1], dim=-1)          # rescaled model
+    log_gamma = alpha + beta - logZs[:, None, None]
+    log_xi = alpha[:, :-1, :, None] + M + beta[:, 1:, None, :] - logZs[:, None, None, None]
+    log_xi = torch.where(mask[:, 1:, None, None], log_xi, torch.tensor(-math.inf, dtype=alpha.dtype, device=x.device))
+    # offsets summed in float64 on the CPU so the likelihood keeps full precision
+    logZ = logZs.double().cpu() + c.double().cpu().sum(1)
     return log_gamma.exp() * mask[..., None], torch.logsumexp(log_xi, dim=1), logZ
 
 
@@ -151,36 +195,41 @@ def fit_hmm_batch(series, K, n_init=4, n_iter=300, tol=1e-6, seed=0, var_floor=1
     X = np.repeat(X, n_init, axis=0)
     Mk = np.repeat(Mk, n_init, axis=0)
     B, T = X.shape
-    x, mask = _t(X), torch.as_tensor(Mk, device=get_device())
+    x, mask = _t(X), _mask_t(Mk)
+    dt = get_dtype()
+    # in float32 the likelihood is only resolved to about 1e-7 relative
+    tol = max(tol, 1e-7) if dt == torch.float32 else tol
 
+    # initial values drawn in float64 on the CPU so every device starts identically
     g = torch.Generator(device='cpu').manual_seed(seed)
-    cnt = mask.sum(1).to(DTYPE)
-    m0 = (x * mask).sum(1) / cnt
-    v0 = (((x - m0[:, None]) ** 2) * mask).sum(1) / cnt
-    spread = torch.linspace(-1.0, 1.0, K, dtype=DTYPE)
-    noise = torch.randn(B, K, generator=g, dtype=DTYPE) * 0.3
-    var = (v0[:, None].cpu() * torch.exp(spread[None, :] + noise)).to(get_device())
-    mu = (m0[:, None].cpu() + torch.randn(B, K, generator=g, dtype=DTYPE) * 0.1 * v0[:, None].cpu().sqrt()).to(get_device())
-    A = torch.full((B, K, K), 0.05 / max(K - 1, 1), dtype=DTYPE)
+    Xc, Mc = torch.as_tensor(X), torch.as_tensor(Mk)
+    cnt = Mc.sum(1).double()
+    m0 = (Xc * Mc).sum(1) / cnt
+    v0 = (((Xc - m0[:, None]) ** 2) * Mc).sum(1) / cnt
+    spread = torch.linspace(-1.0, 1.0, K, dtype=torch.float64)
+    noise = torch.randn(B, K, generator=g, dtype=torch.float64) * 0.3
+    var = _t(v0[:, None] * torch.exp(spread[None, :] + noise))
+    mu = _t(m0[:, None] + torch.randn(B, K, generator=g, dtype=torch.float64) * 0.1 * v0[:, None].sqrt())
+    A = torch.full((B, K, K), 0.05 / max(K - 1, 1), dtype=torch.float64)
     A[:, range(K), range(K)] = 0.95 if K > 1 else 1.0
-    logA = torch.log(A).to(get_device())
-    logpi = torch.full((B, K), -math.log(K), dtype=DTYPE, device=get_device())
+    logA = _t(torch.log(A))
+    logpi = torch.full((B, K), -math.log(K), dtype=dt, device=get_device())
 
-    prev = torch.full((B,), -math.inf, dtype=DTYPE, device=get_device())
+    prev = torch.full((B,), -math.inf, dtype=torch.float64)
     for _ in range(n_iter):
         gamma, log_xi_sum, logZ = _estep(x, mask, logpi, logA, mu, var)
         Nk = gamma.sum(1).clamp_min(1e-10)
         mu = (gamma * x[..., None]).sum(1) / Nk
         var = (gamma * (x[..., None] - mu[:, None]) ** 2).sum(1) / Nk + var_floor
-        logpi = torch.log(gamma[:, 0].clamp_min(1e-300))
-        log_xi_sum = log_xi_sum.clamp_min(-700.0)
+        logpi = torch.log(gamma[:, 0].clamp_min(_tiny()))
+        log_xi_sum = log_xi_sum.clamp_min(-700.0 if dt == torch.float64 else -80.0)
         logA = log_xi_sum - torch.logsumexp(log_xi_sum, dim=-1, keepdim=True)
         if torch.all((logZ - prev).abs() < tol * logZ.abs().clamp_min(1.0)):
             break
         prev = logZ
 
     gamma, _, logZ = _estep(x, mask, logpi, logA, mu, var)
-    alpha, _ = _forward(x, mask, logpi, logA, mu, var)
+    alpha = _forward(x, mask, logpi, logA, mu, var)[0]
     filt = torch.softmax(alpha, dim=-1)
 
     logZ = logZ.view(n, n_init)
@@ -210,16 +259,19 @@ def hmm_filter_batch(series, params, priors=None):
     priors: optional list of initial state distributions (defaults to params['pi']).
     """
     X, Mk = pad_batch(series)
-    x, mask = _t(X), torch.as_tensor(Mk, device=get_device())
+    x, mask = _t(X), _mask_t(Mk)
     logpi = _t(np.stack([np.log(np.maximum(priors[i] if priors is not None else p['pi'], 1e-300))
-                         for i, p in enumerate(params)]))
-    logA = _t(np.log(np.maximum(np.stack([p['A'] for p in params]), 1e-300)))
+                         for i, p in enumerate(params)]).clip(min=-80.0))
+    logA = _t(np.log(np.maximum(np.stack([p['A'] for p in params]), 1e-300)).clip(min=-80.0))
     mu = _t(np.stack([p['mu'] for p in params]))
     var = _t(np.stack([p['sd'] ** 2 for p in params]))
-    alpha, _ = _forward(x, mask, logpi, logA, mu, var)
-    logZt = torch.logsumexp(alpha, dim=-1)
-    lpd = torch.diff(logZt, dim=1, prepend=torch.zeros(len(series), 1, dtype=DTYPE, device=x.device))
+    alpha, _, logb, c = _forward(x, mask, logpi, logA, mu, var)
     filt = torch.softmax(alpha, dim=-1)
+    # one-step predictive density, per step: p(x_t | x_<t) = sum_k pred_t(k) b_t(k)
+    log_filt = torch.log_softmax(alpha, dim=-1)
+    log_pred = torch.cat([logpi[:, None], _log_matmul(log_filt[:, :-1, None, :], logA[:, None])[:, :, 0]], dim=1)
+    log_pred = log_pred - torch.logsumexp(log_pred, dim=-1, keepdim=True)
+    lpd = (torch.logsumexp(log_pred + logb, dim=-1).double().cpu() + c.double().cpu())
     res = []
     for i, s in enumerate(series):
         L = len(s)
@@ -235,9 +287,9 @@ def _jump_values(loss, mask, lam):
     """Min-plus forward values V (B, T, K) for per-step losses (B, T, K).
     Loss is 0.5 * squared Euclidean distance, matching the jumpmodels package."""
     B, T, K = loss.shape
-    off = 1.0 - torch.eye(K, dtype=DTYPE, device=loss.device)
+    off = 1.0 - torch.eye(K, dtype=loss.dtype, device=loss.device)
     M = lam[:, None, None, None] * off + loss[:, 1:, None, :]
-    ident = torch.full((K, K), math.inf, dtype=DTYPE, device=loss.device)
+    ident = torch.full((K, K), math.inf, dtype=loss.dtype, device=loss.device)
     ident.fill_diagonal_(0.0)
     M = torch.where(mask[:, 1:, None, None], M, ident)
     V0 = loss[:, 0]
@@ -291,7 +343,7 @@ def fit_jump_batch(features, lams, K=2, n_init=5, n_iter=30, seed=0, n_fit=None)
     lam = _t(np.repeat(np.asarray(lams, float), n_init))
     B = len(F_rep)
     Xf = _t(F_rep)
-    mask_fit = torch.as_tensor(np.arange(T)[None, :] < len_fit[:, None], device=get_device())
+    mask_fit = _mask_t(np.arange(T)[None, :] < len_fit[:, None])
 
     cent = np.zeros((B, K, d))
     for b in range(B):
@@ -302,8 +354,8 @@ def fit_jump_batch(features, lams, K=2, n_init=5, n_iter=30, seed=0, n_fit=None)
         loss = 0.5 * ((Xf[:, :, None, :] - C[:, None, :, :]) ** 2).sum(-1) * mask_fit[..., None]
         V = _jump_values(loss, mask_fit, lam)
         labels = _backtrack(V, lam, len_fit)
-        lab_t = torch.as_tensor(labels, device=get_device())
-        onehot = torch.nn.functional.one_hot(lab_t, K).to(DTYPE) * mask_fit[..., None]
+        lab_t = torch.as_tensor(labels).to(get_device())
+        onehot = torch.nn.functional.one_hot(lab_t, K).to(get_dtype()) * mask_fit[..., None]
         cnt = onehot.sum(1)
         newC = torch.einsum('btk,btd->bkd', onehot, Xf) / cnt.clamp_min(1)[..., None]
         C = torch.where(cnt[..., None] > 0, newC, C)
@@ -328,7 +380,7 @@ def fit_jump_batch(features, lams, K=2, n_init=5, n_iter=30, seed=0, n_fit=None)
     # online (real-time) labels over all rows with the fitted centroids
     Cbest = _t(np.stack([o['centroids'] for o in out]))
     Xall = _t(F)
-    mask_all = torch.as_tensor(np.arange(T)[None, :] < lengths_all[:, None], device=get_device())
+    mask_all = _mask_t(np.arange(T)[None, :] < lengths_all[:, None])
     loss = 0.5 * ((Xall[:, :, None, :] - Cbest[:, None, :, :]) ** 2).sum(-1) * mask_all[..., None]
     V = _jump_values(loss, mask_all, _t(np.asarray(lams, float)))
     online = V.argmin(-1).cpu().numpy()

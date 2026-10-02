@@ -11,8 +11,8 @@ pandas-datareader>=0.10.0
 statsmodels>=0.14.0
 
 # Regime identification (src/regime_identification.py, src/gpu_regimes.py)
-# torch runs on the CPU by default. For an NVIDIA GPU, install a CUDA build, e.g.
-#   pip install torch --index-url https://download.pytorch.org/whl/cu126
+# On an Apple-silicon Mac the standard wheel includes the GPU (MPS) backend:
+#   pip install torch   (use a native arm64 Python, not one running under Rosetta)
 torch>=2.1
 ruptures>=1.1
 arch>=6.0

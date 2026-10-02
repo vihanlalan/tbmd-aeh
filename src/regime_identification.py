@@ -7,10 +7,10 @@ Can market regimes be identified objectively, and how accurately?
     python src/regime_identification.py            # full run, writes outputs/regimes/
     python src/regime_identification.py --quick    # smoke test, writes outputs/regimes_quick/
 
-Options: --device {auto,cuda,cpu}  --n-sim N  --chunk N
-The HMM and jump-model fits run in batches on the GPU through CUDA when one
-is available (see gpu_regimes.py); PELT, GARCH and bear-market dating run on
-the CPU.
+Options: --device {auto,mps,cpu}  --float32  --n-sim N  --chunk N
+The HMM and jump-model fits run in batches on a MacBook's Apple-silicon GPU
+(PyTorch MPS backend, float32) when one is available, otherwise on the CPU in
+float64 (see gpu_regimes.py); PELT, GARCH and bear-market dating run on the CPU.
 
 Part A  Simulation with known regimes: ex-post and real-time accuracy of
         each method, and whether methods find regimes when none exist.
@@ -45,7 +45,7 @@ ROOT = os.path.join(os.path.dirname(__file__), '..')
 CACHE = os.path.join(ROOT, 'data', 'cache')
 OUT = os.path.join(ROOT, 'outputs', 'regimes')
 N_SIM = 100          # simulation replications per DGP (--n-sim)
-CHUNK = 16           # series per GPU batch (--chunk); lower it if GPU memory runs out
+CHUNK = 16           # series per GPU batch (--chunk); lower it if the Mac runs out of memory
 QUICK = False
 B4_FIRST_YEAR = 1970
 JM_LAMBDAS = (10.0, 30.0, 100.0)
@@ -586,14 +586,16 @@ def part_c(r, labels, p2, p3):
 def main(argv=None):
     global OUT, N_SIM, CHUNK, QUICK, B4_FIRST_YEAR
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument('--device', choices=['auto', 'cuda', 'cpu'], default='auto')
+    ap.add_argument('--device', choices=['auto', 'mps', 'cpu'], default='auto',
+                    help='auto = Apple GPU (MPS) if available, else CPU')
+    ap.add_argument('--float32', action='store_true',
+                    help='use float32 on the CPU too (reproduces the MPS precision)')
     ap.add_argument('--n-sim', type=int, default=N_SIM, help='simulation replications per DGP')
     ap.add_argument('--chunk', type=int, default=CHUNK, help='series per GPU batch')
     ap.add_argument('--quick', action='store_true',
                     help='smoke test: 1990+ data, 2 replications, real-time refits for 2023-2025 only')
     a = ap.parse_args(argv)
-    if a.device != 'auto':
-        G.set_device(a.device)
+    G.set_device(None if a.device == 'auto' else a.device, 'float32' if a.float32 else None)
     N_SIM, CHUNK, QUICK = a.n_sim, a.chunk, a.quick
     r = load_returns()
     if QUICK:
