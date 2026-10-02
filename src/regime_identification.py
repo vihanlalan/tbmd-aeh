@@ -453,15 +453,17 @@ def part_b(r):
     print('\n', par.to_string())
 
     p2, sm2 = fitted[2]
+    p3, sm3 = fitted[3]
     hmm2 = (sm2[:, 1] > 0.5).astype(int)
-    hmm3 = fitted[3][1].argmax(1)
+    hmm3 = sm3.argmax(1)
 
     # B3. Agreement across methods (ex post)
     labels = pd.DataFrame(index=idx)
     labels['HMM-2 (vol regime)'] = hmm2
     labels['HMM-3 top state'] = (hmm3 == 2).astype(int)
     for lam, (ep, _) in zip(JM_LAMBDAS, fit_jump_many([x] * len(JM_LAMBDAS), list(JM_LAMBDAS))):
-        labels[f'Jump model λ={lam:g}'] = ep
+        col_name = f'Jump model λ={lam:g}'
+        labels[col_name] = ep
     cp, n_bk = changepoint_labels(x)
     labels['Change-point (PELT)'] = cp
     px = np.exp(np.cumsum(x / 100))
@@ -470,12 +472,21 @@ def part_b(r):
     labels['NBER recession'] = (rec.reindex(idx, method='ffill') == 1).astype(int)
     vix = pd.read_csv(os.path.join(CACHE, 'index_close.csv'), index_col=0, parse_dates=True)['^VIX']
     labels['VIX ≥ 20 (2005+)'] = (vix.reindex(idx) >= 20).astype(float).where(vix.reindex(idx).notna())
+
+    # Ensure unique columns before metrics
+    labels = labels.loc[:, ~labels.columns.duplicated()]
     labels.to_csv(os.path.join(OUT, 'real_labels_ex_post.csv'))
     cols = labels.columns
     kap = pd.DataFrame(index=cols, columns=cols, dtype=float)
     for a in cols:
         for b in cols:
+            if a == b:
+                kap.loc[a, b] = 1.0
+                continue
             d = labels[[a, b]].dropna()
+            if len(d) < 2:
+                kap.loc[a, b] = np.nan
+                continue
             kap.loc[a, b] = cohen_kappa_score(d[a].astype(int), d[b].astype(int))
     kap = kap.round(2)
     kap.to_csv(os.path.join(OUT, 'real_agreement_kappa.csv'))

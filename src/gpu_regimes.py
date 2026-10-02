@@ -175,7 +175,7 @@ def _estep(x, mask, logpi, logA, mu, var):
     log_xi = alpha[:, :-1, :, None] + M + beta[:, 1:, None, :] - logZs[:, None, None, None]
     log_xi = torch.where(mask[:, 1:, None, None], log_xi, torch.tensor(-math.inf, dtype=alpha.dtype, device=x.device))
     # offsets summed in float64 on the CPU so the likelihood keeps full precision
-    logZ = logZs.double().cpu() + c.double().cpu().sum(1)
+    logZ = logZs.cpu().double() + c.cpu().double().sum(1)
     return log_gamma.exp() * mask[..., None], torch.logsumexp(log_xi, dim=1), logZ
 
 
@@ -271,7 +271,7 @@ def hmm_filter_batch(series, params, priors=None):
     log_filt = torch.log_softmax(alpha, dim=-1)
     log_pred = torch.cat([logpi[:, None], _log_matmul(log_filt[:, :-1, None, :], logA[:, None])[:, :, 0]], dim=1)
     log_pred = log_pred - torch.logsumexp(log_pred, dim=-1, keepdim=True)
-    lpd = (torch.logsumexp(log_pred + logb, dim=-1).double().cpu() + c.double().cpu())
+    lpd = (torch.logsumexp(log_pred + logb, dim=-1).cpu().double() + c.cpu().double())
     res = []
     for i, s in enumerate(series):
         L = len(s)

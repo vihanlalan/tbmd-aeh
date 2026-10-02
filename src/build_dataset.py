@@ -38,7 +38,7 @@ DAX40_TICKERS = [
     'RHM.DE', 'RWE.DE', 'SAP.DE', 'SRT3.DE', 'SIE.DE', 'ENR.DE', 'SHL.DE',
     'SY1.DE', 'VNA.DE', 'VOW3.DE', 'ZAL.DE', '1COV.DE',
 ]
-INDEX_TICKERS = ['SPY', '^GSPC', '^GDAXI', '^VIX', '^V2TX']
+INDEX_TICKERS = ['SPY', '^GSPC', '^GDAXI', '^VIX']
 
 
 def download(tickers):
