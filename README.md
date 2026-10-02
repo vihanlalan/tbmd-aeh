@@ -38,6 +38,18 @@ python src/build_paper.py          # regenerates the manuscript from those outpu
 
 Yahoo Finance data is not redistributed. The paper's results use data downloaded on 26 September 2026, and re-downloads may differ slightly because of revisions to adjusted prices.
 
+## Regime identification (work in progress, GPU)
+
+`src/regime_identification.py` asks whether market regimes can be identified objectively, and how accurately. It uses simulations with known regimes, S&P 500 data from 1950 to 2025, agreement across methods, and comparisons of real-time and ex-post labels. The HMM and jump-model fits are batched in PyTorch (`src/gpu_regimes.py`) and run on an NVIDIA GPU through CUDA when one is available, otherwise on the CPU.
+
+```bash
+python src/validate_gpu_regimes.py                 # checks against hmmlearn / jumpmodels
+python src/regime_identification.py --quick        # smoke test -> outputs/regimes_quick/
+python src/regime_identification.py --device cuda  # full run -> outputs/regimes/
+```
+
+No results from the full run are reported yet.
+
 ## Files
 
 - `src/build_dataset.py`: data download and cache.

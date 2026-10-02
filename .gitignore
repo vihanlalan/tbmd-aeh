@@ -38,3 +38,6 @@ tbmd_multiple_testing.png
 # Downloaded market data (Yahoo Finance data is not redistributable)
 data/cache/
 outputs/paper_run.log
+outputs/regimes_run.log
+outputs/regimes_quick_run.log
+outputs/regimes_quick/
