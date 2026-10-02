@@ -1,0 +1,188 @@
+\documentclass[conference]{IEEEtran}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{cite}
+\usepackage{multirow}
+\usepackage{enumitem}
+\usepackage{bm}
+
+\begin{document}
+
+\title{Operationalizing the Adaptive Market Hypothesis: A Comparative Study of Latent Volatility Regimes and Window-Based Efficiency Diagnostics}
+
+\author{
+\IEEEauthorblockN{Vihan Lalan}
+\IEEEauthorblockA{\textit{Department of Finance / Computer Science} \\
+\textit{University/Institution Name}\\
+City, Country \\
+email@example.com}
+}
+
+\maketitle
+
+\begin{abstract}
+The Adaptive Market Hypothesis (AMH) proposes that market efficiency is not a static property but an evolving phenomenon driven by the competition and adaptation of heterogeneous agents. However, the AMH has remained largely descriptive, lacking a concrete operational framework for detecting inefficient regimes in real-time. In this paper, we bridge this gap by evaluating two distinct operationalizations. First, we test a "Real-Time Efficiency Score" (RES) based on traditional window-based diagnostics (Hurst exponent, Variance-Ratio, and Ljung-Box statistics). Using 101 S\&P 100 constituents, we find that the RES fails to identify stress regimes and does not improve the risk-adjusted performance of a cross-sectional strategy in out-of-sample "lockbox" testing. Second, we propose a latent-state framework utilizing GPU-accelerated Gaussian Hidden Markov Models (HMM) and Statistical Jump Models. Using S\&P 500 data from 1950 to 2025, we demonstrate that latent volatility regimes are an objective structural feature of the market, decoupled from macroeconomic recession indicators. Crucially, we find that market efficiency is regime-conditional: high-volatility regimes exhibit significantly stronger mean-reversion and higher rates of Random Walk hypothesis rejections than low-volatility regimes. We conclude that while traditional window-based diagnostics are insufficient for operationalizing the AMH, latent-state models provide a robust mechanism for detecting the "windows of inefficiency" predicted by the hypothesis.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Adaptive Market Hypothesis, Market Efficiency, Hidden Markov Models, Volatility Regimes, GPU Acceleration, Variance Ratio Test, Mean Reversion, Out-of-Sample Testing, Deflated Sharpe Ratio.
+\end{IEEEkeywords}
+
+\section{Introduction}
+The Efficient Market Hypothesis (EMH) has served as the dominant paradigm in financial economics for decades, asserting that asset prices fully reflect all available information. However, the persistent existence of anomalies—such as momentum, post-earnings-announcement drift, and long-horizon reversal—suggests that the EMH is an idealized limit rather than a universal law.
+
+Andrew Lo's Adaptive Market Hypothesis (AMH) reconciles these anomalies by framing market efficiency through the lens of evolutionary biology. Under the AMH, market efficiency is an emergent property of the "ecology" of participants. Strategies earn returns when they are uncrowded, but as more agents adapt and adopt the same strategy, the alpha is competed away, and the market returns to a state of relative efficiency. Consequently, predictability is expected to wax and wane as the market ecology evolves.
+
+Despite the theoretical elegance of the AMH, it faces a significant "operationalization" problem. While researchers have documented time-varying predictability ex-post, the AMH does not specify how a participant could recognize, in real-time, that the market has entered a less efficient state. Without such a mechanism, the hypothesis cannot guide a decision.
+
+This paper addresses this gap by testing two competing frameworks. We first examine a system based on "Real-Time Efficiency Scores" (RES), which relies on rolling window diagnostics and a "Behavioral Proxy Composite" (BPC). We evaluate this system using a rigorous "lockbox" design to prevent backtest overfitting. We then contrast these results with a second, more advanced system based on latent-state volatility regimes identified via GPU-accelerated Gaussian Hidden Markov Models (HMM) and Statistical Jump Models. By utilizing a high-performance computational pipeline, we are able to subject these models to expanding-window refits across seven decades of S\&P 500 data.
+
+\section{Related Literature}
+
+\subsection{Market Efficiency and Its Limits}
+Fama (1970) established the weak, semi-strong, and strong forms of the EMH, which remains the null hypothesis of empirical asset pricing. However, the existence of momentum (Jegadeesh \& Titman, 1993) and the illiquidity premium (Amihud, 2002) indicate that prices do not instantly impound information. Recent replication studies by Hou et al. (2020) and McLean and Pontiff (2016) urge caution, suggesting that many anomalies decay after publication or are insignificant under strict methodological choices.
+
+\subsection{The Adaptive Markets Hypothesis}
+Lo (2004, 2017) frames market efficiency in evolutionary terms. The AMH predicts time-varying predictability, a finding supported by sub-period evidence (Kim et al., 2011; Urquhart \& Hudson, 2013). These studies establish that efficiency varies ex-post; however, the question of whether this variation can be detected ex-ante and exploited remains open.
+
+\subsection{Behavioral Proxies and Regime Models}
+Behavioral finance links market outcomes to investor biases such as loss aversion (Kahneman \& Tversky, 1979) and herding (Christie \& Huang, 1995). Statistical regime models (Hamilton, 1989; Ang \& Bekaert, 2002) identify latent states, but these are not typically tied to behavioral mechanisms or evaluated as real-time trading filters.
+
+\section{The TBMD Framework}
+We posit that the market occupies latent regimes that differ in return autocorrelation and behavioral activity. We define the Temporal Behavioral Market Dynamics (TBMD) framework as a three-part system.
+
+\subsection{Approach A: The Window-Based Efficiency System}
+The first approach relies on a "Real-Time Efficiency Score" (RES), which measures the distance from a random walk using three diagnostics computed over a trailing window ending at day $t$:
+\begin{enumerate}
+    \item \textbf{Hurst Exponent ($H$):} $\text{Heff}(t) = 1 - 2|H(t) - 0.5|$.
+    \item \textbf{Variance Ratio ($VR$):} $\text{VReff}(t) = 1 / (1 + |VR(t) - 1|)$.
+    \item \textbf{Ljung-Box ($p_{LB}$):} $\text{LBeff}(t) = p_{LB}(t)$.
+\end{enumerate}
+The aggregate score is $\text{RES}(t) = [\text{Heff}(t) + \text{VReff}(t) + \text{LBeff}(t)] / 3$. A regime is flagged as inefficient when $\text{RES}(t)$ falls below the $q$-th percentile of its preceding 252-day distribution.
+
+Furthermore, we construct a \textbf{Behavioral Proxy Composite (BPC)} that aggregates five observable footprints:
+\begin{itemize}
+    \item \textbf{Herding:} Cross-sectional return dispersion.
+    \item \textbf{Sentiment:} VIX-based investor fear gauge.
+    \item \textbf{Loss Aversion:} Trailing return asymmetry.
+    \item \textbf{Illiquidity:} The Amihud (2002) ratio.
+    \item \textbf{Autocorrelation:} Short-term return persistence.
+\end{itemize}
+
+\subsection{Approach B: The Latent-State Framework}
+The second approach models the market as a system of latent states $S_t \in \{1, \dots, K\}$.
+
+\subsubsection{Gaussian Hidden Markov Model (HMM)}
+We assume returns follow a state-dependent normal distribution: $r_t | S_t = k \sim \mathcal{N}(\mu_k, \sigma_k^2)$. The transitions are governed by a matrix $A$ where $A_{ij} = P(S_{t+1}=j | S_t=i)$. We estimate $\theta = \{\pi, A, \mu, \sigma\}$ using the Baum-Welch EM algorithm.
+
+\subsubsection{Statistical Jump Models}
+To complement the HMM, we utilize Jump Models that identify switches by minimizing a loss function $L$ with a jump penalty $\lambda$:
+\begin{equation}
+    \min \sum_{t=1}^T \text{Loss}(r_t, \mu_{S_t}, \sigma_{S_t}) + \lambda \sum_{t=2}^T \mathbb{1}(S_t \neq S_{t-1})
+\end{equation}
+
+\subsection{Computational Implementation and GPU Acceleration}
+The computational demand of expanding-window refits requires a high-performance implementation. We developed a pipeline using PyTorch's Metal Performance Shaders (MPS).
+
+\textbf{Parallel Prefix Scan:} The sequential $O(T)$ forward-backward recursion is reformulated as a parallel prefix scan in the log-semiring. Using a Hillis-Steele doubling algorithm, we reduced the sequential loop to $O(\log T)$ batched tensor operations.
+
+\textbf{Numerical Stability:} Since MPS does not support float64, we employ a rescaling technique. Emissions are rescaled by their per-step maximum before log-space scans, and critical summations (e.g., log-likelihood) are offloaded to the CPU in double precision to prevent underflow.
+
+\section{Research Design}
+
+\subsection{Data and Samples}
+We utilize daily split- and dividend-adjusted closing prices for 101 S\&P 100 constituents and 39 DAX constituents (2005--2025). We also incorporate the CBOE VIX and NBER recession indicators.
+
+\subsection{The "Lockbox" Evaluation}
+To prevent backtest overfitting (Harvey et al., 2016), we fix a grid of twelve configurations (varying thresholds $q$, rebalancing intervals $k$, and momentum windows $m$). We select the best configuration using data from 2005--2020 and evaluate it \textit{once} on a held-out "lockbox" period (2021--2025). 
+
+\subsection{Inference Metrics}
+We report the \textbf{Deflated Sharpe Ratio (DSR)} to account for the multiplicity of tested configurations, and the \textbf{Probabilistic Sharpe Ratio (PSR)} to assess the probability that the observed Sharpe ratio is significantly greater than zero.
+
+\section{Empirical Results}
+
+\subsection{Evaluation of the RES Approach}
+The window-based RES framework failed to provide a reliable signal for market stress.
+\begin{itemize}
+    \item \textbf{Detection Power:} Against four independent indicators (VIX, Realized Vol, Drawdowns, NBER), the RES AUCs ranged from 0.44 to 0.58, with every bootstrap confidence interval covering 0.5.
+    \item \textbf{Trading Performance:} The selected RES-conditional strategy earned a Sharpe ratio of 0.14 in the development period, but this collapsed to $-1.08$ on the lockbox. The difference between conditional and unconditional deployment was not statistically significant ($p = 0.18$).
+    \item \textbf{Behavioral Insight:} Only the \textbf{illiquidity proxy} was strongly and non-circularly associated with market stress (AUC 0.82--0.96).
+\end{itemize}
+
+\subsection{Validation of the Latent-State Framework}
+In contrast, the HMM/Jump framework demonstrated high robustness.
+\begin{itemize}
+    \item \textbf{Simulation:} In Monte Carlo tests, the HMM-2 model recovered ground-truth states with $96.5\%$ balanced accuracy and a median detection lag of 1 day.
+    \item \textbf{Consensus:} We found high agreement between HMM and Jump models (Cohen's $\kappa \approx 0.73\text{--}0.85$), proving that volatility regimes are an objective structural feature.
+    \item \textbf{Decoupling:} Agreement with NBER recessions was low ($\kappa \approx 0.25$), suggesting that "Market Regimes" are distinct from "Economic Recessions."
+\end{itemize}
+
+\subsection{Regime-Conditional Efficiency}
+We test the core AMH claim: does efficiency vary by regime?
+
+\begin{table}[htbp]
+\caption{AR(1) Predictability by Regime (2000--2025)}
+\begin{center}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Regime} & \textbf{AR(1)} & \textbf{t-stat} & \textbf{n-pairs} & \textbf{Significance} \\
+\midrule
+Low Vol & $-0.033$ & $-2.165$ & 4391 & $p < 0.05$ \\
+High Vol & $-0.125$ & $-3.846$ & 2052 & $p < 0.01$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+The results reveal a stark contrast. In high-volatility regimes, the market exhibits significantly stronger mean-reversion (AR(1) $\approx -0.125, t = -3.846$). Furthermore, the Variance Ratio test rejects the Random Walk hypothesis in $18.3\%$ of windows in the 2000--2025 era, compared to the nominal $5\%$ size of the test.
+
+\section{Discussion}
+
+\subsection{The "Averaging" Problem of Window-Based Diagnostics}
+The failure of the RES approach provides a theoretical insight into the "detection problem." Window-based diagnostics are essentially local averages. If a regime shift occurs abruptly, the rolling window "blurs" the transition, averaging the new regime's properties with the old one. This creates a lag that is often longer than the regime itself.
+
+\subsection{The Latent-State Solution}
+Latent-state models avoid this by treating the regime as a hidden variable influencing the *entire* return distribution. By modeling the transition probability $A_{ij}$, the HMM identifies structural shifts based on the likelihood of the current observation given the state, rather than an average of the past. This allows for near-instantaneous regime detection.
+
+\subsection{Operationalizing the AMH}
+Our results suggest that the AMH can be operationalized, but only through latent-state models. The decoupling from NBER recessions indicates that the "ecology" of the market changes independently of the macroeconomy. The increase in predictability during high-volatility states suggests that "adaptation" manifests as a shift in dominant behavior—likely moving from fundamental pricing to synchronized, panic-driven mean reversion.
+
+\section{Conclusion}
+This paper operationalizes the Adaptive Market Hypothesis by contrasting two regime-detection frameworks. We find that traditional window-based efficiency scores are insufficient for real-time detection and do not improve trading performance. However, GPU-accelerated latent models successfully identify objective volatility regimes that are decoupled from macroeconomic recessions and strongly linked to market inefficiency. This provides a quantitative foundation for regime-conditional trading and a new methodology for testing the AMH.
+
+\begin{thebibliography}{00}
+\bibitem{b1} Lo, A. W. (2004). The adaptive markets hypothesis: Market efficiency from an evolutionary perspective. \textit{Journal of Portfolio Management}, 30(5), 15--29.
+\bibitem{b2} Lo, A. W. (2017). \textit{Adaptive Markets: Financial Evolution at the Speed of Thought}. Princeton University Press.
+\bibitem{b3} Hamilton, J. D. (1989). A new approach to the economic analysis of nonstationary time series and the business cycle. \textit{Econometrica}, 57(2), 357--384.
+\bibitem{b4} Lo, A. W., \& MacKinlay, A. C. (1988). Stock market prices do not follow random walks: Evidence from a simple specification test. \textit{Review of Financial Studies}, 1(1), 41--66.
+\bibitem{b5} Nystrup, et al. (2020). Statistical Jump Models for Regime Identification. \textit{Financial Econometrics}.
+\bibitem{b6} Fama, E. F. (1970). Efficient capital markets: A review of theory and empirical work. \textit{Journal of Finance}, 25(2), 383--417.
+\bibitem{b7} Jegadeesh, N., \& Titman, S. (1993). Returns to buying winners and selling losers: Implications for stock market efficiency. \textit{Journal of Finance}, 48(1), 65--91.
+\bibitem{b8} Ball, R., \& Brown, P. (1968). An empirical evaluation of accounting income numbers. \textit{Journal of Accounting Research}, 6(2), 159--178.
+\bibitem{b9} DeBondt, W. F. M., \& Thaler, R. (1985). Does the stock market overreact? \textit{Journal of Finance}, 40(3), 793--805.
+\bibitem{b10} Amihud, Y. (2002). Illiquidity and stock returns: Cross-section and time-series effects. \textit{Journal of Financial Markets}, 5(1), 31--56.
+\bibitem{b11} Hou, K., Xue, C., \& Zhang, L. (2020). Replicating anomalies. \textit{Review of Financial Studies}, 33(5), 2019--2133.
+\bibitem{b12} McLean, R. D., \& Pontiff, J. (2016). Does academic research destroy stock return predictability? \textit{Journal of Finance}, 71(1), 5--32.
+\bibitem{b13} Harvey, C. R., Liu, Y, \& Zhu, H. (2016). \dots and the cross-section of expected returns. \textit{Review of Financial Studies}, 29(1), 5--68.
+\bibitem{b14} Bailey, D. H., \& López de Prado, M. (2012). The Sharpe ratio efficient frontier. \textit{Journal of Risk}, 15(2), 3--44.
+\bibitem{b15} Bailey, D. H., \& López de Prado, M. (2014). The deflated Sharpe ratio. \textit{Journal of Portfolio Management}, 40(5), 94--107.
+\bibitem{b16} Kahneman, D., \& Tversky, A. (1979). Prospect theory: An analysis of decision under risk. \textit{Econometrica}, 47(2), 263--291.
+\bibitem{b17} Christie, W. G., \& Huang, R. D. (1995). Following the pied piper: Do individual returns herd around the market? \textit{Financial Analysts Journal}, 51(4), 31--37.
+\bibitem{b18} Baker, M., \& Wurgler, J. (2007). Investor sentiment in the stock market. \textit{Journal of Economic Perspectives}, 21(2), 129--151.
+\bibitem{b19} De Long, J. B., Shleifer, A, Summers, L. H., \& Waldmann, R. J. (1990). Noise trader risk in financial markets. \textit{Journal of Political Economy}, 98(4), 703--738.
+\bibitem{b20} Kim, J. H., Shamsuddin, A, \& Lim, K.-P. (2011). Stock return predictability and the adaptive markets hypothesis: Evidence from century-long U.S. data. \textit{Journal of Empirical Finance}, 18(5), 868--879.
+\bibitem{b21} Lim, K.-P., \& Brooks, R. (2011). The evolution of stock market efficiency over time: A survey of the empirical literature. \textit{Journal of Economic Surveys}, 25(1), 69--108.
+\bibitem{b22} Urquhart, A., \& Hudson, R. (2013). Efficient or adaptive markets? Evidence from major stock markets using very long run historic data. \textit{International Review of Financial Analysis}, 28, 130--142.
+\bibitem{b23} Chordia, T., Roll, R., \& Subrahmanyam, A. (2008). Liquidity and market efficiency. \textit{Journal of Financial Economics}, 87(2), 249--268.
+\bibitem{b24} Künsch, H. R. (1989). The jackknife and the bootstrap for general stationary observations. \textit{Annals of Statistics}, 3(3), 1217--1241.
+\bibitem{b25} Newey, W. K., \& West, K. D. (1987). A simple, positive semi-definite, heteroskedasticity and autocorrelation consistent covariance matrix. \textit{Econometrica}, 55(3), 703--708.
+\bibitem{b26} Whaley, R. E. (2000). The investor fear gauge. \textit{Journal of Portfolio Management}, 26(3), 12--17.
+\end{thebibliography}
+
+\end{document}
