@@ -59,7 +59,20 @@ def quiet(fn, *a, **k):
         return fn(*a, **k)
 
 
+REQUIRED_FILES = ('gspc_long.csv', 'index_close.csv', 'usrec.csv')
+
+
+def ensure_data():
+    """Download the S&P 500 / VIX / NBER files on first use if data/cache lacks them."""
+    missing = [f for f in REQUIRED_FILES if not os.path.exists(os.path.join(CACHE, f))]
+    if missing:
+        print(f'data/cache is missing {missing}; downloading (Yahoo Finance, FRED)...')
+        import build_dataset
+        build_dataset.main(regimes_only=True)
+
+
 def load_returns():
+    ensure_data()
     px = pd.read_csv(os.path.join(CACHE, 'gspc_long.csv'), index_col=0, parse_dates=True)['Close']
     return (100 * np.log(px).diff()).dropna()
 
