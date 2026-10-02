@@ -6,6 +6,7 @@ downstream analysis runs from a fixed, dated snapshot.
 
     python src/build_dataset.py                  # everything
     python src/build_dataset.py --regimes-only   # only what regime_identification.py needs
+                                                 # (gspc_long.csv, vix_long.csv, usrec.csv)
 
 Writes to data/cache/:
     us_close.csv, us_volume.csv   S&P 100 current constituents (Yahoo Finance, adjusted)
@@ -74,13 +75,8 @@ def main(regimes_only=False):
     lines = [f'Downloaded {dt.datetime.now().isoformat(timespec="seconds")}',
              f'Requested window {START} to {END}']
     if regimes_only:
-        lines.append(download_gspc_long())
-        idx, _ = download(INDEX_TICKERS)
-        idx.to_csv(os.path.join(CACHE, 'index_close.csv'))
-        rec = fred('USREC')
-        rec.to_csv(os.path.join(CACHE, 'usrec.csv'))
-        lines += [f'indices available: {list(idx.columns)}', f'USREC: {rec.index[0].date()} to {rec.index[-1].date()}']
-        print('\n'.join(lines))
+        from regime_identification import download_regime_data
+        download_regime_data(CACHE)
         return
 
     # Marsh McLennan now trades as MRSH; Yahoo returns no history under MMC.

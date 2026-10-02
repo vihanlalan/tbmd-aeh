@@ -10,7 +10,7 @@ reference packages on real S&P 500 returns:
   * Jump model (lambda = 10, 30, 100) vs jumpmodels: objective, ex-post and
     online labels.
 
-    python src/validate_gpu_regimes.py [--device mps] [--float32] [--n 5000]
+    python src/validate_gpu_regimes.py [--device cuda|mps|cpu] [--float32] [--n 5000]
 """
 
 import argparse
@@ -36,17 +36,15 @@ def numpy_filter(x, p):
     return filt, lpd
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument('--device', choices=['auto', 'mps', 'cpu'], default='auto')
-    ap.add_argument('--float32', action='store_true', help='float32 on the CPU (MPS precision)')
-    ap.add_argument('--n', type=int, default=5000, help='most recent observations used')
-    a = ap.parse_args()
-    G.set_device(None if a.device == 'auto' else a.device, 'float32' if a.float32 else None)
+def run_checks(x):
+    """All checks on the return series x. Returns (all_passed, list of result rows)."""
     f32 = G.get_dtype() == G.torch.float32
-    print('Device:', G.device_summary())
-    x = load_returns().values[-a.n:]
-    ok = True
+    tol = 1e-4 if f32 else 1e-8
+    rows = []
+
+    def add(check, torch_value, reference, passed):
+        rows.append({'check': check, 'torch': torch_value, 'reference': reference, 'passed': bool(passed)})
+        print(f'  [{"pass" if passed else "FAIL"}] {check}: torch {torch_value} | reference {reference}')
 
     for k in (2, 3):
         m = GaussianHMM(n_components=k, covariance_type='full', n_iter=300, tol=1e-6, random_state=0)
@@ -59,19 +57,18 @@ def main():
         kap = cohen_kappa_score(ref_smoothed.argmax(1), g['smoothed'].argmax(1))
         f_np, lpd_np = numpy_filter(x, g)
         filt_err = np.abs(f_np - g['filtered']).max()
-        f_t, lpd_t = G.hmm_filter_batch([x], [g])[0]
+        _, lpd_t = G.hmm_filter_batch([x], [g])[0]
         lpd_err = (np.abs(lpd_np - lpd_t) / (1 + np.abs(lpd_np))).max()   # relative error
-        print(f'HMM K={k}: loglik hmmlearn {ll_ref:.2f} torch {g["loglik"]:.2f} | sd {np.round(sd_ref, 3)} vs '
-              f'{np.round(g["sd"], 3)} | state kappa {kap:.4f} | max filter error {filt_err:.1e} | '
-              f'max predictive log density rel. error {lpd_err:.1e}')
-        tol = 1e-4 if f32 else 1e-8
-        ok &= g['loglik'] >= ll_ref - 0.5 and kap > 0.95 and filt_err < tol and lpd_err < tol
+        add(f'HMM K={k} log likelihood (hmmlearn)', round(g['loglik'], 2), round(ll_ref, 2), g['loglik'] >= ll_ref - 0.5)
+        add(f'HMM K={k} state sd', np.round(g['sd'], 3).tolist(), np.round(sd_ref, 3).tolist(), True)
+        add(f'HMM K={k} smoothed-state kappa vs hmmlearn', round(kap, 4), '> 0.95', kap > 0.95)
+        add(f'HMM K={k} filter max abs error vs numpy', f'{filt_err:.1e}', f'< {tol:g}', filt_err < tol)
+        add(f'HMM K={k} predictive density max rel. error vs numpy', f'{lpd_err:.1e}', f'< {tol:g}', lpd_err < tol)
 
     short = x[:1500]
     alone = G.fit_hmm_batch([short], 2, n_init=4)[0]['loglik']
     batched = G.fit_hmm_batch([x, short], 2, n_init=4)[1]['loglik']
-    print(f'Padded batching: short series alone {alone:.4f}, in batch {batched:.4f}')
-    ok &= abs(alone - batched) < 0.5
+    add('Padded batching: short series in batch vs alone', round(batched, 4), round(alone, 4), abs(alone - batched) < 0.5)
 
     X = jm_features(x)
     for lam in (10.0, 30.0, 100.0):
@@ -82,11 +79,24 @@ def main():
         g = G.fit_jump_batch([X], [lam], n_init=5)[0]
         k_ep = cohen_kappa_score(high_vol_labels(lr, x), high_vol_labels(g['ex_post'], x))
         k_on = cohen_kappa_score(high_vol_labels(np.asarray(jm.predict_online(X)), x), high_vol_labels(g['online'], x))
-        print(f'Jump λ={lam:g}: objective jumpmodels {obj_ref:.1f} torch {g["objective"]:.1f} | '
-              f'kappa ex post {k_ep:.4f}, online {k_on:.4f}')
-        ok &= g['objective'] <= obj_ref + (1e-5 if f32 else 1e-9) * abs(obj_ref) and k_ep > 0.95 and k_on > 0.95
+        add(f'Jump λ={lam:g} objective (jumpmodels)', round(g['objective'], 2), round(obj_ref, 2),
+            g['objective'] <= obj_ref + (1e-5 if f32 else 1e-9) * abs(obj_ref))
+        add(f'Jump λ={lam:g} ex-post / online label kappa vs jumpmodels', f'{k_ep:.4f} / {k_on:.4f}', '> 0.95',
+            k_ep > 0.95 and k_on > 0.95)
+    ok = all(r['passed'] for r in rows)
+    print('  ALL CHECKS PASSED' if ok else '  SOME CHECKS FAILED')
+    return ok, rows
 
-    print('ALL CHECKS PASSED' if ok else 'SOME CHECKS FAILED')
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument('--device', choices=['auto', 'cuda', 'mps', 'cpu'], default='auto')
+    ap.add_argument('--float32', action='store_true', help='float32 on the CPU (GPU precision)')
+    ap.add_argument('--n', type=int, default=5000, help='most recent observations used')
+    a = ap.parse_args()
+    G.set_device(None if a.device == 'auto' else a.device, 'float32' if a.float32 else None)
+    print('Device:', G.device_summary())
+    ok, _ = run_checks(load_returns().values[-a.n:])
     raise SystemExit(0 if ok else 1)
 
 

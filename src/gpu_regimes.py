@@ -2,15 +2,16 @@
 gpu_regimes.py
 --------------
 Batched, device-agnostic implementations of the regime models used in
-regime_identification.py. Runs on an Apple-silicon GPU (MacBook M1-M4)
-through PyTorch's Metal backend (MPS) when one is available and on the CPU
-otherwise.
+regime_identification.py. Device selection (automatic): an NVIDIA GPU through
+CUDA (e.g. Google Colab), an Apple-silicon GPU through PyTorch's Metal
+backend (MPS, MacBook M1-M4), otherwise the CPU.
 
-MPS has no float64, so on the GPU everything runs in float32. To keep that
-accurate over long series, emissions are rescaled by their per-step maximum
-before the log-space scans (the offsets are added back to the likelihood),
-and predictive densities are computed per step rather than by differencing
-a cumulative log likelihood.
+GPUs run in float32 (MPS has no float64; on CUDA float32 is much faster),
+the CPU in float64. To keep float32 accurate over long series, emissions are
+rescaled by their per-step maximum before the log-space scans (the offsets
+are added back to the likelihood in float64), and predictive densities are
+computed per step rather than by differencing a cumulative log likelihood.
+validate_gpu_regimes.py checks both precisions against hmmlearn/jumpmodels.
 
   * Gaussian hidden Markov model (Baum-Welch EM). The forward-backward
     recursion is computed with a parallel prefix scan in the log semiring,
@@ -44,21 +45,29 @@ def mps_available():
 def get_device():
     global _DEVICE
     if _DEVICE is None:
-        _DEVICE = torch.device('mps' if mps_available() else 'cpu')
+        if torch.cuda.is_available():
+            _DEVICE = torch.device('cuda')
+        elif mps_available():
+            _DEVICE = torch.device('mps')
+        else:
+            _DEVICE = torch.device('cpu')
     return _DEVICE
 
 
 def get_dtype():
-    """float32 on MPS (no float64 support there), float64 on the CPU unless overridden."""
+    """float32 on a GPU, float64 on the CPU, unless overridden with set_device."""
     if _DTYPE is not None:
         return _DTYPE
-    return torch.float32 if get_device().type == 'mps' else torch.float64
+    return torch.float64 if get_device().type == 'cpu' else torch.float32
 
 
 def set_device(name, dtype=None):
-    """name: 'mps', 'cpu', or None for automatic selection.
+    """name: 'cuda', 'mps', 'cpu', or None for automatic selection.
     dtype: 'float32' / 'float64' to override the default for the device."""
     global _DEVICE, _DTYPE
+    if name == 'cuda' and not torch.cuda.is_available():
+        raise RuntimeError('CUDA requested but torch.cuda.is_available() is False. In Colab: '
+                           'Runtime > Change runtime type > GPU.')
     if name == 'mps' and not mps_available():
         raise RuntimeError('MPS requested but torch.backends.mps.is_available() is False. '
                            'This needs an Apple-silicon Mac, macOS 12.3+ and an arm64 '
@@ -73,9 +82,11 @@ def set_device(name, dtype=None):
 def device_summary():
     d = get_device()
     prec = str(get_dtype()).replace('torch.', '')
+    if d.type == 'cuda':
+        return f'cuda ({torch.cuda.get_device_name(d)}, {prec})'
     if d.type == 'mps':
         return f'mps (Apple GPU, {platform.machine()}, {prec})'
-    return f'cpu ({prec}; no Apple GPU available)' if not mps_available() else f'cpu ({prec})'
+    return f'cpu ({prec}; no GPU available)'
 
 
 def _tiny():
