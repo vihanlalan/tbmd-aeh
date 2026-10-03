@@ -17,12 +17,16 @@
 
 \title{Adaptive Markets or Volatile Markets?\\ Regime Detection and Time-Varying Efficiency\\ in the S\&P 500, 1950--2025}
 
-% TODO: add affiliation and e-mail before submission.
 \author{
 \IEEEauthorblockN{Vihan Lalan}
-\IEEEauthorblockA{\textit{Affiliation} \\
-City, Country \\
-email@example.com}
+\IEEEauthorblockA{\textit{Dwarkadas J. Sanghvi College of Engineering} \\
+Mumbai, India \\
+vihanlalan1@gmail.com}
+\and
+\IEEEauthorblockN{Darsh Patel}
+\IEEEauthorblockA{\textit{Dwarkadas J. Sanghvi College of Engineering} \\
+Mumbai, India \\
+pateldarshm@gmail.com}
 }
 
 \maketitle
@@ -407,38 +411,38 @@ We asked whether objectively identified market regimes explain how efficiency ch
 All code is available at \url{https://github.com/vihanlalan/tbmd-aeh}. The results were produced by \texttt{src/regime\_identification.py} (repository version \texttt{8fa14df}; the follow-up analysis in Table~\ref{tab:race} by \texttt{volatility\_horse\_race} in the same file). Every table and figure can be regenerated from \texttt{outputs/regimes/} with \texttt{src/paper\_figures.py}. The S\&P 500 and VIX data are from Yahoo Finance and cannot be redistributed; the code downloads them.
 
 \begin{thebibliography}{00}
-\bibitem{fama1970} E. F. Fama, ``Efficient capital markets: A review of theory and empirical work,'' \textit{J. Finance}, vol. 25, no. 2, pp. 383--417, 1970.
-\bibitem{lo2004} A. W. Lo, ``The adaptive markets hypothesis: Market efficiency from an evolutionary perspective,'' \textit{J. Portfolio Manage.}, vol. 30, no. 5, pp. 15--29, 2004.
-\bibitem{lo2017} A. W. Lo, \textit{Adaptive Markets: Financial Evolution at the Speed of Thought}. Princeton, NJ, USA: Princeton Univ. Press, 2017.
-\bibitem{limbrooks2011} K.-P. Lim and R. Brooks, ``The evolution of stock market efficiency over time: A survey of the empirical literature,'' \textit{J. Econ. Surveys}, vol. 25, no. 1, pp. 69--108, 2011.
-\bibitem{kim2011} J. H. Kim, A. Shamsuddin, and K.-P. Lim, ``Stock return predictability and the adaptive markets hypothesis: Evidence from century-long U.S. data,'' \textit{J. Empirical Finance}, vol. 18, no. 5, pp. 868--879, 2011.
-\bibitem{urquhart2013} A. Urquhart and R. Hudson, ``Efficient or adaptive markets? Evidence from major stock markets using very long run historic data,'' \textit{Int. Rev. Financial Anal.}, vol. 28, pp. 130--142, 2013.
-\bibitem{hamilton1989} J. D. Hamilton, ``A new approach to the economic analysis of nonstationary time series and the business cycle,'' \textit{Econometrica}, vol. 57, no. 2, pp. 357--384, 1989.
-\bibitem{angtimmermann2012} A. Ang and A. Timmermann, ``Regime changes and financial markets,'' \textit{Annu. Rev. Financial Econ.}, vol. 4, pp. 313--337, 2012.
-\bibitem{nystrup2020} P. Nystrup, E. Lindstr\"om, and H. Madsen, ``Learning hidden Markov models with persistent states by penalizing jumps,'' \textit{Expert Syst. Appl.}, vol. 150, art. 113307, 2020.
-\bibitem{shu2024} Y. Shu, C. Yu, and J. M. Mulvey, ``Downside risk reduction using regime-switching signals: A statistical jump model approach,'' \textit{J. Asset Manage.}, 2024.
-\bibitem{killick2012} R. Killick, P. Fearnhead, and I. A. Eckley, ``Optimal detection of changepoints with a linear computational cost,'' \textit{J. Amer. Statist. Assoc.}, vol. 107, no. 500, pp. 1590--1598, 2012.
-\bibitem{lunde2004} A. Lunde and A. Timmermann, ``Duration dependence in stock prices: An analysis of bull and bear markets,'' \textit{J. Bus. Econ. Statist.}, vol. 22, no. 3, pp. 253--273, 2004.
-\bibitem{bollerslev1986} T. Bollerslev, ``Generalized autoregressive conditional heteroskedasticity,'' \textit{J. Econometrics}, vol. 31, no. 3, pp. 307--327, 1986.
-\bibitem{bollerslev1987} T. Bollerslev, ``A conditionally heteroskedastic time series model for speculative prices and rates of return,'' \textit{Rev. Econ. Statist.}, vol. 69, no. 3, pp. 542--547, 1987.
-\bibitem{lamoureux1990} C. G. Lamoureux and W. D. Lastrapes, ``Persistence in variance, structural change, and the GARCH model,'' \textit{J. Bus. Econ. Statist.}, vol. 8, no. 2, pp. 225--234, 1990.
-\bibitem{hamiltonsusmel1994} J. D. Hamilton and R. Susmel, ``Autoregressive conditional heteroskedasticity and changes in regime,'' \textit{J. Econometrics}, vol. 64, no. 1--2, pp. 307--333, 1994.
-\bibitem{gray1996} S. F. Gray, ``Modeling the conditional distribution of interest rates as a regime-switching process,'' \textit{J. Financial Econ.}, vol. 42, no. 1, pp. 27--62, 1996.
-\bibitem{klaassen2002} F. Klaassen, ``Improving GARCH volatility forecasts with regime-switching GARCH,'' \textit{Empirical Econ.}, vol. 27, no. 2, pp. 363--394, 2002.
-\bibitem{diebold2001} F. X. Diebold and A. Inoue, ``Long memory and regime switching,'' \textit{J. Econometrics}, vol. 105, no. 1, pp. 131--159, 2001.
-\bibitem{engle2008} R. F. Engle and J. G. Rangel, ``The spline-GARCH model for low-frequency volatility and its global macroeconomic causes,'' \textit{Rev. Financial Stud.}, vol. 21, no. 3, pp. 1187--1222, 2008.
-\bibitem{hansen1992} B. E. Hansen, ``The likelihood ratio test under nonstandard conditions: Testing the Markov switching model of GNP,'' \textit{J. Appl. Econometrics}, vol. 7, no. S1, pp. S61--S82, 1992.
-\bibitem{lebaron1992} B. LeBaron, ``Some relations between volatility and serial correlations in stock market returns,'' \textit{J. Bus.}, vol. 65, no. 2, pp. 199--219, 1992.
-\bibitem{sentana1992} E. Sentana and S. Wadhwani, ``Feedback traders and stock return autocorrelations: Evidence from a century of daily data,'' \textit{Econ. J.}, vol. 102, no. 411, pp. 415--425, 1992.
-\bibitem{campbell1993} J. Y. Campbell, S. J. Grossman, and J. Wang, ``Trading volume and serial correlation in stock returns,'' \textit{Quart. J. Econ.}, vol. 108, no. 4, pp. 905--939, 1993.
-\bibitem{lomackinlay1990} A. W. Lo and A. C. MacKinlay, ``An econometric analysis of nonsynchronous trading,'' \textit{J. Econometrics}, vol. 45, no. 1--2, pp. 181--211, 1990.
-\bibitem{lomackinlay1988} A. W. Lo and A. C. MacKinlay, ``Stock market prices do not follow random walks: Evidence from a simple specification test,'' \textit{Rev. Financial Stud.}, vol. 1, no. 1, pp. 41--66, 1988.
-\bibitem{cohen1960} J. Cohen, ``A coefficient of agreement for nominal scales,'' \textit{Educ. Psychol. Meas.}, vol. 20, no. 1, pp. 37--46, 1960.
-\bibitem{schwarz1978} G. Schwarz, ``Estimating the dimension of a model,'' \textit{Ann. Statist.}, vol. 6, no. 2, pp. 461--464, 1978.
-\bibitem{diebold1998} F. X. Diebold, T. A. Gunther, and A. S. Tay, ``Evaluating density forecasts with applications to financial risk management,'' \textit{Int. Econ. Rev.}, vol. 39, no. 4, pp. 863--883, 1998.
-\bibitem{dieboldmariano1995} F. X. Diebold and R. S. Mariano, ``Comparing predictive accuracy,'' \textit{J. Bus. Econ. Statist.}, vol. 13, no. 3, pp. 253--263, 1995.
-\bibitem{neweywest1987} W. K. Newey and K. D. West, ``A simple, positive semi-definite, heteroskedasticity and autocorrelation consistent covariance matrix,'' \textit{Econometrica}, vol. 55, no. 3, pp. 703--708, 1987.
-\bibitem{white1980} H. White, ``A heteroskedasticity-consistent covariance matrix estimator and a direct test for heteroskedasticity,'' \textit{Econometrica}, vol. 48, no. 4, pp. 817--838, 1980.
+\bibitem{fama1970} E. F. Fama, ``Efficient capital markets: A review of theory and empirical work,'' \textit{J. Finance}, vol. 25, no. 2, pp. 383--417, 1970, doi: \nolinkurl{10.2307/2325486}.
+\bibitem{lo2004} A. W. Lo, ``The adaptive markets hypothesis: Market efficiency from an evolutionary perspective,'' \textit{J. Portfolio Manage.}, vol. 30, no. 5, pp. 15--29, 2004, doi: \nolinkurl{10.3905/jpm.2004.442611}.
+\bibitem{lo2017} A. W. Lo, \textit{Adaptive Markets: Financial Evolution at the Speed of Thought}. Princeton, NJ, USA: Princeton Univ. Press, 2017, doi: \nolinkurl{10.1515/9781400887767}.
+\bibitem{limbrooks2011} K.-P. Lim and R. Brooks, ``The evolution of stock market efficiency over time: A survey of the empirical literature,'' \textit{J. Econ. Surveys}, vol. 25, no. 1, pp. 69--108, 2011, doi: \nolinkurl{10.1111/j.1467-6419.2009.00611.x}.
+\bibitem{kim2011} J. H. Kim, A. Shamsuddin, and K.-P. Lim, ``Stock return predictability and the adaptive markets hypothesis: Evidence from century-long U.S. data,'' \textit{J. Empirical Finance}, vol. 18, no. 5, pp. 868--879, 2011, doi: \nolinkurl{10.1016/j.jempfin.2011.08.002}.
+\bibitem{urquhart2013} A. Urquhart and R. Hudson, ``Efficient or adaptive markets? Evidence from major stock markets using very long run historic data,'' \textit{Int. Rev. Financial Anal.}, vol. 28, pp. 130--142, 2013, doi: \nolinkurl{10.1016/j.irfa.2013.03.005}.
+\bibitem{hamilton1989} J. D. Hamilton, ``A new approach to the economic analysis of nonstationary time series and the business cycle,'' \textit{Econometrica}, vol. 57, no. 2, pp. 357--384, 1989, doi: \nolinkurl{10.2307/1912559}.
+\bibitem{angtimmermann2012} A. Ang and A. Timmermann, ``Regime changes and financial markets,'' \textit{Annu. Rev. Financial Econ.}, vol. 4, pp. 313--337, 2012, doi: \nolinkurl{10.1146/annurev-financial-110311-101808}.
+\bibitem{nystrup2020} P. Nystrup, E. Lindstr\"om, and H. Madsen, ``Learning hidden Markov models with persistent states by penalizing jumps,'' \textit{Expert Syst. Appl.}, vol. 150, art. 113307, 2020, doi: \nolinkurl{10.1016/j.eswa.2020.113307}.
+\bibitem{shu2024} Y. Shu, C. Yu, and J. M. Mulvey, ``Downside risk reduction using regime-switching signals: A statistical jump model approach,'' \textit{J. Asset Manage.}, vol. 25, no. 5, pp. 493--507, 2024, doi: \nolinkurl{10.1057/s41260-024-00376-x}.
+\bibitem{killick2012} R. Killick, P. Fearnhead, and I. A. Eckley, ``Optimal detection of changepoints with a linear computational cost,'' \textit{J. Amer. Statist. Assoc.}, vol. 107, no. 500, pp. 1590--1598, 2012, doi: \nolinkurl{10.1080/01621459.2012.737745}.
+\bibitem{lunde2004} A. Lunde and A. Timmermann, ``Duration dependence in stock prices: An analysis of bull and bear markets,'' \textit{J. Bus. Econ. Statist.}, vol. 22, no. 3, pp. 253--273, 2004, doi: \nolinkurl{10.1198/073500104000000136}.
+\bibitem{bollerslev1986} T. Bollerslev, ``Generalized autoregressive conditional heteroskedasticity,'' \textit{J. Econometrics}, vol. 31, no. 3, pp. 307--327, 1986, doi: \nolinkurl{10.1016/0304-4076(86)90063-1}.
+\bibitem{bollerslev1987} T. Bollerslev, ``A conditionally heteroskedastic time series model for speculative prices and rates of return,'' \textit{Rev. Econ. Statist.}, vol. 69, no. 3, pp. 542--547, 1987, doi: \nolinkurl{10.2307/1925546}.
+\bibitem{lamoureux1990} C. G. Lamoureux and W. D. Lastrapes, ``Persistence in variance, structural change, and the GARCH model,'' \textit{J. Bus. Econ. Statist.}, vol. 8, no. 2, pp. 225--234, 1990, doi: \nolinkurl{10.1080/07350015.1990.10509794}.
+\bibitem{hamiltonsusmel1994} J. D. Hamilton and R. Susmel, ``Autoregressive conditional heteroskedasticity and changes in regime,'' \textit{J. Econometrics}, vol. 64, no. 1--2, pp. 307--333, 1994, doi: \nolinkurl{10.1016/0304-4076(94)90067-1}.
+\bibitem{gray1996} S. F. Gray, ``Modeling the conditional distribution of interest rates as a regime-switching process,'' \textit{J. Financial Econ.}, vol. 42, no. 1, pp. 27--62, 1996, doi: \nolinkurl{10.1016/0304-405X(96)00875-6}.
+\bibitem{klaassen2002} F. Klaassen, ``Improving GARCH volatility forecasts with regime-switching GARCH,'' \textit{Empirical Econ.}, vol. 27, no. 2, pp. 363--394, 2002, doi: \nolinkurl{10.1007/s001810100100}.
+\bibitem{diebold2001} F. X. Diebold and A. Inoue, ``Long memory and regime switching,'' \textit{J. Econometrics}, vol. 105, no. 1, pp. 131--159, 2001, doi: \nolinkurl{10.1016/S0304-4076(01)00073-2}.
+\bibitem{engle2008} R. F. Engle and J. G. Rangel, ``The spline-GARCH model for low-frequency volatility and its global macroeconomic causes,'' \textit{Rev. Financial Stud.}, vol. 21, no. 3, pp. 1187--1222, 2008, doi: \nolinkurl{10.1093/rfs/hhn004}.
+\bibitem{hansen1992} B. E. Hansen, ``The likelihood ratio test under nonstandard conditions: Testing the Markov switching model of GNP,'' \textit{J. Appl. Econometrics}, vol. 7, no. S1, pp. S61--S82, 1992, doi: \nolinkurl{10.1002/jae.3950070506}.
+\bibitem{lebaron1992} B. LeBaron, ``Some relations between volatility and serial correlations in stock market returns,'' \textit{J. Bus.}, vol. 65, no. 2, pp. 199--219, 1992, doi: \nolinkurl{10.1086/296565}.
+\bibitem{sentana1992} E. Sentana and S. Wadhwani, ``Feedback traders and stock return autocorrelations: Evidence from a century of daily data,'' \textit{Econ. J.}, vol. 102, no. 411, pp. 415--425, 1992, doi: \nolinkurl{10.2307/2234525}.
+\bibitem{campbell1993} J. Y. Campbell, S. J. Grossman, and J. Wang, ``Trading volume and serial correlation in stock returns,'' \textit{Quart. J. Econ.}, vol. 108, no. 4, pp. 905--939, 1993, doi: \nolinkurl{10.2307/2118454}.
+\bibitem{lomackinlay1990} A. W. Lo and A. C. MacKinlay, ``An econometric analysis of nonsynchronous trading,'' \textit{J. Econometrics}, vol. 45, no. 1--2, pp. 181--211, 1990, doi: \nolinkurl{10.1016/0304-4076(90)90098-E}.
+\bibitem{lomackinlay1988} A. W. Lo and A. C. MacKinlay, ``Stock market prices do not follow random walks: Evidence from a simple specification test,'' \textit{Rev. Financial Stud.}, vol. 1, no. 1, pp. 41--66, 1988, doi: \nolinkurl{10.1093/rfs/1.1.41}.
+\bibitem{cohen1960} J. Cohen, ``A coefficient of agreement for nominal scales,'' \textit{Educ. Psychol. Meas.}, vol. 20, no. 1, pp. 37--46, 1960, doi: \nolinkurl{10.1177/001316446002000104}.
+\bibitem{schwarz1978} G. Schwarz, ``Estimating the dimension of a model,'' \textit{Ann. Statist.}, vol. 6, no. 2, pp. 461--464, 1978, doi: \nolinkurl{10.1214/aos/1176344136}.
+\bibitem{diebold1998} F. X. Diebold, T. A. Gunther, and A. S. Tay, ``Evaluating density forecasts with applications to financial risk management,'' \textit{Int. Econ. Rev.}, vol. 39, no. 4, pp. 863--883, 1998, doi: \nolinkurl{10.2307/2527342}.
+\bibitem{dieboldmariano1995} F. X. Diebold and R. S. Mariano, ``Comparing predictive accuracy,'' \textit{J. Bus. Econ. Statist.}, vol. 13, no. 3, pp. 253--263, 1995, doi: \nolinkurl{10.1080/07350015.1995.10524599}.
+\bibitem{neweywest1987} W. K. Newey and K. D. West, ``A simple, positive semi-definite, heteroskedasticity and autocorrelation consistent covariance matrix,'' \textit{Econometrica}, vol. 55, no. 3, pp. 703--708, 1987, doi: \nolinkurl{10.2307/1913610}.
+\bibitem{white1980} H. White, ``A heteroskedasticity-consistent covariance matrix estimator and a direct test for heteroskedasticity,'' \textit{Econometrica}, vol. 48, no. 4, pp. 817--838, 1980, doi: \nolinkurl{10.2307/1912934}.
 \end{thebibliography}
 
 \end{document}
