@@ -1,0 +1,5 @@
+dgp,share_K>=2_raw_returns,share_K>=2_garch_residuals
+"GARCH(1,1)-t (no regimes)",1.0,0.0
+HMM2 (correctly specified),1.0,0.01
+HMM2 with t(4) shocks (misspecified),1.0,0.2
+HMM3 (three regimes),1.0,0.01

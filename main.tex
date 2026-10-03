@@ -1,25 +1,26 @@
 \documentclass[conference]{IEEEtran}
 \usepackage{amsmath, amssymb, amsfonts}
-\usepackage{algorithmic}
-\usepackage{algorithm}
 \usepackage{graphicx}
 \usepackage{textcomp}
 \usepackage{xcolor}
 \usepackage{booktabs}
-\usepackage{hyperref}
 \usepackage{cite}
 \usepackage{multirow}
-\usepackage{enumitem}
 \usepackage{bm}
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta, calc}
+\usepackage[hidelinks]{hyperref}
+
+\graphicspath{{figures/}}
 
 \begin{document}
 
-\title{Operationalizing the Adaptive Market Hypothesis: A Comparative Study of Latent Volatility Regimes and Window-Based Efficiency Diagnostics}
+\title{Adaptive Markets or Volatile Markets?\\ Regime Detection and Time-Varying Efficiency\\ in the S\&P 500, 1950--2025}
 
+% TODO: add affiliation and e-mail before submission.
 \author{
 \IEEEauthorblockN{Vihan Lalan}
-\IEEEauthorblockA{\textit{Department of Finance / Computer Science} \\
-\textit{University/Institution Name}\\
+\IEEEauthorblockA{\textit{Affiliation} \\
 City, Country \\
 email@example.com}
 }
@@ -27,162 +28,417 @@ email@example.com}
 \maketitle
 
 \begin{abstract}
-The Adaptive Market Hypothesis (AMH) proposes that market efficiency is not a static property but an evolving phenomenon driven by the competition and adaptation of heterogeneous agents. However, the AMH has remained largely descriptive, lacking a concrete operational framework for detecting inefficient regimes in real-time. In this paper, we bridge this gap by evaluating two distinct operationalizations. First, we test a "Real-Time Efficiency Score" (RES) based on traditional window-based diagnostics (Hurst exponent, Variance-Ratio, and Ljung-Box statistics). Using 101 S\&P 100 constituents, we find that the RES fails to identify stress regimes and does not improve the risk-adjusted performance of a cross-sectional strategy in out-of-sample "lockbox" testing. Second, we propose a latent-state framework utilizing GPU-accelerated Gaussian Hidden Markov Models (HMM) and Statistical Jump Models. Using S\&P 500 data from 1950 to 2025, we demonstrate that latent volatility regimes are an objective structural feature of the market, decoupled from macroeconomic recession indicators. Crucially, we find that market efficiency is regime-conditional: high-volatility regimes exhibit significantly stronger mean-reversion and higher rates of Random Walk hypothesis rejections than low-volatility regimes. We conclude that while traditional window-based diagnostics are insufficient for operationalizing the AMH, latent-state models provide a robust mechanism for detecting the "windows of inefficiency" predicted by the hypothesis.
+The Adaptive Markets Hypothesis (AMH) predicts that market efficiency changes with market conditions. A common way to make this testable is to detect market regimes and compare efficiency across them. We ask whether objectively detected regimes explain time variation in efficiency, and, before that, whether such regimes can be detected at all. Using daily S\&P 500 returns from 1950 to 2025, we apply Gaussian hidden Markov models (HMMs), statistical jump models and change-point detection, and evaluate every method against simulated data with and without regimes. When regimes exist, the HMM recovers them accurately (balanced accuracy 0.95 ex post and 0.91 in real time). However, the usual evidence for regimes does not separate them from volatility clustering. The Bayesian information criterion (BIC) selects four regimes in all 100 simulated GARCH(1,1)-$t$ series, which contain none. Agreement between methods on the S\&P 500 (Cohen's $\kappa$ = 0.58--0.68) is no higher than in GARCH data without regimes. A GARCH(1,1)-$t$ model also beats every HMM in sample and out of sample (Diebold--Mariano $t = -4.29$). Using state labels available in real time, daily return autocorrelation is lower in high-volatility states (difference $-0.086$, $t = -3.12$, simulation-calibrated $p = 0.01$), mainly after 2000. When the volatility level is added to the same regression, the negative regime effect disappears and changes sign, while the volatility effect remains ($t = -5.0$). Efficiency in the S\&P 500 is adaptive in the sense that it varies with volatility, but discrete regimes are not needed to describe this variation.
 \end{abstract}
 
 \begin{IEEEkeywords}
-Adaptive Market Hypothesis, Market Efficiency, Hidden Markov Models, Volatility Regimes, GPU Acceleration, Variance Ratio Test, Mean Reversion, Out-of-Sample Testing, Deflated Sharpe Ratio.
+Adaptive Markets Hypothesis, market efficiency, regime switching, hidden Markov models, statistical jump models, volatility clustering, GARCH, return autocorrelation
 \end{IEEEkeywords}
 
 \section{Introduction}
-The Efficient Market Hypothesis (EMH) has served as the dominant paradigm in financial economics for decades, asserting that asset prices fully reflect all available information. However, the persistent existence of anomalies—such as momentum, post-earnings-announcement drift, and long-horizon reversal—suggests that the EMH is an idealized limit rather than a universal law.
 
-Andrew Lo's Adaptive Market Hypothesis (AMH) reconciles these anomalies by framing market efficiency through the lens of evolutionary biology. Under the AMH, market efficiency is an emergent property of the "ecology" of participants. Strategies earn returns when they are uncrowded, but as more agents adapt and adopt the same strategy, the alpha is competed away, and the market returns to a state of relative efficiency. Consequently, predictability is expected to wax and wane as the market ecology evolves.
+The Efficient Market Hypothesis \cite{fama1970} treats efficiency as a fixed property of a market. The Adaptive Markets Hypothesis (AMH) of Lo \cite{lo2004, lo2017} replaces this with an evolutionary view: predictability appears and disappears as market participants, their strategies and the environment change. Empirical work supports the idea that efficiency varies over time \cite{limbrooks2011, kim2011, urquhart2013}. However, the AMH does not say which conditions matter or how to recognize them while they are happening.
 
-Despite the theoretical elegance of the AMH, it faces a significant "operationalization" problem. While researchers have documented time-varying predictability ex-post, the AMH does not specify how a participant could recognize, in real-time, that the market has entered a less efficient state. Without such a mechanism, the hypothesis cannot guide a decision.
+A natural way to make the AMH operational is to divide history into objectively detected \emph{market regimes}, such as calm and turbulent periods, and to test whether efficiency differs between them. Regime models have a long history in finance \cite{hamilton1989, angtimmermann2012}, and newer methods such as statistical jump models \cite{nystrup2020, shu2024} have made them popular in practice. This approach rests on two assumptions that are rarely tested together. The first is that the detected regimes are real, and not an artifact of volatility clustering \cite{bollerslev1986}. It is well known that regime switching and persistent volatility are hard to tell apart \cite{lamoureux1990, hamiltonsusmel1994, gray1996, klaassen2002, diebold2001}. The second is that regime labels can be known when they are needed. Most studies use labels estimated with the full sample, which contain information from the future.
 
-This paper addresses this gap by testing two competing frameworks. We first examine a system based on "Real-Time Efficiency Scores" (RES), which relies on rolling window diagnostics and a "Behavioral Proxy Composite" (BPC). We evaluate this system using a rigorous "lockbox" design to prevent backtest overfitting. We then contrast these results with a second, more advanced system based on latent-state volatility regimes identified via GPU-accelerated Gaussian Hidden Markov Models (HMM) and Statistical Jump Models. By utilizing a high-performance computational pipeline, we are able to subject these models to expanding-window refits across seven decades of S\&P 500 data.
+This paper asks: \emph{do objectively identified market regimes explain how market efficiency changes over time?} We answer in two steps. First, can regimes be identified objectively, and how accurately? Second, does efficiency differ across regimes when the regimes are labelled without look-ahead, and does the regime label explain anything beyond the level of volatility?
+
+We make three contributions. First, we evaluate common regime detectors (HMMs, jump models, PELT change-point detection) on the same 76-year S\&P 500 sample. We benchmark them against simulated data in which the truth is known, including data generated by a GARCH(1,1)-$t$ process that has no regimes. This gives a null distribution for two widely used kinds of evidence: model selection by BIC and agreement between detectors. Second, we compare labels available in real time with ex-post labels across 56 years of expanding-window re-estimation. Third, we test whether return autocorrelation differs across real-time regimes. The test is calibrated by simulation and compared with a continuous measure of volatility.
+
+The main findings are as follows. The detectors work when regimes exist. However, on the S\&P 500 neither BIC nor agreement between detectors provides evidence of regimes beyond what volatility clustering alone produces, and a no-regime GARCH model forecasts better than any HMM. Real-time labels agree only moderately with ex-post labels ($\kappa$ = 0.58--0.65). Return autocorrelation is significantly lower in real-time high-volatility states, consistent with an adaptive market. However, this effect is explained by the volatility level itself, not by the regime label. For the AMH, the conditions under which efficiency changes appear to be continuous volatility conditions rather than discrete regimes.
 
 \section{Related Literature}
 
-\subsection{Market Efficiency and Its Limits}
-Fama (1970) established the weak, semi-strong, and strong forms of the EMH, which remains the null hypothesis of empirical asset pricing. However, the existence of momentum (Jegadeesh \& Titman, 1993) and the illiquidity premium (Amihud, 2002) indicate that prices do not instantly impound information. Recent replication studies by Hou et al. (2020) and McLean and Pontiff (2016) urge caution, suggesting that many anomalies decay after publication or are insignificant under strict methodological choices.
+\subsection{Adaptive markets and time-varying efficiency}
+Lo \cite{lo2004, lo2017} argues that efficiency depends on the population of market participants and the environment they face. Lim and Brooks \cite{limbrooks2011} survey evidence that efficiency evolves over time. Kim, Shamsuddin and Lim \cite{kim2011} find that the return predictability of the U.S. market over a century varies with market conditions. Urquhart and Hudson \cite{urquhart2013} find adaptive behavior in very long samples from major markets. These studies document variation over time but generally do not separate regimes from volatility.
 
-\subsection{The Adaptive Markets Hypothesis}
-Lo (2004, 2017) frames market efficiency in evolutionary terms. The AMH predicts time-varying predictability, a finding supported by sub-period evidence (Kim et al., 2011; Urquhart \& Hudson, 2013). These studies establish that efficiency varies ex-post; however, the question of whether this variation can be detected ex-ante and exploited remains open.
+\subsection{Regime identification}
+Hamilton's Markov-switching model \cite{hamilton1989} is the standard parametric approach; Ang and Timmermann \cite{angtimmermann2012} review its use in finance. Statistical jump models \cite{nystrup2020, shu2024} replace the Markov chain with a penalty on state changes and are designed to produce more persistent states. Non-parametric alternatives include change-point detection, for example PELT \cite{killick2012}, and rules for dating bull and bear markets \cite{lunde2004}.
 
-\subsection{Behavioral Proxies and Regime Models}
-Behavioral finance links market outcomes to investor biases such as loss aversion (Kahneman \& Tversky, 1979) and herding (Christie \& Huang, 1995). Statistical regime models (Hamilton, 1989; Ang \& Bekaert, 2002) identify latent states, but these are not typically tied to behavioral mechanisms or evaluated as real-time trading filters.
+\subsection{Regimes versus volatility dynamics}
+Lamoureux and Lastrapes \cite{lamoureux1990} show that shifts in the level of variance can make GARCH volatility appear more persistent. Hamilton and Susmel \cite{hamiltonsusmel1994}, Gray \cite{gray1996} and Klaassen \cite{klaassen2002} combine regime switching with ARCH/GARCH. Diebold and Inoue \cite{diebold2001} show that regime switching and long memory are easily confused, and Engle and Rangel \cite{engle2008} model slowly moving volatility. Standard likelihood-ratio tests of the number of regimes have non-standard distributions \cite{hansen1992}. All of this suggests that evidence for regimes should be judged against no-regime alternatives.
 
-\section{The TBMD Framework}
-We posit that the market occupies latent regimes that differ in return autocorrelation and behavioral activity. We define the Temporal Behavioral Market Dynamics (TBMD) framework as a three-part system.
+\subsection{Volatility and autocorrelation}
+LeBaron \cite{lebaron1992} and Sentana and Wadhwani \cite{sentana1992} find that index return autocorrelation falls, and can turn negative, when volatility is high. Campbell, Grossman and Wang \cite{campbell1993} relate autocorrelation to trading volume. Index autocorrelation is also affected by non-synchronous trading \cite{lomackinlay1990}. We build on this evidence by asking whether a regime label adds anything to the volatility level.
 
-\subsection{Approach A: The Window-Based Efficiency System}
-The first approach relies on a "Real-Time Efficiency Score" (RES), which measures the distance from a random walk using three diagnostics computed over a trailing window ending at day $t$:
-\begin{enumerate}
-    \item \textbf{Hurst Exponent ($H$):} $\text{Heff}(t) = 1 - 2|H(t) - 0.5|$.
-    \item \textbf{Variance Ratio ($VR$):} $\text{VReff}(t) = 1 / (1 + |VR(t) - 1|)$.
-    \item \textbf{Ljung-Box ($p_{LB}$):} $\text{LBeff}(t) = p_{LB}(t)$.
-\end{enumerate}
-The aggregate score is $\text{RES}(t) = [\text{Heff}(t) + \text{VReff}(t) + \text{LBeff}(t)] / 3$. A regime is flagged as inefficient when $\text{RES}(t)$ falls below the $q$-th percentile of its preceding 252-day distribution.
+\section{Data}
 
-Furthermore, we construct a \textbf{Behavioral Proxy Composite (BPC)} that aggregates five observable footprints:
-\begin{itemize}
-    \item \textbf{Herding:} Cross-sectional return dispersion.
-    \item \textbf{Sentiment:} VIX-based investor fear gauge.
-    \item \textbf{Loss Aversion:} Trailing return asymmetry.
-    \item \textbf{Illiquidity:} The Amihud (2002) ratio.
-    \item \textbf{Autocorrelation:} Short-term return persistence.
-\end{itemize}
+We use the daily closing level of the S\&P 500 index (\texttt{\textasciicircum GSPC}) from Yahoo Finance, from 3 January 1950 to 31 December 2025. This gives $n = 19{,}120$ daily log returns $r_t = 100\,\Delta \ln P_t$. For comparison we use the CBOE VIX index (from January 1990) and the NBER recession indicator (FRED series USREC). The data were downloaded on 2 October 2026.
 
-\subsection{Approach B: The Latent-State Framework}
-The second approach models the market as a system of latent states $S_t \in \{1, \dots, K\}$.
+\section{Methods}
 
-\subsubsection{Gaussian Hidden Markov Model (HMM)}
-We assume returns follow a state-dependent normal distribution: $r_t | S_t = k \sim \mathcal{N}(\mu_k, \sigma_k^2)$. The transitions are governed by a matrix $A$ where $A_{ij} = P(S_{t+1}=j | S_t=i)$. We estimate $\theta = \{\pi, A, \mu, \sigma\}$ using the Baum-Welch EM algorithm.
+Figure~\ref{fig:flow} summarizes the design.
 
-\subsubsection{Statistical Jump Models}
-To complement the HMM, we utilize Jump Models that identify switches by minimizing a loss function $L$ with a jump penalty $\lambda$:
+\begin{figure*}[t]
+\centering
+\begin{tikzpicture}[
+  font=\footnotesize,
+  box/.style={draw, rounded corners=2pt, align=flush center, inner sep=4pt, fill=#1},
+  box/.default={white},
+  half/.style={text width=6.75cm, minimum height=1.25cm},
+  q/.style={box=green!8, text width=2.45cm, minimum height=2.7cm, anchor=north west},
+  arr/.style={-{Stealth[length=2.2mm]}, thick, gray!70!black}]
+\node[box=gray!12, text width=14.3cm, anchor=north west] (data) at (0,0) {\textbf{Data}: S\&P 500 daily log returns 1950--2025 ($n=19{,}120$); VIX (1990--) and NBER recessions for comparison};
+\node[box=blue!8, half, anchor=north west] (sim) at ($(data.south west)+(0,-6mm)$) {\textbf{Simulation with known truth} (100 replications each)\\HMM-2 $\cdot$ HMM-2 with $t(4)$ shocks $\cdot$ HMM-3 $\cdot$ GARCH(1,1)-$t$ (\emph{no regimes}); parameters estimated on the S\&P 500};
+\node[box=orange!10, half, anchor=north east] (real) at ($(data.south east)+(0,-6mm)$) {\textbf{Real data}: S\&P 500, 1950--2025\\out-of-sample period 2000--2025; real-time period 1970--2025};
+\node[box=white, text width=14.3cm, anchor=north west] (det) at ($(sim.south west)+(0,-6mm)$) {\textbf{Regime detectors}: Gaussian HMM ($K=1,\dots,4$) $\cdot$ statistical jump model ($\lambda \in \{10, 30, 100\}$) $\cdot$ PELT change points $\cdot$ 20\% bull/bear rule\\GPU-batched implementation, validated against \texttt{hmmlearn} and \texttt{jumpmodels}};
+\node[box=white, half, anchor=north west] (ep) at ($(det.south west)+(0,-6mm)$) {\textbf{Ex-post labels}\\smoothed probabilities / full-sample fit (use future data)};
+\node[box=white, half, anchor=north east] (rt) at ($(det.south east)+(0,-6mm)$) {\textbf{Real-time labels}\\filtered probabilities / online jump model,\\re-estimated every January on past data only};
+\node[q] (q1) at ($(ep.south west)+(0,-7mm)$) {\textbf{Q1 Accuracy}\\balanced accuracy, delay and switching vs.\ true regimes};
+\node[q] (q2) at ($(q1.north east)+(2.2mm,0)$) {\textbf{Q2 Are regimes real?}\\BIC, GARCH-residual test, forecasts vs.\ GARCH, agreement vs.\ no-regime null};
+\node[q] (q3) at ($(q2.north east)+(2.2mm,0)$) {\textbf{Q3 Usable in real time?}\\real-time vs.\ ex-post $\kappa$, switching frequency};
+\node[q] (q4) at ($(q3.north east)+(2.2mm,0)$) {\textbf{Q4 Efficiency by regime}\\AR(1) by state, test calibrated on simulated placebos; variance ratios};
+\node[q] (q5) at ($(q4.north east)+(2.2mm,0)$) {\textbf{Q5 Regime or volatility?}\\regime label vs.\ EWMA volatility in one regression};
+\node[box=gray!12, text width=14.3cm, anchor=north west] (score) at ($(q1.south west)+(0,-6mm)$) {\textbf{Scorecard} against criteria fixed before the full run $\;\rightarrow\;$ do detected regimes explain time-varying efficiency?};
+\draw[arr] (data.south -| sim.north) -- (sim.north);
+\draw[arr] (data.south -| real.north) -- (real.north);
+\draw[arr] (sim.south) -- (sim.south |- det.north);
+\draw[arr] (real.south) -- (real.south |- det.north);
+\draw[arr] (det.south -| ep.north) -- (ep.north);
+\draw[arr] (det.south -| rt.north) -- (rt.north);
+\foreach \qq in {q1,q2} \draw[arr] (ep.south) -- ++(0,-3mm) -| (\qq.north);
+\draw[arr] (ep.south) -- ++(0,-3mm) -| ([xshift=-4mm]q3.north);
+\draw[arr] (rt.south) -- ++(0,-3mm) -| ([xshift=4mm]q3.north);
+\foreach \qq in {q4,q5} \draw[arr] (rt.south) -- ++(0,-3mm) -| (\qq.north);
+\foreach \qq in {q1,q2,q3,q4,q5} \draw[arr] (\qq.south) -- (\qq.south |- score.north);
+\end{tikzpicture}
+\caption{Study design. Every detector is applied both to simulated data with a known truth (including a GARCH process with no regimes) and to the S\&P 500. The tests Q1--Q5 use ex-post labels, real-time labels or both.}
+\label{fig:flow}
+\end{figure*}
+
+\subsection{Regime detectors}
+\emph{Gaussian HMM.} Returns follow $r_t \mid s_t = k \sim N(\mu_k, \sigma_k^2)$, with a first-order Markov chain $P(s_t = j \mid s_{t-1} = i) = a_{ij}$ \cite{hamilton1989}. We estimate $K = 2, 3, 4$ states by the Baum--Welch EM algorithm with 3--5 random restarts and order the states by volatility. Ex-post labels set state 1 (high volatility) when the smoothed probability exceeds 0.5. Real-time labels use the filtered probability instead.
+
+\emph{Statistical jump model.} Following \cite{nystrup2020, shu2024}, states minimize
 \begin{equation}
-    \min \sum_{t=1}^T \text{Loss}(r_t, \mu_{S_t}, \sigma_{S_t}) + \lambda \sum_{t=2}^T \mathbb{1}(S_t \neq S_{t-1})
+\sum_{t} \tfrac{1}{2}\,\lVert \bm{x}_t - \bm{\theta}_{s_t} \rVert^2 + \lambda \sum_{t} \mathbf{1}\{s_t \neq s_{t-1}\},
 \end{equation}
+where $\bm{x}_t$ contains the exponentially weighted mean return, log downside deviation and Sortino ratio at half-lives of 5, 10 and 21 days. The features are standardized on the estimation window. We use $\lambda \in \{10, 30, 100\}$, with $\lambda = 30$ as the main specification. Real-time (online) labels come from the forward pass of the dynamic program.
 
-\subsection{Computational Implementation and GPU Acceleration}
-The computational demand of expanding-window refits requires a high-performance implementation. We developed a pipeline using PyTorch's Metal Performance Shaders (MPS).
+\emph{Change points and bear markets.} PELT \cite{killick2012} with a Gaussian mean-and-variance cost, penalty $3 \ln T$ and minimum segment length 21 days. The resulting segments are grouped into low- and high-volatility sets by $k$-means on log segment volatility. Bear markets are dated by the 20\% rule of \cite{lunde2004}.
 
-\textbf{Parallel Prefix Scan:} The sequential $O(T)$ forward-backward recursion is reformulated as a parallel prefix scan in the log-semiring. Using a Hillis-Steele doubling algorithm, we reduced the sequential loop to $O(\log T)$ batched tensor operations.
+\emph{Real-time protocol.} For each year from 1970 to 2025, the HMM and the jump model are re-estimated on all data up to the previous 31 December. Labels for the year are then produced with only past information.
 
-\textbf{Numerical Stability:} Since MPS does not support float64, we employ a rescaling technique. Emissions are rescaled by their per-step maximum before log-space scans, and critical summations (e.g., log-likelihood) are offloaded to the CPU in double precision to prevent underflow.
+\subsection{Simulation design}
+We estimate four data-generating processes (DGPs) on the S\&P 500 and simulate 100 series of the same length ($T = 19{,}120$) from each:
+\begin{enumerate}
+\item a two-state Gaussian HMM, for which the HMM is correctly specified;
+\item the same HMM with standardized $t(4)$ shocks;
+\item a three-state HMM, where the truth is the top state;
+\item a GARCH(1,1) model with Student-$t$ shocks \cite{bollerslev1986, bollerslev1987}, which has \emph{no regimes}.
+\end{enumerate}
+All detectors are applied to every series. PELT is applied to the first 25 replications per DGP because of its computational cost. Accuracy is measured by balanced accuracy and Cohen's $\kappa$ \cite{cohen1960} for the high-volatility state, the median detection delay, and the ratio of detected to true state switches.
 
-\section{Research Design}
+\subsection{Is there evidence for regimes?}
+\emph{BIC.} We compare $\mathrm{BIC} = -2 \ln L + p \ln T$ \cite{schwarz1978} for an i.i.d.\ Gaussian model ($K=1$) and HMMs with $K = 2, 3, 4$, where $p = (K-1) + K(K-1) + 2K$.
 
-\subsection{Data and Samples}
-We utilize daily split- and dividend-adjusted closing prices for 101 S\&P 100 constituents and 39 DAX constituents (2005--2025). We also incorporate the CBOE VIX and NBER recession indicators.
+\emph{Regimes beyond GARCH.} We fit a GARCH(1,1)-$t$ model, map its standardized residuals to $N(0,1)$ through the fitted $t$ distribution function (a probability integral transform \cite{diebold1998}), and repeat the BIC comparison. If GARCH-$t$ is correct, the transformed residuals are i.i.d.\ normal and $K = 1$ should be selected.
 
-\subsection{The "Lockbox" Evaluation}
-To prevent backtest overfitting (Harvey et al., 2016), we fix a grid of twelve configurations (varying thresholds $q$, rebalancing intervals $k$, and momentum windows $m$). We select the best configuration using data from 2005--2020 and evaluate it \textit{once} on a held-out "lockbox" period (2021--2025). 
+\emph{Out-of-sample density forecasts.} Parameters are estimated on 1950--1999. One-step-ahead predictive log densities for 2000--2025 are compared with GARCH(1,1)-$t$ using Diebold--Mariano tests \cite{dieboldmariano1995} with Newey--West standard errors (10 lags) \cite{neweywest1987}.
 
-\subsection{Inference Metrics}
-We report the \textbf{Deflated Sharpe Ratio (DSR)} to account for the multiplicity of tested configurations, and the \textbf{Probabilistic Sharpe Ratio (PSR)} to assess the probability that the observed Sharpe ratio is significantly greater than zero.
+\emph{Agreement against a no-regime null.} Cohen's $\kappa$ between detectors on the S\&P 500 is compared with the distribution of the same $\kappa$ in the simulated GARCH data.
 
-\section{Empirical Results}
+\subsection{Efficiency by regime}
+Let $s_{t-1} \in \{0, 1\}$ be the real-time label at $t-1$. We estimate
+\begin{equation}
+r_t = \alpha + \beta r_{t-1} + \gamma s_{t-1} + \delta\, s_{t-1} r_{t-1} + e_t
+\label{eq:ar}
+\end{equation}
+with White standard errors \cite{white1980}, so that $\beta$ and $\beta + \delta$ are the first-order autocorrelations in the low- and high-volatility states. The same regression with the same real-time labelling procedure is run on every simulated series, none of which has any predictability. This gives the test's false-positive rate and simulation-calibrated $p$-values. We also compute rolling one-year Lo--MacKinlay variance-ratio tests \cite{lomackinlay1988} on real and simulated returns.
 
-\subsection{Evaluation of the RES Approach}
-The window-based RES framework failed to provide a reliable signal for market stress.
-\begin{itemize}
-    \item \textbf{Detection Power:} Against four independent indicators (VIX, Realized Vol, Drawdowns, NBER), the RES AUCs ranged from 0.44 to 0.58, with every bootstrap confidence interval covering 0.5.
-    \item \textbf{Trading Performance:} The selected RES-conditional strategy earned a Sharpe ratio of 0.14 in the development period, but this collapsed to $-1.08$ on the lockbox. The difference between conditional and unconditional deployment was not statistically significant ($p = 0.18$).
-    \item \textbf{Behavioral Insight:} Only the \textbf{illiquidity proxy} was strongly and non-circularly associated with market stress (AUC 0.82--0.96).
-\end{itemize}
+To test whether the regime label matters beyond volatility, we add $v_{t-1}$, the standardized log of a RiskMetrics exponentially weighted volatility $\hat\sigma_t^2 = 0.94\,\hat\sigma_{t-1}^2 + 0.06\, r_t^2$ known at $t-1$, and its interaction with $r_{t-1}$:
+\begin{equation}
+r_t = \alpha + \beta r_{t-1} + \gamma s_{t-1} + \delta\, s_{t-1} r_{t-1} + \kappa v_{t-1} + \eta\, v_{t-1} r_{t-1} + e_t .
+\label{eq:race}
+\end{equation}
+This comparison was added after the first full run and is reported as a follow-up analysis.
 
-\subsection{Validation of the Latent-State Framework}
-In contrast, the HMM/Jump framework demonstrated high robustness.
-\begin{itemize}
-    \item \textbf{Simulation:} In Monte Carlo tests, the HMM-2 model recovered ground-truth states with $96.5\%$ balanced accuracy and a median detection lag of 1 day.
-    \item \textbf{Consensus:} We found high agreement between HMM and Jump models (Cohen's $\kappa \approx 0.73\text{--}0.85$), proving that volatility regimes are an objective structural feature.
-    \item \textbf{Decoupling:} Agreement with NBER recessions was low ($\kappa \approx 0.25$), suggesting that "Market Regimes" are distinct from "Economic Recessions."
-\end{itemize}
+\subsection{Pre-specified criteria and implementation}
+Before the full run, we fixed pass/fail criteria for each question (Table~\ref{tab:score}). The HMM and jump-model computations are written in PyTorch and batched on a GPU. The forward--backward recursions and the jump-model dynamic program use parallel prefix scans. Before every run the implementation is checked against the reference packages \texttt{hmmlearn} and \texttt{jumpmodels}. On the full run (NVIDIA A100, float32), log-likelihoods matched \texttt{hmmlearn} to within 0.04, state labels agreed with $\kappa \ge 0.98$, and jump-model objectives and labels matched \texttt{jumpmodels} exactly. The full study took 27 minutes.
 
-\subsection{Regime-Conditional Efficiency}
-We test the core AMH claim: does efficiency vary by regime?
+\section{Results}
 
-\begin{table}[htbp]
-\caption{AR(1) Predictability by Regime (2000--2025)}
-\begin{center}
-\begin{tabular}{lcccc}
+\subsection{Q1: Do the detectors recover true regimes?}
+Table~\ref{tab:sim} and Fig.~\ref{fig:sim} report accuracy in the simulations. When the HMM is correctly specified, it recovers the high-volatility state with balanced accuracy 0.951 ex post and 0.907 in real time, with a median delay of one day. With fat-tailed $t(4)$ shocks, accuracy falls to 0.862 and 0.787, and the real-time HMM switches 5.7 times as often as the true process. In the three-state process, a two-state HMM detects the crash state with $\kappa$ of only 0.25, while a three-state HMM recovers all three states ($\kappa = 0.857$). The jump models are less accurate (0.65--0.77) on all processes. This partly reflects the simulation design, which generates data from HMMs. PELT is accurate ex post (0.82--0.92) but misses 30--41\% of high-volatility episodes.
+
+\begin{table}[t]
+\centering
+\caption{Simulation: Recovery of the High-Volatility State (Mean of 100 Replications; PELT 25)}
+\label{tab:sim}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\resizebox{\columnwidth}{!}{\begin{tabular}{lccc}
 \toprule
-\textbf{Regime} & \textbf{AR(1)} & \textbf{t-stat} & \textbf{n-pairs} & \textbf{Significance} \\
+Method & HMM-2 & HMM-2, $t(4)$ & HMM-3 \\
 \midrule
-Low Vol & $-0.033$ & $-2.165$ & 4391 & $p < 0.05$ \\
-High Vol & $-0.125$ & $-3.846$ & 2052 & $p < 0.01$ \\
+\multicolumn{4}{l}{\emph{Balanced accuracy}}\\
+HMM-2 ex post & 0.951 & 0.862 & 0.862 \\
+HMM-2 real time & 0.907 & 0.787 & 0.861 \\
+Jump $\lambda=30$ ex post & 0.736 & 0.708 & 0.749 \\
+Jump $\lambda=30$ real time & 0.676 & 0.652 & 0.709 \\
+PELT ex post & 0.860 & 0.822 & 0.923 \\
+\midrule
+\multicolumn{4}{l}{\emph{Cohen's $\kappa$ / detected-to-true switches}}\\
+HMM-2 ex post & 0.91 / 0.84 & 0.75 / 2.69 & 0.25 / 5.10 \\
+HMM-2 real time & 0.83 / 1.86 & 0.61 / 5.73 & 0.26 / 14.47 \\
+Jump $\lambda=30$ real time & 0.31 / 0.75 & 0.26 / 0.81 & 0.12 / 2.67 \\
 \bottomrule
-\end{tabular}
-\end{center}
+\end{tabular}}
 \end{table}
 
-The results reveal a stark contrast. In high-volatility regimes, the market exhibits significantly stronger mean-reversion (AR(1) $\approx -0.125, t = -3.846$). Furthermore, the Variance Ratio test rejects the Random Walk hypothesis in $18.3\%$ of windows in the 2000--2025 era, compared to the nominal $5\%$ size of the test.
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.9\textwidth]{F2_simulation_accuracy.png}
+\caption{Simulation: balanced accuracy for the high-volatility state (mean $\pm$ one standard deviation across replications). The dashed line marks the pre-specified threshold of 0.80.}
+\label{fig:sim}
+\end{figure*}
+
+\subsection{Q2: Does the S\&P 500 have regimes beyond volatility clustering?}
+\emph{Model selection.} On raw returns, BIC selects the correct number of regimes in every replication of the HMM processes. It also selects four regimes in all 100 GARCH(1,1)-$t$ series and in all 100 HMM-2 series with $t(4)$ shocks (Table~\ref{tab:bic}). BIC on raw returns therefore finds ``regimes'' whenever volatility clusters or returns are fat-tailed, as is the case for every equity index. On the S\&P 500, it also selects $K = 4$.
+
+The GARCH-residual test controls this false-positive rate: it selects $K \ge 2$ in none of the GARCH series. However, it has almost no power, selecting $K \ge 2$ in only 1\% of the true two- and three-regime series, because the GARCH model absorbs regime-driven volatility. The S\&P 500 residuals select $K = 4$ (BIC falls from 54{,}254.5 to 53{,}870.9), a pattern that none of the four simulated processes reproduces. Because the test has no power against Markov regimes, we read this as evidence that GARCH(1,1) misses some features of the series, such as slowly moving volatility \cite{engle2008} or structural change, rather than as evidence of regimes. By our pre-specified rule the criterion is inconclusive.
+
+\begin{table}[t]
+\centering
+\caption{Number of Regimes Selected by BIC (Count of 100 Replications)}
+\label{tab:bic}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+ & \multicolumn{2}{c}{Raw returns} & \multicolumn{2}{c}{GARCH-$t$ residuals}\\
+DGP & $K{=}1$ & $K{\geq}2$ & $K{=}1$ & $K{\geq}2$ \\
+\midrule
+HMM-2 & 0 & 100 ($K{=}2$) & 99 & 1 \\
+HMM-2, $t(4)$ shocks & 0 & 100 ($K{=}4$) & 80 & 20 \\
+HMM-3 & 0 & 100 ($K{=}3$) & 99 & 1 \\
+GARCH(1,1)-$t$ (no regimes) & 0 & 100 ($K{=}4$) & 100 & 0 \\
+\midrule
+S\&P 500, 1950--2025 & \multicolumn{2}{c}{$K = 4$} & \multicolumn{2}{c}{$K = 4$} \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\emph{Forecasting.} Table~\ref{tab:mc} compares models. GARCH(1,1)-$t$, which has no regimes, has the lowest BIC (45{,}403.5, against 45{,}800.3 for the four-state HMM). It also has the highest out-of-sample log score in 2000--2025, and it beats every HMM significantly (Diebold--Mariano $t$ between $-3.71$ and $-4.35$).
+
+\begin{table}[t]
+\centering
+\caption{Model Comparison, S\&P 500. BIC on 1950--2025; Mean Out-of-Sample Log Score 2000--2025 with Parameters Estimated on 1950--1999. DM $t<0$: Worse Than GARCH-$t$.}
+\label{tab:mc}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lcccc}
+\toprule
+Model & Params & BIC & OOS score & DM $t$ \\
+\midrule
+Gaussian i.i.d.\ ($K{=}1$) & 2 & 54{,}156.2 & $-1.780$ & $-5.49$ \\
+Gaussian HMM, $K{=}2$ & 7 & 47{,}484.3 & $-1.445$ & $-3.71$ \\
+Gaussian HMM, $K{=}3$ & 14 & 46{,}209.0 & $-1.388$ & $-4.35$ \\
+Gaussian HMM, $K{=}4$ & 23 & 45{,}800.3 & $-1.373$ & $-4.29$ \\
+GARCH(1,1)-normal & 4 & 46{,}520.3 & $-1.383$ & $-4.77$ \\
+GARCH(1,1)-$t$ & 5 & \textbf{45{,}403.5} & $\mathbf{-1.358}$ & -- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\emph{Agreement between detectors.} On the S\&P 500 the volatility-based detectors agree moderately with each other ($\kappa$ = 0.58--0.68) and with VIX $\geq 20$ ($\kappa$ = 0.60--0.72). They agree much less with NBER recessions ($\kappa$ = 0.15--0.28) and with bear markets ($\kappa$ = 0.22--0.40). Table~\ref{tab:agree} and Fig.~\ref{fig:agree} show that this level of agreement is what the same detectors produce in GARCH data without regimes. Only one of three pairs exceeds the 95th percentile of the null distribution, and only by 0.01. Moreover, agreement in data with true regimes is no higher than without them. Agreement between detectors is therefore not evidence of regimes.
+
+\begin{table}[t]
+\centering
+\caption{Agreement Between Detectors (Cohen's $\kappa$, Ex Post): S\&P 500 vs.\ Simulated Data}
+\label{tab:agree}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\resizebox{\columnwidth}{!}{\begin{tabular}{lcccc}
+\toprule
+ & S\&P & \multicolumn{2}{c}{GARCH-$t$ (no regimes)} & HMM-2 \\
+Pair & 500 & mean & 95th pct & mean \\
+\midrule
+HMM-2 vs.\ Jump $\lambda{=}30$ & 0.68 & 0.43 & 0.67 & 0.43 \\
+HMM-2 vs.\ PELT & 0.65 & 0.64 & 0.74 & 0.68 \\
+Jump $\lambda{=}30$ vs.\ PELT & 0.58 & 0.46 & 0.73 & 0.45 \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.9\textwidth]{F3_agreement_vs_null.png}
+\caption{Agreement between detectors on the S\&P 500 (red line) compared with its distribution in simulated GARCH(1,1)-$t$ data without regimes (grey) and in simulated two-regime HMM data (blue).}
+\label{fig:agree}
+\end{figure*}
+
+\emph{What the detectors find.} The two-state HMM separates a calm state (10.1\% annualized volatility, expected duration 82 days, 77\% of days) from a turbulent state (27.0\%, 25 days, 23\% of days). The three-state model adds a crash state with 42.0\% volatility that covers 5.1\% of days. The high-volatility state is more volatile in 1988--2025 than in 1950--1987 (29.3\% vs.\ 23.0\%). Labels obtained by filtering 1988--2025 with 1950--1987 parameters agree with the full-sample labels with $\kappa = 0.75$. Figure~\ref{fig:timeline} shows the labels over time.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.95\textwidth]{F1_regimes_timeline.png}
+\caption{Top: cumulative S\&P 500 log return with the ex-post HMM-2 high-volatility state shaded. Bottom: high-volatility labels from each method; grey marks periods before real-time labels are available (1950--1969).}
+\label{fig:timeline}
+\end{figure*}
+
+\subsection{Q3: Can regimes be identified in real time?}
+Real-time labels agree with their ex-post counterparts on 84.2\% of days for the HMM ($\kappa = 0.649$) and 80.0\% for the jump model ($\kappa = 0.576$), both below the pre-specified threshold of 0.70 (Table~\ref{tab:rt}). The real-time HMM switches state 21.5 times per year, against 4.2 times per year ex post. Much of the apparent clarity of ex-post regimes is therefore not available to an investor at the time.
+
+\begin{table}[t]
+\centering
+\caption{Real-Time vs.\ Ex-Post Labels, 1970--2025}
+\label{tab:rt}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lcccc}
+\toprule
+ & Agreement & & \multicolumn{2}{c}{Switches per year}\\
+Method & (\%) & $\kappa$ & real time & ex post \\
+\midrule
+HMM-2 & 84.2 & 0.649 & 21.5 & 4.2 \\
+Jump $\lambda{=}30$ & 80.0 & 0.576 & 3.7 & 1.8 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Q4: Does efficiency differ across real-time regimes?}
+Table~\ref{tab:ar} reports regression~\eqref{eq:ar} with real-time labels. Over 1970--2025 the first-order autocorrelation is 0.052 ($t = 3.67$) in the HMM's low-volatility state and $-0.034$ ($t = -1.44$) in the high-volatility state. The difference is $-0.086$ ($t = -3.12$). With jump-model labels the difference is $-0.063$ ($t = -2.12$).
+
+The test is slightly over-sized. In the simulated GARCH data without any predictability it rejects at the 5\% level in 9\% (HMM labels) and 6\% (jump labels) of replications. The 95th percentile of $|t|$ in these placebo runs is 2.10 for HMM labels and 2.05 for jump labels. Against the GARCH placebos, the calibrated $p$-values are 0.01 (HMM) and 0.04 (jump model); against all 400 simulated series they are 0.003 and 0.04.
+
+The effect is concentrated after 2000. In 2000--2025, autocorrelation is close to zero in calm states and between $-0.11$ and $-0.12$ in turbulent states (differences: $t = -2.33$ and $-2.71$). It is not significant in 1970--1979 or 1980--1999 (Fig.~\ref{fig:eff}).
+
+Rolling variance-ratio tests reject the random walk in 28.7\% of one-year windows over 1950--2025: 53.9\% in 1950--1979, 6.1\% in 1980--1999 and 18.3\% in 2000--2025. By contrast, the rejection rate is 4.7\%--5.3\% in simulated regime and GARCH data (95th percentile at most 7.6\%). Regime switching or volatility clustering alone therefore does not produce these rejections. The strong positive autocorrelation before 1980 (about 0.24--0.29 in the 1970s) is consistent with non-synchronous trading in the index \cite{lomackinlay1990} and should not be read as inefficiency without further evidence.
+
+\begin{table*}[t]
+\centering
+\caption{AR(1) by Real-Time Volatility State, Regression \eqref{eq:ar}. White $t$-Statistics in Parentheses.}
+\label{tab:ar}
+\footnotesize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{llccc}
+\toprule
+Labels & Period & Low vol.\ & High vol.\ & Difference \\
+\midrule
+\multirow{4}{*}{HMM-2} & 1970--2025 & 0.052 (3.67) & $-0.034$ ($-1.44$) & $-0.086$ ($-3.12$) \\
+ & 1970--1979 & 0.285 (8.96) & 0.241 (8.18) & $-0.044$ ($-1.02$) \\
+ & 1980--1999 & 0.086 (3.53) & 0.026 (0.50) & $-0.060$ ($-1.05$) \\
+ & 2000--2025 & $-0.029$ ($-1.42$) & $-0.113$ ($-3.75$) & $-0.084$ ($-2.33$) \\
+\midrule
+\multirow{4}{*}{Jump $\lambda{=}30$} & 1970--2025 & 0.028 (1.94) & $-0.035$ ($-1.35$) & $-0.063$ ($-2.12$) \\
+ & 1970--1979 & 0.240 (8.04) & 0.254 (7.89) & 0.013 (0.31) \\
+ & 1980--1999 & 0.017 (0.76) & 0.049 (0.77) & 0.032 (0.47) \\
+ & 2000--2025 & $-0.018$ ($-0.84$) & $-0.123$ ($-3.82$) & $-0.105$ ($-2.71$) \\
+\midrule
+\multicolumn{5}{l}{False-positive rate at 5\% in GARCH placebos: HMM 0.09, jump 0.06}\\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsection{Q5: Regime or volatility?}
+Table~\ref{tab:race} and the right panel of Fig.~\ref{fig:eff} report regression~\eqref{eq:race}. On its own, the volatility interaction is stronger than either regime interaction ($t = -5.06$ over 1970--2025). It is also significant in 1970--1999 ($t = -2.54$), where neither regime label is. When both are included, the volatility interaction remains ($t = -5.00$ and $-5.45$), while the regime interaction becomes \emph{positive} ($t = 2.91$ and $3.74$). The lower autocorrelation in turbulent states is therefore explained by the volatility level. Conditional on volatility, the regime label carries no additional information in the direction the regime hypothesis predicts.
+
+\begin{table}[t]
+\centering
+\caption{Regime Label vs.\ Volatility (Regression \eqref{eq:race}): White $t$-Statistics of the Interactions with $r_{t-1}$. Follow-Up Analysis.}
+\label{tab:race}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\resizebox{\columnwidth}{!}{\begin{tabular}{llcccc}
+\toprule
+ & & Regime & Volatility & \multicolumn{2}{c}{Both}\\
+Labels & Period & only & only & regime & volatility\\
+\midrule
+\multirow{3}{*}{HMM-2} & 1970--2025 & $-3.12$ & $-5.06$ & 2.91 & $-5.00$ \\
+ & 1970--1999 & $-1.12$ & $-2.54$ & 1.52 & $-2.73$ \\
+ & 2000--2025 & $-2.33$ & $-2.92$ & 1.72 & $-2.79$ \\
+\midrule
+\multirow{3}{*}{Jump $\lambda{=}30$} & 1970--2025 & $-2.12$ & $-5.06$ & 3.74 & $-5.45$ \\
+ & 1970--1999 & 0.66 & $-2.54$ & 4.00 & $-3.72$ \\
+ & 2000--2025 & $-2.70$ & $-2.92$ & 1.08 & $-2.58$ \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=0.95\textwidth]{F4_efficiency_by_regime.png}
+\caption{Left: first-order autocorrelation of daily S\&P 500 returns in the low- and high-volatility states identified in real time, with 95\% confidence intervals. Right: $t$-statistics of the interaction of $r_{t-1}$ with the regime label, with log EWMA volatility, and with both together (regression \eqref{eq:race}, 1970--2025).}
+\label{fig:eff}
+\end{figure*}
+
+\subsection{Scorecard}
+Table~\ref{tab:score} collects the pre-specified criteria. The HMM passes the accuracy criteria and the jump model does not. No criterion for real regimes in the S\&P 500 passes, apart from one agreement pair that clears its threshold by 0.01; the GARCH-residual criterion is inconclusive because the test has no power. Both real-time usability criteria fail. Both efficiency criteria pass. Combined with Q5, however, the efficiency result is a volatility effect rather than a regime effect.
+
+\begin{table*}[t]
+\centering
+\caption{Pre-Specified Criteria and Results}
+\label{tab:score}
+\footnotesize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{p{6.2cm}ccc}
+\toprule
+Criterion & Value & Threshold & Result \\
+\midrule
+HMM-2 real-time balanced accuracy & 0.907 & $\ge 0.80$ & pass \\
+HMM-2 ex-post balanced accuracy & 0.951 & $\ge 0.80$ & pass \\
+Jump $\lambda{=}30$ real-time / ex-post accuracy & 0.676 / 0.736 & $\ge 0.80$ & fail \\
+BIC finds $K{\ge}2$ in no-regime data & 1.00 & $\le 0.05$ & fail \\
+GARCH-residual test: size / power & 0.00 / 0.01 & $\le 0.10$ / $\ge 0.80$ & pass / fail \\
+GARCH-residual test on S\&P 500 & $K = 4$ & $K \ge 2$ & inconclusive \\
+Best HMM beats GARCH-$t$ out of sample & $t = -4.29$ & $t \ge 1.96$ & fail \\
+Agreement above no-regime 95th pct (3 pairs) & 1 of 3 & 3 of 3 & fail \\
+Real-time vs.\ ex-post $\kappa$ (HMM / jump) & 0.649 / 0.576 & $\ge 0.70$ & fail \\
+AR(1) test false-positive rate (HMM / jump) & 0.09 / 0.06 & $\le 0.10$ & pass \\
+AR(1) high minus low, $|t|$ (HMM / jump) & 3.12 / 2.12 & $\ge 1.96$ & pass \\
+\bottomrule
+\end{tabular}
+\end{table*}
 
 \section{Discussion}
 
-\subsection{The "Averaging" Problem of Window-Based Diagnostics}
-The failure of the RES approach provides a theoretical insight into the "detection problem." Window-based diagnostics are essentially local averages. If a regime shift occurs abruptly, the rolling window "blurs" the transition, averaging the new regime's properties with the old one. This creates a lag that is often longer than the regime itself.
+\emph{Implications for the AMH.} The results support an adaptive view of efficiency. Return autocorrelation changes over time, and it is lower, often negative, when volatility is high, especially in the last 25 years. This fits the AMH idea that the behavior of prices depends on market conditions, and it agrees with earlier evidence on volatility and autocorrelation \cite{lebaron1992, sentana1992}. However, the results do not support describing these conditions as discrete regimes. In the S\&P 500, the regimes found by standard detectors are what volatility clustering would produce, they are hard to identify in real time, and they explain efficiency only through their link to volatility. A simpler continuous variable, the current volatility level, does the job better. For empirical work on the AMH, regime-based evidence should be checked against no-regime benchmarks and against continuous measures of market conditions.
 
-\subsection{The Latent-State Solution}
-Latent-state models avoid this by treating the regime as a hidden variable influencing the *entire* return distribution. By modeling the transition probability $A_{ij}$, the HMM identifies structural shifts based on the likelihood of the current observation given the state, rather than an average of the past. This allows for near-instantaneous regime detection.
+\emph{Methodological implications.} Two kinds of evidence often presented for regimes, a BIC preference for several states and agreement between different detectors, appear in our simulations even when there are no regimes. Studies that rely on them should report a no-regime benchmark such as the one used here.
 
-\subsection{Operationalizing the AMH}
-Our results suggest that the AMH can be operationalized, but only through latent-state models. The decoupling from NBER recessions indicates that the "ecology" of the market changes independently of the macroeconomy. The increase in predictability during high-volatility states suggests that "adaptation" manifests as a shift in dominant behavior—likely moving from fundamental pricing to synchronized, panic-driven mean reversion.
+\emph{Limitations.} We study one index, at a daily frequency, with first-order autocorrelation and variance ratios as the measures of efficiency. The efficiency tests use two-state labels. Whether a three- or four-state model, for example one with a separate crash state, adds information beyond volatility is not yet tested. The GARCH-residual test has no power against Markov regimes, so it cannot rule regimes out. The regime-versus-volatility comparison was not part of the pre-specified criteria. The jump-model results depend on the feature set and penalty values, and the simulations, generated mostly from HMMs, favor the HMM. Index autocorrelation before 1980 is likely affected by non-synchronous trading. Yahoo Finance prices may be revised over time.
 
 \section{Conclusion}
-This paper operationalizes the Adaptive Market Hypothesis by contrasting two regime-detection frameworks. We find that traditional window-based efficiency scores are insufficient for real-time detection and do not improve trading performance. However, GPU-accelerated latent models successfully identify objective volatility regimes that are decoupled from macroeconomic recessions and strongly linked to market inefficiency. This provides a quantitative foundation for regime-conditional trading and a new methodology for testing the AMH.
+We asked whether objectively identified market regimes explain how efficiency changes over time in the S\&P 500 from 1950 to 2025. Regime detectors work when regimes exist, but the usual evidence for regimes in the S\&P 500 is matched by volatility clustering alone, a no-regime GARCH model fits and forecasts better, and real-time labels differ substantially from ex-post ones. Market efficiency, measured by return autocorrelation with labels available in real time, is lower in turbulent periods. This variation is explained by the level of volatility, not by the regime label. The market is adaptive, but in this sample it adapts to volatility rather than switching between regimes.
+
+\section*{Data and Code Availability}
+All code is available at \url{https://github.com/vihanlalan/tbmd-aeh}. The results were produced by \texttt{src/regime\_identification.py} (repository version \texttt{8fa14df}; the follow-up analysis in Table~\ref{tab:race} by \texttt{volatility\_horse\_race} in the same file). Every table and figure can be regenerated from \texttt{outputs/regimes/} with \texttt{src/paper\_figures.py}. The S\&P 500 and VIX data are from Yahoo Finance and cannot be redistributed; the code downloads them.
 
 \begin{thebibliography}{00}
-\bibitem{b1} Lo, A. W. (2004). The adaptive markets hypothesis: Market efficiency from an evolutionary perspective. \textit{Journal of Portfolio Management}, 30(5), 15--29.
-\bibitem{b2} Lo, A. W. (2017). \textit{Adaptive Markets: Financial Evolution at the Speed of Thought}. Princeton University Press.
-\bibitem{b3} Hamilton, J. D. (1989). A new approach to the economic analysis of nonstationary time series and the business cycle. \textit{Econometrica}, 57(2), 357--384.
-\bibitem{b4} Lo, A. W., \& MacKinlay, A. C. (1988). Stock market prices do not follow random walks: Evidence from a simple specification test. \textit{Review of Financial Studies}, 1(1), 41--66.
-\bibitem{b5} Nystrup, et al. (2020). Statistical Jump Models for Regime Identification. \textit{Financial Econometrics}.
-\bibitem{b6} Fama, E. F. (1970). Efficient capital markets: A review of theory and empirical work. \textit{Journal of Finance}, 25(2), 383--417.
-\bibitem{b7} Jegadeesh, N., \& Titman, S. (1993). Returns to buying winners and selling losers: Implications for stock market efficiency. \textit{Journal of Finance}, 48(1), 65--91.
-\bibitem{b8} Ball, R., \& Brown, P. (1968). An empirical evaluation of accounting income numbers. \textit{Journal of Accounting Research}, 6(2), 159--178.
-\bibitem{b9} DeBondt, W. F. M., \& Thaler, R. (1985). Does the stock market overreact? \textit{Journal of Finance}, 40(3), 793--805.
-\bibitem{b10} Amihud, Y. (2002). Illiquidity and stock returns: Cross-section and time-series effects. \textit{Journal of Financial Markets}, 5(1), 31--56.
-\bibitem{b11} Hou, K., Xue, C., \& Zhang, L. (2020). Replicating anomalies. \textit{Review of Financial Studies}, 33(5), 2019--2133.
-\bibitem{b12} McLean, R. D., \& Pontiff, J. (2016). Does academic research destroy stock return predictability? \textit{Journal of Finance}, 71(1), 5--32.
-\bibitem{b13} Harvey, C. R., Liu, Y, \& Zhu, H. (2016). \dots and the cross-section of expected returns. \textit{Review of Financial Studies}, 29(1), 5--68.
-\bibitem{b14} Bailey, D. H., \& López de Prado, M. (2012). The Sharpe ratio efficient frontier. \textit{Journal of Risk}, 15(2), 3--44.
-\bibitem{b15} Bailey, D. H., \& López de Prado, M. (2014). The deflated Sharpe ratio. \textit{Journal of Portfolio Management}, 40(5), 94--107.
-\bibitem{b16} Kahneman, D., \& Tversky, A. (1979). Prospect theory: An analysis of decision under risk. \textit{Econometrica}, 47(2), 263--291.
-\bibitem{b17} Christie, W. G., \& Huang, R. D. (1995). Following the pied piper: Do individual returns herd around the market? \textit{Financial Analysts Journal}, 51(4), 31--37.
-\bibitem{b18} Baker, M., \& Wurgler, J. (2007). Investor sentiment in the stock market. \textit{Journal of Economic Perspectives}, 21(2), 129--151.
-\bibitem{b19} De Long, J. B., Shleifer, A, Summers, L. H., \& Waldmann, R. J. (1990). Noise trader risk in financial markets. \textit{Journal of Political Economy}, 98(4), 703--738.
-\bibitem{b20} Kim, J. H., Shamsuddin, A, \& Lim, K.-P. (2011). Stock return predictability and the adaptive markets hypothesis: Evidence from century-long U.S. data. \textit{Journal of Empirical Finance}, 18(5), 868--879.
-\bibitem{b21} Lim, K.-P., \& Brooks, R. (2011). The evolution of stock market efficiency over time: A survey of the empirical literature. \textit{Journal of Economic Surveys}, 25(1), 69--108.
-\bibitem{b22} Urquhart, A., \& Hudson, R. (2013). Efficient or adaptive markets? Evidence from major stock markets using very long run historic data. \textit{International Review of Financial Analysis}, 28, 130--142.
-\bibitem{b23} Chordia, T., Roll, R., \& Subrahmanyam, A. (2008). Liquidity and market efficiency. \textit{Journal of Financial Economics}, 87(2), 249--268.
-\bibitem{b24} Künsch, H. R. (1989). The jackknife and the bootstrap for general stationary observations. \textit{Annals of Statistics}, 3(3), 1217--1241.
-\bibitem{b25} Newey, W. K., \& West, K. D. (1987). A simple, positive semi-definite, heteroskedasticity and autocorrelation consistent covariance matrix. \textit{Econometrica}, 55(3), 703--708.
-\bibitem{b26} Whaley, R. E. (2000). The investor fear gauge. \textit{Journal of Portfolio Management}, 26(3), 12--17.
+\bibitem{fama1970} E. F. Fama, ``Efficient capital markets: A review of theory and empirical work,'' \textit{J. Finance}, vol. 25, no. 2, pp. 383--417, 1970.
+\bibitem{lo2004} A. W. Lo, ``The adaptive markets hypothesis: Market efficiency from an evolutionary perspective,'' \textit{J. Portfolio Manage.}, vol. 30, no. 5, pp. 15--29, 2004.
+\bibitem{lo2017} A. W. Lo, \textit{Adaptive Markets: Financial Evolution at the Speed of Thought}. Princeton, NJ, USA: Princeton Univ. Press, 2017.
+\bibitem{limbrooks2011} K.-P. Lim and R. Brooks, ``The evolution of stock market efficiency over time: A survey of the empirical literature,'' \textit{J. Econ. Surveys}, vol. 25, no. 1, pp. 69--108, 2011.
+\bibitem{kim2011} J. H. Kim, A. Shamsuddin, and K.-P. Lim, ``Stock return predictability and the adaptive markets hypothesis: Evidence from century-long U.S. data,'' \textit{J. Empirical Finance}, vol. 18, no. 5, pp. 868--879, 2011.
+\bibitem{urquhart2013} A. Urquhart and R. Hudson, ``Efficient or adaptive markets? Evidence from major stock markets using very long run historic data,'' \textit{Int. Rev. Financial Anal.}, vol. 28, pp. 130--142, 2013.
+\bibitem{hamilton1989} J. D. Hamilton, ``A new approach to the economic analysis of nonstationary time series and the business cycle,'' \textit{Econometrica}, vol. 57, no. 2, pp. 357--384, 1989.
+\bibitem{angtimmermann2012} A. Ang and A. Timmermann, ``Regime changes and financial markets,'' \textit{Annu. Rev. Financial Econ.}, vol. 4, pp. 313--337, 2012.
+\bibitem{nystrup2020} P. Nystrup, E. Lindstr\"om, and H. Madsen, ``Learning hidden Markov models with persistent states by penalizing jumps,'' \textit{Expert Syst. Appl.}, vol. 150, art. 113307, 2020.
+\bibitem{shu2024} Y. Shu, C. Yu, and J. M. Mulvey, ``Downside risk reduction using regime-switching signals: A statistical jump model approach,'' \textit{J. Asset Manage.}, 2024.
+\bibitem{killick2012} R. Killick, P. Fearnhead, and I. A. Eckley, ``Optimal detection of changepoints with a linear computational cost,'' \textit{J. Amer. Statist. Assoc.}, vol. 107, no. 500, pp. 1590--1598, 2012.
+\bibitem{lunde2004} A. Lunde and A. Timmermann, ``Duration dependence in stock prices: An analysis of bull and bear markets,'' \textit{J. Bus. Econ. Statist.}, vol. 22, no. 3, pp. 253--273, 2004.
+\bibitem{bollerslev1986} T. Bollerslev, ``Generalized autoregressive conditional heteroskedasticity,'' \textit{J. Econometrics}, vol. 31, no. 3, pp. 307--327, 1986.
+\bibitem{bollerslev1987} T. Bollerslev, ``A conditionally heteroskedastic time series model for speculative prices and rates of return,'' \textit{Rev. Econ. Statist.}, vol. 69, no. 3, pp. 542--547, 1987.
+\bibitem{lamoureux1990} C. G. Lamoureux and W. D. Lastrapes, ``Persistence in variance, structural change, and the GARCH model,'' \textit{J. Bus. Econ. Statist.}, vol. 8, no. 2, pp. 225--234, 1990.
+\bibitem{hamiltonsusmel1994} J. D. Hamilton and R. Susmel, ``Autoregressive conditional heteroskedasticity and changes in regime,'' \textit{J. Econometrics}, vol. 64, no. 1--2, pp. 307--333, 1994.
+\bibitem{gray1996} S. F. Gray, ``Modeling the conditional distribution of interest rates as a regime-switching process,'' \textit{J. Financial Econ.}, vol. 42, no. 1, pp. 27--62, 1996.
+\bibitem{klaassen2002} F. Klaassen, ``Improving GARCH volatility forecasts with regime-switching GARCH,'' \textit{Empirical Econ.}, vol. 27, no. 2, pp. 363--394, 2002.
+\bibitem{diebold2001} F. X. Diebold and A. Inoue, ``Long memory and regime switching,'' \textit{J. Econometrics}, vol. 105, no. 1, pp. 131--159, 2001.
+\bibitem{engle2008} R. F. Engle and J. G. Rangel, ``The spline-GARCH model for low-frequency volatility and its global macroeconomic causes,'' \textit{Rev. Financial Stud.}, vol. 21, no. 3, pp. 1187--1222, 2008.
+\bibitem{hansen1992} B. E. Hansen, ``The likelihood ratio test under nonstandard conditions: Testing the Markov switching model of GNP,'' \textit{J. Appl. Econometrics}, vol. 7, no. S1, pp. S61--S82, 1992.
+\bibitem{lebaron1992} B. LeBaron, ``Some relations between volatility and serial correlations in stock market returns,'' \textit{J. Bus.}, vol. 65, no. 2, pp. 199--219, 1992.
+\bibitem{sentana1992} E. Sentana and S. Wadhwani, ``Feedback traders and stock return autocorrelations: Evidence from a century of daily data,'' \textit{Econ. J.}, vol. 102, no. 411, pp. 415--425, 1992.
+\bibitem{campbell1993} J. Y. Campbell, S. J. Grossman, and J. Wang, ``Trading volume and serial correlation in stock returns,'' \textit{Quart. J. Econ.}, vol. 108, no. 4, pp. 905--939, 1993.
+\bibitem{lomackinlay1990} A. W. Lo and A. C. MacKinlay, ``An econometric analysis of nonsynchronous trading,'' \textit{J. Econometrics}, vol. 45, no. 1--2, pp. 181--211, 1990.
+\bibitem{lomackinlay1988} A. W. Lo and A. C. MacKinlay, ``Stock market prices do not follow random walks: Evidence from a simple specification test,'' \textit{Rev. Financial Stud.}, vol. 1, no. 1, pp. 41--66, 1988.
+\bibitem{cohen1960} J. Cohen, ``A coefficient of agreement for nominal scales,'' \textit{Educ. Psychol. Meas.}, vol. 20, no. 1, pp. 37--46, 1960.
+\bibitem{schwarz1978} G. Schwarz, ``Estimating the dimension of a model,'' \textit{Ann. Statist.}, vol. 6, no. 2, pp. 461--464, 1978.
+\bibitem{diebold1998} F. X. Diebold, T. A. Gunther, and A. S. Tay, ``Evaluating density forecasts with applications to financial risk management,'' \textit{Int. Econ. Rev.}, vol. 39, no. 4, pp. 863--883, 1998.
+\bibitem{dieboldmariano1995} F. X. Diebold and R. S. Mariano, ``Comparing predictive accuracy,'' \textit{J. Bus. Econ. Statist.}, vol. 13, no. 3, pp. 253--263, 1995.
+\bibitem{neweywest1987} W. K. Newey and K. D. West, ``A simple, positive semi-definite, heteroskedasticity and autocorrelation consistent covariance matrix,'' \textit{Econometrica}, vol. 55, no. 3, pp. 703--708, 1987.
+\bibitem{white1980} H. White, ``A heteroskedasticity-consistent covariance matrix estimator and a direct test for heteroskedasticity,'' \textit{Econometrica}, vol. 48, no. 4, pp. 817--838, 1980.
 \end{thebibliography}
 
 \end{document}

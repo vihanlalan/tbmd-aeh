@@ -1,0 +1,10 @@
+,share_high_pct,n_switches,mean_spell_days
+HMM-2,22.7,296.0,64.4
+HMM-3 top state,5.1,82.0,230.4
+Jump λ=10,26.7,270.0,70.6
+Jump λ=30,22.0,122.0,155.4
+Jump λ=100,21.4,46.0,406.8
+Change-point (PELT),21.4,36.0,516.8
+Bear market (20% rule),15.5,26.0,708.1
+NBER recession,12.4,22.0,831.3
+VIX ≥ 20 (1990+),37.4,492.0,18.4

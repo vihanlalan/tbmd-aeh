@@ -1,0 +1,29 @@
+dgp,method,n_reps,balanced_accuracy,ba_sd,kappa,median_delay_days,missed_episodes,switch_ratio
+HMM2 (correctly specified),Change-point (PELT) ex post,25,0.86,0.016,0.665,0.0,0.365,0.291
+HMM2 (correctly specified),HMM-2 ex post (smoothed),100,0.951,0.005,0.913,0.0,0.122,0.836
+HMM2 (correctly specified),HMM-2 real time (filtered),100,0.907,0.007,0.826,1.0,0.09,1.856
+HMM2 (correctly specified),Jump λ=10 ex post,100,0.723,0.032,0.385,1.0,0.232,0.89
+HMM2 (correctly specified),Jump λ=10 real time,100,0.695,0.028,0.33,2.0,0.221,1.266
+HMM2 (correctly specified),Jump λ=100 ex post,100,0.715,0.023,0.411,0.0,0.489,0.258
+HMM2 (correctly specified),Jump λ=100 real time,100,0.619,0.019,0.215,4.5,0.47,0.421
+HMM2 (correctly specified),Jump λ=30 ex post,100,0.736,0.026,0.425,1.0,0.323,0.518
+HMM2 (correctly specified),Jump λ=30 real time,100,0.676,0.021,0.307,4.0,0.317,0.752
+HMM2 with t(4) shocks (misspecified),Change-point (PELT) ex post,25,0.822,0.017,0.609,0.0,0.408,0.299
+HMM2 with t(4) shocks (misspecified),HMM-2 ex post (smoothed),100,0.862,0.016,0.751,0.0,0.099,2.691
+HMM2 with t(4) shocks (misspecified),HMM-2 real time (filtered),100,0.787,0.014,0.611,1.0,0.081,5.727
+HMM2 with t(4) shocks (misspecified),Jump λ=10 ex post,100,0.696,0.029,0.325,0.0,0.235,0.955
+HMM2 with t(4) shocks (misspecified),Jump λ=10 real time,100,0.668,0.025,0.271,1.5,0.224,1.328
+HMM2 with t(4) shocks (misspecified),Jump λ=100 ex post,100,0.692,0.024,0.363,0.0,0.504,0.252
+HMM2 with t(4) shocks (misspecified),Jump λ=100 real time,100,0.607,0.02,0.191,0.0,0.479,0.426
+HMM2 with t(4) shocks (misspecified),Jump λ=30 ex post,100,0.708,0.023,0.362,0.0,0.327,0.55
+HMM2 with t(4) shocks (misspecified),Jump λ=30 real time,100,0.652,0.02,0.255,3.0,0.317,0.811
+HMM3 (three regimes),Change-point (PELT) ex post,25,0.923,0.018,0.66,0.0,0.298,0.548
+HMM3 (three regimes),HMM-2 ex post (smoothed),100,0.862,0.029,0.25,0.0,0.021,5.096
+HMM3 (three regimes),HMM-2 real time (filtered),100,0.861,0.023,0.264,0.0,0.024,14.467
+HMM3 (three regimes),"HMM-3 ex post, 3-class",100,0.912,0.01,0.857,,,0.783
+HMM3 (three regimes),Jump λ=10 ex post,100,0.728,0.041,0.129,0.0,0.121,3.097
+HMM3 (three regimes),Jump λ=10 real time,100,0.71,0.038,0.114,0.0,0.119,4.439
+HMM3 (three regimes),Jump λ=100 ex post,100,0.772,0.043,0.232,0.0,0.279,0.753
+HMM3 (three regimes),Jump λ=100 real time,100,0.681,0.038,0.139,0.0,0.337,1.284
+HMM3 (three regimes),Jump λ=30 ex post,100,0.749,0.043,0.153,0.0,0.155,1.748
+HMM3 (three regimes),Jump λ=30 real time,100,0.709,0.037,0.121,0.0,0.176,2.669

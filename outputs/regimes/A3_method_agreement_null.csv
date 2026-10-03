@@ -1,0 +1,41 @@
+dgp,pair,n_reps,mean,p05,p95
+"GARCH(1,1)-t (no regimes)",HMM-2 vs Change-point (PELT),25,0.64,0.555,0.741
+"GARCH(1,1)-t (no regimes)",HMM-2 vs Jump λ=10,100,0.333,0.141,0.603
+"GARCH(1,1)-t (no regimes)",HMM-2 vs Jump λ=100,100,0.539,0.399,0.66
+"GARCH(1,1)-t (no regimes)",HMM-2 vs Jump λ=30,100,0.426,0.234,0.665
+"GARCH(1,1)-t (no regimes)",Jump λ=10 vs Change-point (PELT),25,0.361,0.159,0.593
+"GARCH(1,1)-t (no regimes)",Jump λ=10 vs Jump λ=100,100,0.536,0.328,0.748
+"GARCH(1,1)-t (no regimes)",Jump λ=10 vs Jump λ=30,100,0.797,0.641,0.892
+"GARCH(1,1)-t (no regimes)",Jump λ=100 vs Change-point (PELT),25,0.574,0.422,0.784
+"GARCH(1,1)-t (no regimes)",Jump λ=30 vs Change-point (PELT),25,0.455,0.25,0.733
+"GARCH(1,1)-t (no regimes)",Jump λ=30 vs Jump λ=100,100,0.683,0.422,0.863
+HMM2 (correctly specified),HMM-2 vs Change-point (PELT),25,0.681,0.611,0.732
+HMM2 (correctly specified),HMM-2 vs Jump λ=10,100,0.39,0.261,0.512
+HMM2 (correctly specified),HMM-2 vs Jump λ=100,100,0.42,0.318,0.498
+HMM2 (correctly specified),HMM-2 vs Jump λ=30,100,0.432,0.312,0.527
+HMM2 (correctly specified),Jump λ=10 vs Change-point (PELT),25,0.4,0.292,0.527
+HMM2 (correctly specified),Jump λ=10 vs Jump λ=100,100,0.679,0.543,0.773
+HMM2 (correctly specified),Jump λ=10 vs Jump λ=30,100,0.864,0.757,0.921
+HMM2 (correctly specified),Jump λ=100 vs Change-point (PELT),25,0.479,0.359,0.599
+HMM2 (correctly specified),Jump λ=30 vs Change-point (PELT),25,0.453,0.358,0.559
+HMM2 (correctly specified),Jump λ=30 vs Jump λ=100,100,0.774,0.676,0.845
+HMM2 with t(4) shocks (misspecified),HMM-2 vs Change-point (PELT),25,0.54,0.466,0.603
+HMM2 with t(4) shocks (misspecified),HMM-2 vs Jump λ=10,100,0.285,0.186,0.39
+HMM2 with t(4) shocks (misspecified),HMM-2 vs Jump λ=100,100,0.313,0.233,0.378
+HMM2 with t(4) shocks (misspecified),HMM-2 vs Jump λ=30,100,0.315,0.221,0.392
+HMM2 with t(4) shocks (misspecified),Jump λ=10 vs Change-point (PELT),25,0.35,0.235,0.459
+HMM2 with t(4) shocks (misspecified),Jump λ=10 vs Jump λ=100,100,0.637,0.495,0.732
+HMM2 with t(4) shocks (misspecified),Jump λ=10 vs Jump λ=30,100,0.856,0.763,0.908
+HMM2 with t(4) shocks (misspecified),Jump λ=100 vs Change-point (PELT),25,0.429,0.327,0.517
+HMM2 with t(4) shocks (misspecified),Jump λ=30 vs Change-point (PELT),25,0.398,0.329,0.498
+HMM2 with t(4) shocks (misspecified),Jump λ=30 vs Jump λ=100,100,0.743,0.599,0.843
+HMM3 (three regimes),HMM-2 vs Change-point (PELT),25,0.338,0.229,0.461
+HMM3 (three regimes),HMM-2 vs Jump λ=10,100,0.371,0.262,0.46
+HMM3 (three regimes),HMM-2 vs Jump λ=100,100,0.343,0.253,0.429
+HMM3 (three regimes),HMM-2 vs Jump λ=30,100,0.383,0.303,0.449
+HMM3 (three regimes),Jump λ=10 vs Change-point (PELT),25,0.181,0.09,0.305
+HMM3 (three regimes),Jump λ=10 vs Jump λ=100,100,0.608,0.396,0.721
+HMM3 (three regimes),Jump λ=10 vs Jump λ=30,100,0.868,0.796,0.91
+HMM3 (three regimes),Jump λ=100 vs Change-point (PELT),25,0.303,0.128,0.543
+HMM3 (three regimes),Jump λ=30 vs Change-point (PELT),25,0.209,0.099,0.342
+HMM3 (three regimes),Jump λ=30 vs Jump λ=100,100,0.694,0.454,0.828

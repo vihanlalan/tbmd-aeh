@@ -1,0 +1,107 @@
+{
+  "device": "cuda (NVIDIA A100-SXM4-40GB, float32)",
+  "n_sim": 100,
+  "n_pelt": 25,
+  "quick": false,
+  "sample": "1950-01-04 to 2025-12-31",
+  "n_obs": 19120,
+  "validation_passed": true,
+  "bic_k_raw_returns": 4,
+  "bic_k_garch_residuals": 4,
+  "best_hmm_oos": "Gaussian HMM, K=4",
+  "best_hmm_dm_t_vs_garch_t": -4.2896,
+  "pelt_breakpoints": 56,
+  "scorecard": [
+    {
+      "criterion": "HMM-2 real time (filtered): balanced accuracy",
+      "value": "0.907",
+      "result": "PASS"
+    },
+    {
+      "criterion": "Jump \u03bb=30 real time: balanced accuracy",
+      "value": "0.676",
+      "result": "FAIL"
+    },
+    {
+      "criterion": "HMM-2 ex post (smoothed): balanced accuracy",
+      "value": "0.951",
+      "result": "PASS"
+    },
+    {
+      "criterion": "Jump \u03bb=30 ex post: balanced accuracy",
+      "value": "0.736",
+      "result": "FAIL"
+    },
+    {
+      "criterion": "BIC on raw returns finds K>=2 in GARCH-t data (no regimes)",
+      "value": "1.0",
+      "result": "FAIL"
+    },
+    {
+      "criterion": "BIC on GARCH-t residuals finds K>=2 in GARCH-t data (size)",
+      "value": "0.0",
+      "result": "PASS"
+    },
+    {
+      "criterion": "BIC on GARCH-t residuals finds K>=2 in true 2-regime data (power)",
+      "value": "0.01",
+      "result": "FAIL"
+    },
+    {
+      "criterion": "BIC on GARCH-t residuals of the S&P 500 selects K>=2",
+      "value": "K = 4",
+      "result": "PASS"
+    },
+    {
+      "criterion": "Best HMM (Gaussian HMM, K=4) beats GARCH-t out of sample (DM t)",
+      "value": "-4.29",
+      "result": "FAIL"
+    },
+    {
+      "criterion": "Agreement HMM-2 vs Jump \u03bb=30: real kappa vs no-regime (GARCH-t) 95th pct",
+      "value": "0.68 vs 0.67",
+      "result": "PASS"
+    },
+    {
+      "criterion": "Agreement HMM-2 vs Change-point (PELT): real kappa vs no-regime (GARCH-t) 95th pct",
+      "value": "0.65 vs 0.74",
+      "result": "FAIL"
+    },
+    {
+      "criterion": "Agreement Jump \u03bb=30 vs Change-point (PELT): real kappa vs no-regime (GARCH-t) 95th pct",
+      "value": "0.58 vs 0.73",
+      "result": "FAIL"
+    },
+    {
+      "criterion": "HMM-2 real time vs ex post: kappa (1970-2025)",
+      "value": "0.649",
+      "result": "FAIL"
+    },
+    {
+      "criterion": "Jump \u03bb=30 real time vs ex post: kappa (1970-2025)",
+      "value": "0.576",
+      "result": "FAIL"
+    },
+    {
+      "criterion": "HMM-2 real time: test false-positive rate in GARCH-t data",
+      "value": "0.09",
+      "result": "PASS"
+    },
+    {
+      "criterion": "HMM-2 real time: AR(1) high minus low (all (1970-2025)), White t",
+      "value": "-0.086 (t = -3.12)",
+      "result": "PASS"
+    },
+    {
+      "criterion": "Jump \u03bb=30 real time: test false-positive rate in GARCH-t data",
+      "value": "0.06",
+      "result": "PASS"
+    },
+    {
+      "criterion": "Jump \u03bb=30 real time: AR(1) high minus low (all (1970-2025)), White t",
+      "value": "-0.063 (t = -2.12)",
+      "result": "PASS"
+    }
+  ],
+  "runtime_min": 26.7
+}

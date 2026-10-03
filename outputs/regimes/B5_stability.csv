@@ -1,0 +1,4 @@
+sample,low_vol_ann_pct,high_vol_ann_pct,low_dur_days,high_dur_days
+1950-1987,9.33,23.03,72.31,18.95
+1988-2025,10.96,29.31,82.25,30.28
+full 1950-2025,10.1,27.01,81.7,25.14

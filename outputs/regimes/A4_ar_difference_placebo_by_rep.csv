@@ -1,0 +1,801 @@
+dgp,rep,labels,t_diff
+HMM2 (correctly specified),0,HMM-2 real time,-0.005614260813433086
+HMM2 (correctly specified),0,Jump λ=30 real time,0.7639031081904197
+HMM2 (correctly specified),1,HMM-2 real time,0.15816631582308288
+HMM2 (correctly specified),1,Jump λ=30 real time,-0.40667715270779975
+HMM2 (correctly specified),2,HMM-2 real time,0.1897031333516452
+HMM2 (correctly specified),2,Jump λ=30 real time,-0.0549470090313371
+HMM2 (correctly specified),3,HMM-2 real time,0.5684517386979216
+HMM2 (correctly specified),3,Jump λ=30 real time,0.8781592996871931
+HMM2 (correctly specified),4,HMM-2 real time,-0.5635068774416017
+HMM2 (correctly specified),4,Jump λ=30 real time,-0.6657168504743861
+HMM2 (correctly specified),5,HMM-2 real time,-1.0599319675695917
+HMM2 (correctly specified),5,Jump λ=30 real time,-0.7074660162001958
+HMM2 (correctly specified),6,HMM-2 real time,0.5055187993425942
+HMM2 (correctly specified),6,Jump λ=30 real time,-0.8339378000134703
+HMM2 (correctly specified),7,HMM-2 real time,0.25689664174583127
+HMM2 (correctly specified),7,Jump λ=30 real time,-0.01100116977260498
+HMM2 (correctly specified),8,HMM-2 real time,0.21762332184131253
+HMM2 (correctly specified),8,Jump λ=30 real time,0.7211153448210507
+HMM2 (correctly specified),9,HMM-2 real time,-0.004085916107440783
+HMM2 (correctly specified),9,Jump λ=30 real time,-1.0205981398319615
+HMM2 (correctly specified),10,HMM-2 real time,-0.2402371975152338
+HMM2 (correctly specified),10,Jump λ=30 real time,0.46958013683716743
+HMM2 (correctly specified),11,HMM-2 real time,-0.22114402539592015
+HMM2 (correctly specified),11,Jump λ=30 real time,-0.2488253764614943
+HMM2 (correctly specified),12,HMM-2 real time,-0.9977292064790587
+HMM2 (correctly specified),12,Jump λ=30 real time,-0.11375975549546137
+HMM2 (correctly specified),13,HMM-2 real time,0.07765216056356675
+HMM2 (correctly specified),13,Jump λ=30 real time,-1.2221365410633702
+HMM2 (correctly specified),14,HMM-2 real time,-0.3746927877510629
+HMM2 (correctly specified),14,Jump λ=30 real time,0.7480694959447151
+HMM2 (correctly specified),15,HMM-2 real time,-0.040106351179044535
+HMM2 (correctly specified),15,Jump λ=30 real time,-0.9159802383307618
+HMM2 (correctly specified),16,HMM-2 real time,-2.565195496906592
+HMM2 (correctly specified),16,Jump λ=30 real time,-1.3617033172919137
+HMM2 (correctly specified),17,HMM-2 real time,0.5597480199067467
+HMM2 (correctly specified),17,Jump λ=30 real time,1.5702743178723175
+HMM2 (correctly specified),18,HMM-2 real time,0.5286863569099093
+HMM2 (correctly specified),18,Jump λ=30 real time,1.452774443325433
+HMM2 (correctly specified),19,HMM-2 real time,-0.8709301855840619
+HMM2 (correctly specified),19,Jump λ=30 real time,-1.295536497834402
+HMM2 (correctly specified),20,HMM-2 real time,0.2910148254888895
+HMM2 (correctly specified),20,Jump λ=30 real time,-0.034947745835003874
+HMM2 (correctly specified),21,HMM-2 real time,-1.0307425797614893
+HMM2 (correctly specified),21,Jump λ=30 real time,0.2682938768273125
+HMM2 (correctly specified),22,HMM-2 real time,1.596332263770818
+HMM2 (correctly specified),22,Jump λ=30 real time,1.1139947571239175
+HMM2 (correctly specified),23,HMM-2 real time,0.06387951707234422
+HMM2 (correctly specified),23,Jump λ=30 real time,0.9448355398953442
+HMM2 (correctly specified),24,HMM-2 real time,-0.7877958718366468
+HMM2 (correctly specified),24,Jump λ=30 real time,-1.198025131676038
+HMM2 (correctly specified),25,HMM-2 real time,-0.4692888248801627
+HMM2 (correctly specified),25,Jump λ=30 real time,-0.23259204664403116
+HMM2 (correctly specified),26,HMM-2 real time,-1.3729226696970203
+HMM2 (correctly specified),26,Jump λ=30 real time,-0.5594944669811285
+HMM2 (correctly specified),27,HMM-2 real time,2.506781426850111
+HMM2 (correctly specified),27,Jump λ=30 real time,0.3472498706915926
+HMM2 (correctly specified),28,HMM-2 real time,-0.8800750210441104
+HMM2 (correctly specified),28,Jump λ=30 real time,-0.07923509918021988
+HMM2 (correctly specified),29,HMM-2 real time,1.1008265332975358
+HMM2 (correctly specified),29,Jump λ=30 real time,-1.0020812243890904
+HMM2 (correctly specified),30,HMM-2 real time,-1.4676661710045253
+HMM2 (correctly specified),30,Jump λ=30 real time,-0.9476018032848591
+HMM2 (correctly specified),31,HMM-2 real time,-2.3603992241218754
+HMM2 (correctly specified),31,Jump λ=30 real time,-1.2941987504496264
+HMM2 (correctly specified),32,HMM-2 real time,1.313167072413384
+HMM2 (correctly specified),32,Jump λ=30 real time,-0.14914396723347606
+HMM2 (correctly specified),33,HMM-2 real time,-1.2236591486108328
+HMM2 (correctly specified),33,Jump λ=30 real time,-0.7220994694704337
+HMM2 (correctly specified),34,HMM-2 real time,0.7006879137619538
+HMM2 (correctly specified),34,Jump λ=30 real time,2.1876900001910324
+HMM2 (correctly specified),35,HMM-2 real time,-1.921874193447401
+HMM2 (correctly specified),35,Jump λ=30 real time,-0.04824005981161209
+HMM2 (correctly specified),36,HMM-2 real time,0.42805860396456
+HMM2 (correctly specified),36,Jump λ=30 real time,0.8392508650120152
+HMM2 (correctly specified),37,HMM-2 real time,0.8951024250208445
+HMM2 (correctly specified),37,Jump λ=30 real time,-0.7811480656804095
+HMM2 (correctly specified),38,HMM-2 real time,0.09872644801418491
+HMM2 (correctly specified),38,Jump λ=30 real time,-0.9989030446252821
+HMM2 (correctly specified),39,HMM-2 real time,-0.005338232082811841
+HMM2 (correctly specified),39,Jump λ=30 real time,0.08462174063683164
+HMM2 (correctly specified),40,HMM-2 real time,0.7543257513052776
+HMM2 (correctly specified),40,Jump λ=30 real time,1.1440740839363162
+HMM2 (correctly specified),41,HMM-2 real time,1.171450812866808
+HMM2 (correctly specified),41,Jump λ=30 real time,0.49211889592676916
+HMM2 (correctly specified),42,HMM-2 real time,1.4221609231162389
+HMM2 (correctly specified),42,Jump λ=30 real time,1.1004987876096106
+HMM2 (correctly specified),43,HMM-2 real time,1.7754202568014115
+HMM2 (correctly specified),43,Jump λ=30 real time,1.7674455346675935
+HMM2 (correctly specified),44,HMM-2 real time,0.930807349278414
+HMM2 (correctly specified),44,Jump λ=30 real time,1.6521638141696573
+HMM2 (correctly specified),45,HMM-2 real time,0.651283304280872
+HMM2 (correctly specified),45,Jump λ=30 real time,0.017675954339407437
+HMM2 (correctly specified),46,HMM-2 real time,1.5640186634324738
+HMM2 (correctly specified),46,Jump λ=30 real time,0.37008094338461467
+HMM2 (correctly specified),47,HMM-2 real time,0.20489382259946265
+HMM2 (correctly specified),47,Jump λ=30 real time,0.33025165646325505
+HMM2 (correctly specified),48,HMM-2 real time,-0.016731847272901664
+HMM2 (correctly specified),48,Jump λ=30 real time,0.49570404159888365
+HMM2 (correctly specified),49,HMM-2 real time,-0.6793672653333486
+HMM2 (correctly specified),49,Jump λ=30 real time,0.3609758934535806
+HMM2 (correctly specified),50,HMM-2 real time,1.8157058808527473
+HMM2 (correctly specified),50,Jump λ=30 real time,-0.6171262589763418
+HMM2 (correctly specified),51,HMM-2 real time,0.31542924948618384
+HMM2 (correctly specified),51,Jump λ=30 real time,0.8584002201845266
+HMM2 (correctly specified),52,HMM-2 real time,-0.2704567434374875
+HMM2 (correctly specified),52,Jump λ=30 real time,-3.00951062681265
+HMM2 (correctly specified),53,HMM-2 real time,-0.3522934517869868
+HMM2 (correctly specified),53,Jump λ=30 real time,1.0484805440816691
+HMM2 (correctly specified),54,HMM-2 real time,-0.6790345772002692
+HMM2 (correctly specified),54,Jump λ=30 real time,-1.797733149247564
+HMM2 (correctly specified),55,HMM-2 real time,-0.1412245253653783
+HMM2 (correctly specified),55,Jump λ=30 real time,0.9950819818576722
+HMM2 (correctly specified),56,HMM-2 real time,-0.4737560006854026
+HMM2 (correctly specified),56,Jump λ=30 real time,-0.6648612707227456
+HMM2 (correctly specified),57,HMM-2 real time,1.5293030791298563
+HMM2 (correctly specified),57,Jump λ=30 real time,0.32175498834481403
+HMM2 (correctly specified),58,HMM-2 real time,-1.065688843414482
+HMM2 (correctly specified),58,Jump λ=30 real time,-1.4597834525550668
+HMM2 (correctly specified),59,HMM-2 real time,-1.781275479620213
+HMM2 (correctly specified),59,Jump λ=30 real time,0.152971681159982
+HMM2 (correctly specified),60,HMM-2 real time,1.213462674012313
+HMM2 (correctly specified),60,Jump λ=30 real time,1.8684939425348532
+HMM2 (correctly specified),61,HMM-2 real time,-1.743874576496597
+HMM2 (correctly specified),61,Jump λ=30 real time,1.0141078505739007
+HMM2 (correctly specified),62,HMM-2 real time,0.7490925525724609
+HMM2 (correctly specified),62,Jump λ=30 real time,0.7564773334257936
+HMM2 (correctly specified),63,HMM-2 real time,1.02281450677223
+HMM2 (correctly specified),63,Jump λ=30 real time,1.2169310954544084
+HMM2 (correctly specified),64,HMM-2 real time,0.6756600029023663
+HMM2 (correctly specified),64,Jump λ=30 real time,0.7238142852677493
+HMM2 (correctly specified),65,HMM-2 real time,-0.5169363986039527
+HMM2 (correctly specified),65,Jump λ=30 real time,-0.5308711947849746
+HMM2 (correctly specified),66,HMM-2 real time,-0.34875215622144856
+HMM2 (correctly specified),66,Jump λ=30 real time,1.6327132875040902
+HMM2 (correctly specified),67,HMM-2 real time,1.3358870454107388
+HMM2 (correctly specified),67,Jump λ=30 real time,0.5067955024374794
+HMM2 (correctly specified),68,HMM-2 real time,-0.8446278483315656
+HMM2 (correctly specified),68,Jump λ=30 real time,0.3292898778282369
+HMM2 (correctly specified),69,HMM-2 real time,0.7648663776481535
+HMM2 (correctly specified),69,Jump λ=30 real time,-1.3230880112202428
+HMM2 (correctly specified),70,HMM-2 real time,0.5444243223825426
+HMM2 (correctly specified),70,Jump λ=30 real time,-0.974464241985445
+HMM2 (correctly specified),71,HMM-2 real time,0.820313777809515
+HMM2 (correctly specified),71,Jump λ=30 real time,3.4227079291123457
+HMM2 (correctly specified),72,HMM-2 real time,1.2581894214062166
+HMM2 (correctly specified),72,Jump λ=30 real time,-0.872681410863588
+HMM2 (correctly specified),73,HMM-2 real time,-1.0683620413190396
+HMM2 (correctly specified),73,Jump λ=30 real time,-0.0647615796368296
+HMM2 (correctly specified),74,HMM-2 real time,0.2631099293114405
+HMM2 (correctly specified),74,Jump λ=30 real time,-1.210897051577431
+HMM2 (correctly specified),75,HMM-2 real time,1.4513413438694032
+HMM2 (correctly specified),75,Jump λ=30 real time,-1.5243518838922343
+HMM2 (correctly specified),76,HMM-2 real time,0.9005360952202285
+HMM2 (correctly specified),76,Jump λ=30 real time,0.3742685386344081
+HMM2 (correctly specified),77,HMM-2 real time,0.9959442718336436
+HMM2 (correctly specified),77,Jump λ=30 real time,0.35935024991342673
+HMM2 (correctly specified),78,HMM-2 real time,-1.7817251993529808
+HMM2 (correctly specified),78,Jump λ=30 real time,0.45316920376734326
+HMM2 (correctly specified),79,HMM-2 real time,1.5179588926248544
+HMM2 (correctly specified),79,Jump λ=30 real time,2.6971952875859606
+HMM2 (correctly specified),80,HMM-2 real time,-0.3050383231283002
+HMM2 (correctly specified),80,Jump λ=30 real time,-1.202683138707513
+HMM2 (correctly specified),81,HMM-2 real time,-0.8479933722695473
+HMM2 (correctly specified),81,Jump λ=30 real time,0.02973671125207739
+HMM2 (correctly specified),82,HMM-2 real time,1.57446176431974
+HMM2 (correctly specified),82,Jump λ=30 real time,1.8780374047380088
+HMM2 (correctly specified),83,HMM-2 real time,-0.03439865052757765
+HMM2 (correctly specified),83,Jump λ=30 real time,0.1114994899220047
+HMM2 (correctly specified),84,HMM-2 real time,0.8216735466594006
+HMM2 (correctly specified),84,Jump λ=30 real time,-1.5171784574271279
+HMM2 (correctly specified),85,HMM-2 real time,-1.1383340825682617
+HMM2 (correctly specified),85,Jump λ=30 real time,0.493037958122428
+HMM2 (correctly specified),86,HMM-2 real time,-0.060081796731064126
+HMM2 (correctly specified),86,Jump λ=30 real time,0.5963973231517395
+HMM2 (correctly specified),87,HMM-2 real time,0.42344030055557436
+HMM2 (correctly specified),87,Jump λ=30 real time,0.47739817097861165
+HMM2 (correctly specified),88,HMM-2 real time,1.1118237880620983
+HMM2 (correctly specified),88,Jump λ=30 real time,-0.7019621370632175
+HMM2 (correctly specified),89,HMM-2 real time,0.6904189669056878
+HMM2 (correctly specified),89,Jump λ=30 real time,-0.794718397287817
+HMM2 (correctly specified),90,HMM-2 real time,0.5877576927056928
+HMM2 (correctly specified),90,Jump λ=30 real time,1.414949876490063
+HMM2 (correctly specified),91,HMM-2 real time,1.3362695237816613
+HMM2 (correctly specified),91,Jump λ=30 real time,0.23356118721462304
+HMM2 (correctly specified),92,HMM-2 real time,-0.8602704565726931
+HMM2 (correctly specified),92,Jump λ=30 real time,0.5707904278502756
+HMM2 (correctly specified),93,HMM-2 real time,1.4220321425837283
+HMM2 (correctly specified),93,Jump λ=30 real time,-0.5282458256055601
+HMM2 (correctly specified),94,HMM-2 real time,1.7760310032427054
+HMM2 (correctly specified),94,Jump λ=30 real time,0.33422194074986017
+HMM2 (correctly specified),95,HMM-2 real time,-2.1127770167383124
+HMM2 (correctly specified),95,Jump λ=30 real time,-1.1010057566865623
+HMM2 (correctly specified),96,HMM-2 real time,0.7689698042366058
+HMM2 (correctly specified),96,Jump λ=30 real time,0.18958848054309904
+HMM2 (correctly specified),97,HMM-2 real time,-0.4800419427484921
+HMM2 (correctly specified),97,Jump λ=30 real time,-1.2663760002844393
+HMM2 (correctly specified),98,HMM-2 real time,0.7038641672871853
+HMM2 (correctly specified),98,Jump λ=30 real time,0.8470240041668186
+HMM2 (correctly specified),99,HMM-2 real time,0.8498120242917085
+HMM2 (correctly specified),99,Jump λ=30 real time,-0.9968235555023842
+HMM2 with t(4) shocks (misspecified),0,HMM-2 real time,-1.217686757025077
+HMM2 with t(4) shocks (misspecified),0,Jump λ=30 real time,-1.1774783868971421
+HMM2 with t(4) shocks (misspecified),1,HMM-2 real time,-1.2971922048772215
+HMM2 with t(4) shocks (misspecified),1,Jump λ=30 real time,0.3682149776862234
+HMM2 with t(4) shocks (misspecified),2,HMM-2 real time,-0.8784086929845062
+HMM2 with t(4) shocks (misspecified),2,Jump λ=30 real time,1.47169997609169
+HMM2 with t(4) shocks (misspecified),3,HMM-2 real time,0.48813689924809145
+HMM2 with t(4) shocks (misspecified),3,Jump λ=30 real time,-0.28300599113862296
+HMM2 with t(4) shocks (misspecified),4,HMM-2 real time,1.1252391466293574
+HMM2 with t(4) shocks (misspecified),4,Jump λ=30 real time,-1.485327116170508
+HMM2 with t(4) shocks (misspecified),5,HMM-2 real time,0.228217996252225
+HMM2 with t(4) shocks (misspecified),5,Jump λ=30 real time,0.7329176190021828
+HMM2 with t(4) shocks (misspecified),6,HMM-2 real time,-0.29982974236390236
+HMM2 with t(4) shocks (misspecified),6,Jump λ=30 real time,-0.1158191212271347
+HMM2 with t(4) shocks (misspecified),7,HMM-2 real time,0.35266078229535713
+HMM2 with t(4) shocks (misspecified),7,Jump λ=30 real time,1.1444543720415936
+HMM2 with t(4) shocks (misspecified),8,HMM-2 real time,1.5544181069101581
+HMM2 with t(4) shocks (misspecified),8,Jump λ=30 real time,-0.4517367388820955
+HMM2 with t(4) shocks (misspecified),9,HMM-2 real time,-0.4592725375772336
+HMM2 with t(4) shocks (misspecified),9,Jump λ=30 real time,-0.10053632477528934
+HMM2 with t(4) shocks (misspecified),10,HMM-2 real time,-2.4126631241012997
+HMM2 with t(4) shocks (misspecified),10,Jump λ=30 real time,0.20808017598008602
+HMM2 with t(4) shocks (misspecified),11,HMM-2 real time,0.2641735898428863
+HMM2 with t(4) shocks (misspecified),11,Jump λ=30 real time,-0.1176034591183134
+HMM2 with t(4) shocks (misspecified),12,HMM-2 real time,2.069511369491302
+HMM2 with t(4) shocks (misspecified),12,Jump λ=30 real time,-0.30764090557339757
+HMM2 with t(4) shocks (misspecified),13,HMM-2 real time,-0.1144027222885775
+HMM2 with t(4) shocks (misspecified),13,Jump λ=30 real time,0.4926546403087711
+HMM2 with t(4) shocks (misspecified),14,HMM-2 real time,-0.0765572752607242
+HMM2 with t(4) shocks (misspecified),14,Jump λ=30 real time,-0.28038552290695956
+HMM2 with t(4) shocks (misspecified),15,HMM-2 real time,-0.615097670755329
+HMM2 with t(4) shocks (misspecified),15,Jump λ=30 real time,-1.3478070095040158
+HMM2 with t(4) shocks (misspecified),16,HMM-2 real time,0.3939986541489354
+HMM2 with t(4) shocks (misspecified),16,Jump λ=30 real time,-0.764420051794813
+HMM2 with t(4) shocks (misspecified),17,HMM-2 real time,-0.013255897399439547
+HMM2 with t(4) shocks (misspecified),17,Jump λ=30 real time,2.2818876206967977
+HMM2 with t(4) shocks (misspecified),18,HMM-2 real time,-2.1506036881177
+HMM2 with t(4) shocks (misspecified),18,Jump λ=30 real time,-0.4051929836392831
+HMM2 with t(4) shocks (misspecified),19,HMM-2 real time,-1.413666473088394
+HMM2 with t(4) shocks (misspecified),19,Jump λ=30 real time,1.4131923457331768
+HMM2 with t(4) shocks (misspecified),20,HMM-2 real time,-0.20837926475454424
+HMM2 with t(4) shocks (misspecified),20,Jump λ=30 real time,1.438063992632156
+HMM2 with t(4) shocks (misspecified),21,HMM-2 real time,0.357096686423948
+HMM2 with t(4) shocks (misspecified),21,Jump λ=30 real time,2.2531153221048204
+HMM2 with t(4) shocks (misspecified),22,HMM-2 real time,-0.6073037309316176
+HMM2 with t(4) shocks (misspecified),22,Jump λ=30 real time,0.963390049872508
+HMM2 with t(4) shocks (misspecified),23,HMM-2 real time,0.12973984669871416
+HMM2 with t(4) shocks (misspecified),23,Jump λ=30 real time,-1.7250445121563045
+HMM2 with t(4) shocks (misspecified),24,HMM-2 real time,-0.8584515529709089
+HMM2 with t(4) shocks (misspecified),24,Jump λ=30 real time,0.1512240869330542
+HMM2 with t(4) shocks (misspecified),25,HMM-2 real time,0.8369617063309092
+HMM2 with t(4) shocks (misspecified),25,Jump λ=30 real time,1.4709554588118912
+HMM2 with t(4) shocks (misspecified),26,HMM-2 real time,-0.3381369059505776
+HMM2 with t(4) shocks (misspecified),26,Jump λ=30 real time,0.021134866998054117
+HMM2 with t(4) shocks (misspecified),27,HMM-2 real time,-0.2845351214756669
+HMM2 with t(4) shocks (misspecified),27,Jump λ=30 real time,0.5035729277089533
+HMM2 with t(4) shocks (misspecified),28,HMM-2 real time,0.47095741732560414
+HMM2 with t(4) shocks (misspecified),28,Jump λ=30 real time,1.3231734442809293
+HMM2 with t(4) shocks (misspecified),29,HMM-2 real time,-0.7005481747594491
+HMM2 with t(4) shocks (misspecified),29,Jump λ=30 real time,-0.8837164626720981
+HMM2 with t(4) shocks (misspecified),30,HMM-2 real time,1.2491916989915604
+HMM2 with t(4) shocks (misspecified),30,Jump λ=30 real time,0.4724471781111351
+HMM2 with t(4) shocks (misspecified),31,HMM-2 real time,-0.12383812896453232
+HMM2 with t(4) shocks (misspecified),31,Jump λ=30 real time,-0.07914164066645854
+HMM2 with t(4) shocks (misspecified),32,HMM-2 real time,1.493407350580233
+HMM2 with t(4) shocks (misspecified),32,Jump λ=30 real time,2.02673130667201
+HMM2 with t(4) shocks (misspecified),33,HMM-2 real time,-1.0607556037702155
+HMM2 with t(4) shocks (misspecified),33,Jump λ=30 real time,0.3917272931294615
+HMM2 with t(4) shocks (misspecified),34,HMM-2 real time,-1.044146886368044
+HMM2 with t(4) shocks (misspecified),34,Jump λ=30 real time,0.01855037011868906
+HMM2 with t(4) shocks (misspecified),35,HMM-2 real time,-0.8834750687606109
+HMM2 with t(4) shocks (misspecified),35,Jump λ=30 real time,-2.5956168467661285
+HMM2 with t(4) shocks (misspecified),36,HMM-2 real time,-1.3319718889247556
+HMM2 with t(4) shocks (misspecified),36,Jump λ=30 real time,1.8258662635310552
+HMM2 with t(4) shocks (misspecified),37,HMM-2 real time,0.6227247366113476
+HMM2 with t(4) shocks (misspecified),37,Jump λ=30 real time,-0.08656895883265622
+HMM2 with t(4) shocks (misspecified),38,HMM-2 real time,-0.013383797896916018
+HMM2 with t(4) shocks (misspecified),38,Jump λ=30 real time,-0.5338997197171175
+HMM2 with t(4) shocks (misspecified),39,HMM-2 real time,-0.48070933771349594
+HMM2 with t(4) shocks (misspecified),39,Jump λ=30 real time,0.21941068499317257
+HMM2 with t(4) shocks (misspecified),40,HMM-2 real time,-1.5110871158538248
+HMM2 with t(4) shocks (misspecified),40,Jump λ=30 real time,-0.517024055178618
+HMM2 with t(4) shocks (misspecified),41,HMM-2 real time,-0.8545730899688668
+HMM2 with t(4) shocks (misspecified),41,Jump λ=30 real time,0.7263426971759651
+HMM2 with t(4) shocks (misspecified),42,HMM-2 real time,0.673317435477503
+HMM2 with t(4) shocks (misspecified),42,Jump λ=30 real time,-1.6619786216746328
+HMM2 with t(4) shocks (misspecified),43,HMM-2 real time,0.023346101822722
+HMM2 with t(4) shocks (misspecified),43,Jump λ=30 real time,-1.593235167083559
+HMM2 with t(4) shocks (misspecified),44,HMM-2 real time,0.11262891404922554
+HMM2 with t(4) shocks (misspecified),44,Jump λ=30 real time,2.370359035446016
+HMM2 with t(4) shocks (misspecified),45,HMM-2 real time,-0.2646230044670312
+HMM2 with t(4) shocks (misspecified),45,Jump λ=30 real time,-1.3074700443639105
+HMM2 with t(4) shocks (misspecified),46,HMM-2 real time,0.6152425203932738
+HMM2 with t(4) shocks (misspecified),46,Jump λ=30 real time,-0.8219351775861088
+HMM2 with t(4) shocks (misspecified),47,HMM-2 real time,-0.18267961603679284
+HMM2 with t(4) shocks (misspecified),47,Jump λ=30 real time,1.5077232358911563
+HMM2 with t(4) shocks (misspecified),48,HMM-2 real time,2.321468648244685
+HMM2 with t(4) shocks (misspecified),48,Jump λ=30 real time,-1.4822549451297946
+HMM2 with t(4) shocks (misspecified),49,HMM-2 real time,-0.6391792763216447
+HMM2 with t(4) shocks (misspecified),49,Jump λ=30 real time,1.0683031352709078
+HMM2 with t(4) shocks (misspecified),50,HMM-2 real time,-1.3837908715495446
+HMM2 with t(4) shocks (misspecified),50,Jump λ=30 real time,-0.5168506242453934
+HMM2 with t(4) shocks (misspecified),51,HMM-2 real time,0.5024509983279881
+HMM2 with t(4) shocks (misspecified),51,Jump λ=30 real time,-0.5457856535679191
+HMM2 with t(4) shocks (misspecified),52,HMM-2 real time,0.584348845804978
+HMM2 with t(4) shocks (misspecified),52,Jump λ=30 real time,0.7919676968099039
+HMM2 with t(4) shocks (misspecified),53,HMM-2 real time,0.41685195223656635
+HMM2 with t(4) shocks (misspecified),53,Jump λ=30 real time,0.7526254166548231
+HMM2 with t(4) shocks (misspecified),54,HMM-2 real time,0.2372182591932136
+HMM2 with t(4) shocks (misspecified),54,Jump λ=30 real time,-0.06058571471962649
+HMM2 with t(4) shocks (misspecified),55,HMM-2 real time,1.7298014417754126
+HMM2 with t(4) shocks (misspecified),55,Jump λ=30 real time,1.6838951925696921
+HMM2 with t(4) shocks (misspecified),56,HMM-2 real time,0.25137470281799074
+HMM2 with t(4) shocks (misspecified),56,Jump λ=30 real time,1.888441337578686
+HMM2 with t(4) shocks (misspecified),57,HMM-2 real time,-0.2647320398447708
+HMM2 with t(4) shocks (misspecified),57,Jump λ=30 real time,0.8396015269487338
+HMM2 with t(4) shocks (misspecified),58,HMM-2 real time,-2.1786825153038873
+HMM2 with t(4) shocks (misspecified),58,Jump λ=30 real time,-0.14025049247623178
+HMM2 with t(4) shocks (misspecified),59,HMM-2 real time,-0.6171163252322837
+HMM2 with t(4) shocks (misspecified),59,Jump λ=30 real time,1.4699211329994284
+HMM2 with t(4) shocks (misspecified),60,HMM-2 real time,0.41381343676856547
+HMM2 with t(4) shocks (misspecified),60,Jump λ=30 real time,0.9984322491718125
+HMM2 with t(4) shocks (misspecified),61,HMM-2 real time,0.8348192019016835
+HMM2 with t(4) shocks (misspecified),61,Jump λ=30 real time,0.9643442025054033
+HMM2 with t(4) shocks (misspecified),62,HMM-2 real time,-0.35260680103106334
+HMM2 with t(4) shocks (misspecified),62,Jump λ=30 real time,-1.6465465062802882
+HMM2 with t(4) shocks (misspecified),63,HMM-2 real time,0.36239323839739096
+HMM2 with t(4) shocks (misspecified),63,Jump λ=30 real time,-0.14398362783815202
+HMM2 with t(4) shocks (misspecified),64,HMM-2 real time,0.24816295443129788
+HMM2 with t(4) shocks (misspecified),64,Jump λ=30 real time,-0.32502774393738915
+HMM2 with t(4) shocks (misspecified),65,HMM-2 real time,1.0365941284701656
+HMM2 with t(4) shocks (misspecified),65,Jump λ=30 real time,0.058885686293236476
+HMM2 with t(4) shocks (misspecified),66,HMM-2 real time,1.294399001216572
+HMM2 with t(4) shocks (misspecified),66,Jump λ=30 real time,0.41664971115292365
+HMM2 with t(4) shocks (misspecified),67,HMM-2 real time,-0.030034798966368556
+HMM2 with t(4) shocks (misspecified),67,Jump λ=30 real time,0.18854803579121565
+HMM2 with t(4) shocks (misspecified),68,HMM-2 real time,-0.020821360872529754
+HMM2 with t(4) shocks (misspecified),68,Jump λ=30 real time,-0.7472917499213858
+HMM2 with t(4) shocks (misspecified),69,HMM-2 real time,-0.06297632892483619
+HMM2 with t(4) shocks (misspecified),69,Jump λ=30 real time,1.012237818235594
+HMM2 with t(4) shocks (misspecified),70,HMM-2 real time,0.46293502233685024
+HMM2 with t(4) shocks (misspecified),70,Jump λ=30 real time,-0.714829303135522
+HMM2 with t(4) shocks (misspecified),71,HMM-2 real time,0.543324490039084
+HMM2 with t(4) shocks (misspecified),71,Jump λ=30 real time,-0.362706658812153
+HMM2 with t(4) shocks (misspecified),72,HMM-2 real time,-0.013532359835606043
+HMM2 with t(4) shocks (misspecified),72,Jump λ=30 real time,-0.6852246239057885
+HMM2 with t(4) shocks (misspecified),73,HMM-2 real time,2.3239429179590783
+HMM2 with t(4) shocks (misspecified),73,Jump λ=30 real time,0.3437108003017143
+HMM2 with t(4) shocks (misspecified),74,HMM-2 real time,-0.6714056962167257
+HMM2 with t(4) shocks (misspecified),74,Jump λ=30 real time,-0.701947019477692
+HMM2 with t(4) shocks (misspecified),75,HMM-2 real time,-0.11731389009559613
+HMM2 with t(4) shocks (misspecified),75,Jump λ=30 real time,-0.6150064227987614
+HMM2 with t(4) shocks (misspecified),76,HMM-2 real time,0.6734681210432236
+HMM2 with t(4) shocks (misspecified),76,Jump λ=30 real time,-0.745176191114396
+HMM2 with t(4) shocks (misspecified),77,HMM-2 real time,1.4746910150973287
+HMM2 with t(4) shocks (misspecified),77,Jump λ=30 real time,0.18595738297383316
+HMM2 with t(4) shocks (misspecified),78,HMM-2 real time,0.09895927080584727
+HMM2 with t(4) shocks (misspecified),78,Jump λ=30 real time,1.1951201725190082
+HMM2 with t(4) shocks (misspecified),79,HMM-2 real time,0.1038286478029226
+HMM2 with t(4) shocks (misspecified),79,Jump λ=30 real time,0.5814306150059736
+HMM2 with t(4) shocks (misspecified),80,HMM-2 real time,0.48758129749504725
+HMM2 with t(4) shocks (misspecified),80,Jump λ=30 real time,3.377814477143379
+HMM2 with t(4) shocks (misspecified),81,HMM-2 real time,-0.18453130900851367
+HMM2 with t(4) shocks (misspecified),81,Jump λ=30 real time,0.10760522052590817
+HMM2 with t(4) shocks (misspecified),82,HMM-2 real time,-0.10723799194224212
+HMM2 with t(4) shocks (misspecified),82,Jump λ=30 real time,0.40355563911356473
+HMM2 with t(4) shocks (misspecified),83,HMM-2 real time,1.102893805275223
+HMM2 with t(4) shocks (misspecified),83,Jump λ=30 real time,3.129317812259718
+HMM2 with t(4) shocks (misspecified),84,HMM-2 real time,-0.9639503891820097
+HMM2 with t(4) shocks (misspecified),84,Jump λ=30 real time,-0.09959550643686843
+HMM2 with t(4) shocks (misspecified),85,HMM-2 real time,-0.2805174367326292
+HMM2 with t(4) shocks (misspecified),85,Jump λ=30 real time,-1.6396119953057255
+HMM2 with t(4) shocks (misspecified),86,HMM-2 real time,0.3796709432909029
+HMM2 with t(4) shocks (misspecified),86,Jump λ=30 real time,-0.023747028324122933
+HMM2 with t(4) shocks (misspecified),87,HMM-2 real time,-0.48322491744023843
+HMM2 with t(4) shocks (misspecified),87,Jump λ=30 real time,1.0815094269182277
+HMM2 with t(4) shocks (misspecified),88,HMM-2 real time,1.3973802734337564
+HMM2 with t(4) shocks (misspecified),88,Jump λ=30 real time,1.277873047205918
+HMM2 with t(4) shocks (misspecified),89,HMM-2 real time,-0.11400050831161301
+HMM2 with t(4) shocks (misspecified),89,Jump λ=30 real time,-0.20303613141159751
+HMM2 with t(4) shocks (misspecified),90,HMM-2 real time,0.1797316413078603
+HMM2 with t(4) shocks (misspecified),90,Jump λ=30 real time,-0.2731966089734179
+HMM2 with t(4) shocks (misspecified),91,HMM-2 real time,-0.6104921956057302
+HMM2 with t(4) shocks (misspecified),91,Jump λ=30 real time,0.04066513563172615
+HMM2 with t(4) shocks (misspecified),92,HMM-2 real time,-0.9433336906439241
+HMM2 with t(4) shocks (misspecified),92,Jump λ=30 real time,0.4082999998715551
+HMM2 with t(4) shocks (misspecified),93,HMM-2 real time,0.2187315702448803
+HMM2 with t(4) shocks (misspecified),93,Jump λ=30 real time,0.967964883668684
+HMM2 with t(4) shocks (misspecified),94,HMM-2 real time,-0.009920149765976662
+HMM2 with t(4) shocks (misspecified),94,Jump λ=30 real time,-0.6855670394793417
+HMM2 with t(4) shocks (misspecified),95,HMM-2 real time,-0.23671457350964156
+HMM2 with t(4) shocks (misspecified),95,Jump λ=30 real time,-1.491897221428842
+HMM2 with t(4) shocks (misspecified),96,HMM-2 real time,-0.6144256435260759
+HMM2 with t(4) shocks (misspecified),96,Jump λ=30 real time,-0.5658253407226402
+HMM2 with t(4) shocks (misspecified),97,HMM-2 real time,1.1050569450180159
+HMM2 with t(4) shocks (misspecified),97,Jump λ=30 real time,-0.34676655524365524
+HMM2 with t(4) shocks (misspecified),98,HMM-2 real time,-0.573035493740242
+HMM2 with t(4) shocks (misspecified),98,Jump λ=30 real time,1.0184628986926656
+HMM2 with t(4) shocks (misspecified),99,HMM-2 real time,-0.786776211541624
+HMM2 with t(4) shocks (misspecified),99,Jump λ=30 real time,-0.23382488486406705
+HMM3 (three regimes),0,HMM-2 real time,-0.07082608987230285
+HMM3 (three regimes),0,Jump λ=30 real time,1.5701358759581923
+HMM3 (three regimes),1,HMM-2 real time,1.8922958706143083
+HMM3 (three regimes),1,Jump λ=30 real time,0.20650361632431066
+HMM3 (three regimes),2,HMM-2 real time,1.1439041580901255
+HMM3 (three regimes),2,Jump λ=30 real time,1.0228640106361644
+HMM3 (three regimes),3,HMM-2 real time,2.295124058340661
+HMM3 (three regimes),3,Jump λ=30 real time,0.6191917683067426
+HMM3 (three regimes),4,HMM-2 real time,-1.5137653803411077
+HMM3 (three regimes),4,Jump λ=30 real time,0.15149248409977428
+HMM3 (three regimes),5,HMM-2 real time,-0.6639597019488608
+HMM3 (three regimes),5,Jump λ=30 real time,-1.3313054689020196
+HMM3 (three regimes),6,HMM-2 real time,1.244059047425605
+HMM3 (three regimes),6,Jump λ=30 real time,0.8909583719129168
+HMM3 (three regimes),7,HMM-2 real time,-2.225069093882113
+HMM3 (three regimes),7,Jump λ=30 real time,-0.7655675088511759
+HMM3 (three regimes),8,HMM-2 real time,-1.9188896842102048
+HMM3 (three regimes),8,Jump λ=30 real time,1.2725195114839605
+HMM3 (three regimes),9,HMM-2 real time,-1.640257372464809
+HMM3 (three regimes),9,Jump λ=30 real time,-0.9907133194764282
+HMM3 (three regimes),10,HMM-2 real time,0.04034048734647498
+HMM3 (three regimes),10,Jump λ=30 real time,0.2329058624125199
+HMM3 (three regimes),11,HMM-2 real time,-2.079235712461633
+HMM3 (three regimes),11,Jump λ=30 real time,-2.6479715294965422
+HMM3 (three regimes),12,HMM-2 real time,1.0038347227523718
+HMM3 (three regimes),12,Jump λ=30 real time,0.6625798539919769
+HMM3 (three regimes),13,HMM-2 real time,-0.7749439127674072
+HMM3 (three regimes),13,Jump λ=30 real time,-0.5410411612376828
+HMM3 (three regimes),14,HMM-2 real time,0.19142712534629114
+HMM3 (three regimes),14,Jump λ=30 real time,0.13208355681183837
+HMM3 (three regimes),15,HMM-2 real time,0.6579751070930782
+HMM3 (three regimes),15,Jump λ=30 real time,-0.8130699535868195
+HMM3 (three regimes),16,HMM-2 real time,1.8119415686888904
+HMM3 (three regimes),16,Jump λ=30 real time,-1.5156984517632124
+HMM3 (three regimes),17,HMM-2 real time,1.3312076009804008
+HMM3 (three regimes),17,Jump λ=30 real time,-1.50752928016874
+HMM3 (three regimes),18,HMM-2 real time,0.5150370130045241
+HMM3 (three regimes),18,Jump λ=30 real time,-1.5622981694024394
+HMM3 (three regimes),19,HMM-2 real time,0.8069947793280531
+HMM3 (three regimes),19,Jump λ=30 real time,0.5573697026996394
+HMM3 (three regimes),20,HMM-2 real time,0.20053645563632266
+HMM3 (three regimes),20,Jump λ=30 real time,0.48513439250032664
+HMM3 (three regimes),21,HMM-2 real time,-0.24762456187767354
+HMM3 (three regimes),21,Jump λ=30 real time,1.1524539293682279
+HMM3 (three regimes),22,HMM-2 real time,0.8327716248176332
+HMM3 (three regimes),22,Jump λ=30 real time,-0.040179375207513364
+HMM3 (three regimes),23,HMM-2 real time,-0.15287552808982327
+HMM3 (three regimes),23,Jump λ=30 real time,0.5782778514929804
+HMM3 (three regimes),24,HMM-2 real time,-1.2718104898370075
+HMM3 (three regimes),24,Jump λ=30 real time,-0.34364363579063373
+HMM3 (three regimes),25,HMM-2 real time,0.8133875732289862
+HMM3 (three regimes),25,Jump λ=30 real time,1.2900693680793882
+HMM3 (three regimes),26,HMM-2 real time,-0.14343079934733735
+HMM3 (three regimes),26,Jump λ=30 real time,0.9733305100681331
+HMM3 (three regimes),27,HMM-2 real time,2.4113557444267926
+HMM3 (three regimes),27,Jump λ=30 real time,0.5914170139390356
+HMM3 (three regimes),28,HMM-2 real time,0.7061416267652049
+HMM3 (three regimes),28,Jump λ=30 real time,1.2615254777069078
+HMM3 (three regimes),29,HMM-2 real time,-0.5286023529496086
+HMM3 (three regimes),29,Jump λ=30 real time,-0.7254971071951063
+HMM3 (three regimes),30,HMM-2 real time,0.40626589229544535
+HMM3 (three regimes),30,Jump λ=30 real time,-0.6278737638933864
+HMM3 (three regimes),31,HMM-2 real time,-0.05703533652642863
+HMM3 (three regimes),31,Jump λ=30 real time,-1.667785919792701
+HMM3 (three regimes),32,HMM-2 real time,0.0963747532171497
+HMM3 (three regimes),32,Jump λ=30 real time,-0.40742039549797415
+HMM3 (three regimes),33,HMM-2 real time,0.4417554785527512
+HMM3 (three regimes),33,Jump λ=30 real time,0.6594381652387111
+HMM3 (three regimes),34,HMM-2 real time,0.24809098690598919
+HMM3 (three regimes),34,Jump λ=30 real time,1.2336676762241923
+HMM3 (three regimes),35,HMM-2 real time,1.1845386402720572
+HMM3 (three regimes),35,Jump λ=30 real time,-0.2670949842391745
+HMM3 (three regimes),36,HMM-2 real time,1.0774150971655034
+HMM3 (three regimes),36,Jump λ=30 real time,-0.12386803174361802
+HMM3 (three regimes),37,HMM-2 real time,0.8271832536321213
+HMM3 (three regimes),37,Jump λ=30 real time,0.52984510059256
+HMM3 (three regimes),38,HMM-2 real time,-1.4714655970716608
+HMM3 (three regimes),38,Jump λ=30 real time,-0.4477786956203466
+HMM3 (three regimes),39,HMM-2 real time,1.1654710207367602
+HMM3 (three regimes),39,Jump λ=30 real time,0.7700216082706982
+HMM3 (three regimes),40,HMM-2 real time,0.7003103466904688
+HMM3 (three regimes),40,Jump λ=30 real time,0.9991548762461288
+HMM3 (three regimes),41,HMM-2 real time,0.024839775892844494
+HMM3 (three regimes),41,Jump λ=30 real time,-0.22169208139556673
+HMM3 (three regimes),42,HMM-2 real time,1.0396091143822686
+HMM3 (three regimes),42,Jump λ=30 real time,0.4255539029344939
+HMM3 (three regimes),43,HMM-2 real time,-0.4590389139927783
+HMM3 (three regimes),43,Jump λ=30 real time,1.3606519638795371
+HMM3 (three regimes),44,HMM-2 real time,0.7728386935007707
+HMM3 (three regimes),44,Jump λ=30 real time,-0.4858041825043716
+HMM3 (three regimes),45,HMM-2 real time,0.1287565010383013
+HMM3 (three regimes),45,Jump λ=30 real time,-0.24244378153498042
+HMM3 (three regimes),46,HMM-2 real time,0.6496877670358807
+HMM3 (three regimes),46,Jump λ=30 real time,-2.104213147346541
+HMM3 (three regimes),47,HMM-2 real time,-0.039576098441489696
+HMM3 (three regimes),47,Jump λ=30 real time,-0.7925349232776021
+HMM3 (three regimes),48,HMM-2 real time,-1.027605550959318
+HMM3 (three regimes),48,Jump λ=30 real time,-0.4374239114259811
+HMM3 (three regimes),49,HMM-2 real time,-1.1459925639367539
+HMM3 (three regimes),49,Jump λ=30 real time,-0.6755362365863455
+HMM3 (three regimes),50,HMM-2 real time,0.04784518137575348
+HMM3 (three regimes),50,Jump λ=30 real time,0.19464171388951343
+HMM3 (three regimes),51,HMM-2 real time,0.3826385948335725
+HMM3 (three regimes),51,Jump λ=30 real time,0.9196782084087121
+HMM3 (three regimes),52,HMM-2 real time,2.0618177269179983
+HMM3 (three regimes),52,Jump λ=30 real time,0.7824366905125499
+HMM3 (three regimes),53,HMM-2 real time,0.2448631861109818
+HMM3 (three regimes),53,Jump λ=30 real time,-0.0682913569296133
+HMM3 (three regimes),54,HMM-2 real time,-0.2537612103250152
+HMM3 (three regimes),54,Jump λ=30 real time,0.8825043983589647
+HMM3 (three regimes),55,HMM-2 real time,-0.8533514680257126
+HMM3 (three regimes),55,Jump λ=30 real time,0.8203408367339977
+HMM3 (three regimes),56,HMM-2 real time,-0.9051084566374933
+HMM3 (three regimes),56,Jump λ=30 real time,-0.9264391767791186
+HMM3 (three regimes),57,HMM-2 real time,-0.38271200096419494
+HMM3 (three regimes),57,Jump λ=30 real time,-0.06611561293606558
+HMM3 (three regimes),58,HMM-2 real time,-0.4151605052526844
+HMM3 (three regimes),58,Jump λ=30 real time,-0.013084216875155602
+HMM3 (three regimes),59,HMM-2 real time,-0.09701175244038607
+HMM3 (three regimes),59,Jump λ=30 real time,0.038509794599747675
+HMM3 (three regimes),60,HMM-2 real time,1.0964045252548928
+HMM3 (three regimes),60,Jump λ=30 real time,-0.5176636448618014
+HMM3 (three regimes),61,HMM-2 real time,-0.27548196376917444
+HMM3 (three regimes),61,Jump λ=30 real time,0.7275907905860545
+HMM3 (three regimes),62,HMM-2 real time,-0.5936327480408753
+HMM3 (three regimes),62,Jump λ=30 real time,1.7309117057489654
+HMM3 (three regimes),63,HMM-2 real time,-0.08241123302971806
+HMM3 (three regimes),63,Jump λ=30 real time,0.9058240359406073
+HMM3 (three regimes),64,HMM-2 real time,-2.463970671766991
+HMM3 (three regimes),64,Jump λ=30 real time,-1.0715288142955157
+HMM3 (three regimes),65,HMM-2 real time,-0.008771967463954203
+HMM3 (three regimes),65,Jump λ=30 real time,-1.2523544399120066
+HMM3 (three regimes),66,HMM-2 real time,0.42939385951002285
+HMM3 (three regimes),66,Jump λ=30 real time,0.9336246159032074
+HMM3 (three regimes),67,HMM-2 real time,0.6387941914024537
+HMM3 (three regimes),67,Jump λ=30 real time,-0.37695237098621626
+HMM3 (three regimes),68,HMM-2 real time,-0.46666152966312907
+HMM3 (three regimes),68,Jump λ=30 real time,-1.9623230776417568
+HMM3 (three regimes),69,HMM-2 real time,0.7324623549022972
+HMM3 (three regimes),69,Jump λ=30 real time,-0.9431972542143066
+HMM3 (three regimes),70,HMM-2 real time,0.14302838966692205
+HMM3 (three regimes),70,Jump λ=30 real time,-0.37924127629373106
+HMM3 (three regimes),71,HMM-2 real time,0.6466797197630402
+HMM3 (three regimes),71,Jump λ=30 real time,0.7922076648453855
+HMM3 (three regimes),72,HMM-2 real time,-0.8530337510306518
+HMM3 (three regimes),72,Jump λ=30 real time,0.8577492809929542
+HMM3 (three regimes),73,HMM-2 real time,-0.6180510945769281
+HMM3 (three regimes),73,Jump λ=30 real time,0.45296656131120655
+HMM3 (three regimes),74,HMM-2 real time,-0.4960842114375711
+HMM3 (three regimes),74,Jump λ=30 real time,-0.741766722547932
+HMM3 (three regimes),75,HMM-2 real time,-0.763750212207833
+HMM3 (three regimes),75,Jump λ=30 real time,0.6826546774014132
+HMM3 (three regimes),76,HMM-2 real time,0.7084208439539073
+HMM3 (three regimes),76,Jump λ=30 real time,0.28168743922161815
+HMM3 (three regimes),77,HMM-2 real time,0.2930949585207937
+HMM3 (three regimes),77,Jump λ=30 real time,0.2981764147718775
+HMM3 (three regimes),78,HMM-2 real time,-0.5235652302812633
+HMM3 (three regimes),78,Jump λ=30 real time,0.2947961513958883
+HMM3 (three regimes),79,HMM-2 real time,-0.09394814800192838
+HMM3 (three regimes),79,Jump λ=30 real time,-0.44601985109354675
+HMM3 (three regimes),80,HMM-2 real time,-0.8391183396652798
+HMM3 (three regimes),80,Jump λ=30 real time,-1.877775024364715
+HMM3 (three regimes),81,HMM-2 real time,1.4675693677369865
+HMM3 (three regimes),81,Jump λ=30 real time,0.8309546505701303
+HMM3 (three regimes),82,HMM-2 real time,-0.2537782141157193
+HMM3 (three regimes),82,Jump λ=30 real time,-1.6573216167741782
+HMM3 (three regimes),83,HMM-2 real time,0.23718372640724006
+HMM3 (three regimes),83,Jump λ=30 real time,1.4693408428873687
+HMM3 (three regimes),84,HMM-2 real time,-0.5721920439393777
+HMM3 (three regimes),84,Jump λ=30 real time,2.272574490281124
+HMM3 (three regimes),85,HMM-2 real time,-1.0368350040450505
+HMM3 (three regimes),85,Jump λ=30 real time,0.3858882121725426
+HMM3 (three regimes),86,HMM-2 real time,-0.48430271153257737
+HMM3 (three regimes),86,Jump λ=30 real time,-2.024659221943455
+HMM3 (three regimes),87,HMM-2 real time,-1.3934478993192383
+HMM3 (three regimes),87,Jump λ=30 real time,0.4228752160850366
+HMM3 (three regimes),88,HMM-2 real time,0.6373742370089638
+HMM3 (three regimes),88,Jump λ=30 real time,1.2426724491212617
+HMM3 (three regimes),89,HMM-2 real time,1.8712609229993726
+HMM3 (three regimes),89,Jump λ=30 real time,-0.005299011476168061
+HMM3 (three regimes),90,HMM-2 real time,-0.37726829734529943
+HMM3 (three regimes),90,Jump λ=30 real time,0.6053024891043133
+HMM3 (three regimes),91,HMM-2 real time,-1.355204611315479
+HMM3 (three regimes),91,Jump λ=30 real time,0.06109177974515863
+HMM3 (three regimes),92,HMM-2 real time,0.316428464511575
+HMM3 (three regimes),92,Jump λ=30 real time,-0.26436289569641724
+HMM3 (three regimes),93,HMM-2 real time,-1.8392039623346603
+HMM3 (three regimes),93,Jump λ=30 real time,1.3071383469618114
+HMM3 (three regimes),94,HMM-2 real time,0.2016315277473024
+HMM3 (three regimes),94,Jump λ=30 real time,-0.110938333929185
+HMM3 (three regimes),95,HMM-2 real time,-1.2260173339807097
+HMM3 (three regimes),95,Jump λ=30 real time,0.4619508200219329
+HMM3 (three regimes),96,HMM-2 real time,0.40909718730317934
+HMM3 (three regimes),96,Jump λ=30 real time,0.6247993077665824
+HMM3 (three regimes),97,HMM-2 real time,1.1880795824263877
+HMM3 (three regimes),97,Jump λ=30 real time,0.5938525671744117
+HMM3 (three regimes),98,HMM-2 real time,-1.4255361452830895
+HMM3 (three regimes),98,Jump λ=30 real time,-0.9199083604649415
+HMM3 (three regimes),99,HMM-2 real time,0.9560094172285095
+HMM3 (three regimes),99,Jump λ=30 real time,-1.0680649932498079
+"GARCH(1,1)-t (no regimes)",0,HMM-2 real time,-0.6966298421340595
+"GARCH(1,1)-t (no regimes)",0,Jump λ=30 real time,0.25287353165929805
+"GARCH(1,1)-t (no regimes)",1,HMM-2 real time,-0.19354967757483932
+"GARCH(1,1)-t (no regimes)",1,Jump λ=30 real time,-0.15152803032066367
+"GARCH(1,1)-t (no regimes)",2,HMM-2 real time,-0.5707009056536421
+"GARCH(1,1)-t (no regimes)",2,Jump λ=30 real time,0.785669167752674
+"GARCH(1,1)-t (no regimes)",3,HMM-2 real time,-0.2402905210850054
+"GARCH(1,1)-t (no regimes)",3,Jump λ=30 real time,-0.7950277683319108
+"GARCH(1,1)-t (no regimes)",4,HMM-2 real time,0.6916826993131612
+"GARCH(1,1)-t (no regimes)",4,Jump λ=30 real time,-0.3136777866766157
+"GARCH(1,1)-t (no regimes)",5,HMM-2 real time,0.35144413424484616
+"GARCH(1,1)-t (no regimes)",5,Jump λ=30 real time,0.15068745593164645
+"GARCH(1,1)-t (no regimes)",6,HMM-2 real time,-0.18537775009143959
+"GARCH(1,1)-t (no regimes)",6,Jump λ=30 real time,2.0521401804093022
+"GARCH(1,1)-t (no regimes)",7,HMM-2 real time,-0.1547268568860079
+"GARCH(1,1)-t (no regimes)",7,Jump λ=30 real time,0.4511773165336739
+"GARCH(1,1)-t (no regimes)",8,HMM-2 real time,-0.02280785692502659
+"GARCH(1,1)-t (no regimes)",8,Jump λ=30 real time,0.18335218756533667
+"GARCH(1,1)-t (no regimes)",9,HMM-2 real time,-1.0007550090038366
+"GARCH(1,1)-t (no regimes)",9,Jump λ=30 real time,-0.4507652732497064
+"GARCH(1,1)-t (no regimes)",10,HMM-2 real time,0.8770733844037971
+"GARCH(1,1)-t (no regimes)",10,Jump λ=30 real time,0.9184514637365584
+"GARCH(1,1)-t (no regimes)",11,HMM-2 real time,1.9752696687526319
+"GARCH(1,1)-t (no regimes)",11,Jump λ=30 real time,-0.1339012815206299
+"GARCH(1,1)-t (no regimes)",12,HMM-2 real time,0.12126212054390713
+"GARCH(1,1)-t (no regimes)",12,Jump λ=30 real time,0.04043018647028488
+"GARCH(1,1)-t (no regimes)",13,HMM-2 real time,-1.2571581742456268
+"GARCH(1,1)-t (no regimes)",13,Jump λ=30 real time,-1.024839507393535
+"GARCH(1,1)-t (no regimes)",14,HMM-2 real time,-1.7073509783531466
+"GARCH(1,1)-t (no regimes)",14,Jump λ=30 real time,-1.0339101937153459
+"GARCH(1,1)-t (no regimes)",15,HMM-2 real time,1.626769288781255
+"GARCH(1,1)-t (no regimes)",15,Jump λ=30 real time,1.9260453090965497
+"GARCH(1,1)-t (no regimes)",16,HMM-2 real time,0.6201350178046641
+"GARCH(1,1)-t (no regimes)",16,Jump λ=30 real time,-0.09852271345224126
+"GARCH(1,1)-t (no regimes)",17,HMM-2 real time,-0.366183138135864
+"GARCH(1,1)-t (no regimes)",17,Jump λ=30 real time,-2.045501579381709
+"GARCH(1,1)-t (no regimes)",18,HMM-2 real time,-0.12598178963211865
+"GARCH(1,1)-t (no regimes)",18,Jump λ=30 real time,0.06483334613135547
+"GARCH(1,1)-t (no regimes)",19,HMM-2 real time,0.06057191479978295
+"GARCH(1,1)-t (no regimes)",19,Jump λ=30 real time,-0.8540276084004012
+"GARCH(1,1)-t (no regimes)",20,HMM-2 real time,0.6509534156738901
+"GARCH(1,1)-t (no regimes)",20,Jump λ=30 real time,-0.07501197504861092
+"GARCH(1,1)-t (no regimes)",21,HMM-2 real time,0.6305719738993089
+"GARCH(1,1)-t (no regimes)",21,Jump λ=30 real time,1.158506630158819
+"GARCH(1,1)-t (no regimes)",22,HMM-2 real time,0.2164535507629238
+"GARCH(1,1)-t (no regimes)",22,Jump λ=30 real time,-1.5396335345803998
+"GARCH(1,1)-t (no regimes)",23,HMM-2 real time,-1.2850543480548338
+"GARCH(1,1)-t (no regimes)",23,Jump λ=30 real time,0.26143736246928695
+"GARCH(1,1)-t (no regimes)",24,HMM-2 real time,0.18508328352113615
+"GARCH(1,1)-t (no regimes)",24,Jump λ=30 real time,1.276916735036617
+"GARCH(1,1)-t (no regimes)",25,HMM-2 real time,0.7751307034131074
+"GARCH(1,1)-t (no regimes)",25,Jump λ=30 real time,0.5660077126494787
+"GARCH(1,1)-t (no regimes)",26,HMM-2 real time,-0.4789454960934553
+"GARCH(1,1)-t (no regimes)",26,Jump λ=30 real time,-0.648978180284293
+"GARCH(1,1)-t (no regimes)",27,HMM-2 real time,-0.5840110370167589
+"GARCH(1,1)-t (no regimes)",27,Jump λ=30 real time,-0.8838145561047289
+"GARCH(1,1)-t (no regimes)",28,HMM-2 real time,-0.6678535013393567
+"GARCH(1,1)-t (no regimes)",28,Jump λ=30 real time,-1.2217458825011753
+"GARCH(1,1)-t (no regimes)",29,HMM-2 real time,0.4725148920585692
+"GARCH(1,1)-t (no regimes)",29,Jump λ=30 real time,0.3529492810714775
+"GARCH(1,1)-t (no regimes)",30,HMM-2 real time,-0.4428331009754793
+"GARCH(1,1)-t (no regimes)",30,Jump λ=30 real time,-0.7528931153894746
+"GARCH(1,1)-t (no regimes)",31,HMM-2 real time,0.6618895586387551
+"GARCH(1,1)-t (no regimes)",31,Jump λ=30 real time,0.0696206501898526
+"GARCH(1,1)-t (no regimes)",32,HMM-2 real time,-0.8712304648883973
+"GARCH(1,1)-t (no regimes)",32,Jump λ=30 real time,-1.036059771369806
+"GARCH(1,1)-t (no regimes)",33,HMM-2 real time,0.032269902790575296
+"GARCH(1,1)-t (no regimes)",33,Jump λ=30 real time,-0.40266469452465864
+"GARCH(1,1)-t (no regimes)",34,HMM-2 real time,1.2838478450648156
+"GARCH(1,1)-t (no regimes)",34,Jump λ=30 real time,1.1506235196682761
+"GARCH(1,1)-t (no regimes)",35,HMM-2 real time,-1.7819338526494888
+"GARCH(1,1)-t (no regimes)",35,Jump λ=30 real time,0.0054228000769662365
+"GARCH(1,1)-t (no regimes)",36,HMM-2 real time,1.3441758007524203
+"GARCH(1,1)-t (no regimes)",36,Jump λ=30 real time,0.4287465677455408
+"GARCH(1,1)-t (no regimes)",37,HMM-2 real time,0.30222750833088485
+"GARCH(1,1)-t (no regimes)",37,Jump λ=30 real time,0.6329813820949018
+"GARCH(1,1)-t (no regimes)",38,HMM-2 real time,-0.7305521948807823
+"GARCH(1,1)-t (no regimes)",38,Jump λ=30 real time,0.4491287260772877
+"GARCH(1,1)-t (no regimes)",39,HMM-2 real time,-1.021884758924891
+"GARCH(1,1)-t (no regimes)",39,Jump λ=30 real time,0.12871611896050583
+"GARCH(1,1)-t (no regimes)",40,HMM-2 real time,0.2520099818457607
+"GARCH(1,1)-t (no regimes)",40,Jump λ=30 real time,-0.055339822934297275
+"GARCH(1,1)-t (no regimes)",41,HMM-2 real time,0.010760735723086171
+"GARCH(1,1)-t (no regimes)",41,Jump λ=30 real time,-1.227469994978798
+"GARCH(1,1)-t (no regimes)",42,HMM-2 real time,0.34910749122513085
+"GARCH(1,1)-t (no regimes)",42,Jump λ=30 real time,-0.671081083245867
+"GARCH(1,1)-t (no regimes)",43,HMM-2 real time,-0.806688328629797
+"GARCH(1,1)-t (no regimes)",43,Jump λ=30 real time,-0.4243137112241457
+"GARCH(1,1)-t (no regimes)",44,HMM-2 real time,-0.39022440878134723
+"GARCH(1,1)-t (no regimes)",44,Jump λ=30 real time,1.2235437258794997
+"GARCH(1,1)-t (no regimes)",45,HMM-2 real time,-0.15935819046268085
+"GARCH(1,1)-t (no regimes)",45,Jump λ=30 real time,0.45973963271824225
+"GARCH(1,1)-t (no regimes)",46,HMM-2 real time,1.0211128986375213
+"GARCH(1,1)-t (no regimes)",46,Jump λ=30 real time,1.3772989068151618
+"GARCH(1,1)-t (no regimes)",47,HMM-2 real time,-1.9424121327870254
+"GARCH(1,1)-t (no regimes)",47,Jump λ=30 real time,-0.5421642150649719
+"GARCH(1,1)-t (no regimes)",48,HMM-2 real time,1.0604433483841755
+"GARCH(1,1)-t (no regimes)",48,Jump λ=30 real time,-1.084172502162631
+"GARCH(1,1)-t (no regimes)",49,HMM-2 real time,-0.7773815815463898
+"GARCH(1,1)-t (no regimes)",49,Jump λ=30 real time,0.868996684590963
+"GARCH(1,1)-t (no regimes)",50,HMM-2 real time,-2.0987323925478454
+"GARCH(1,1)-t (no regimes)",50,Jump λ=30 real time,-1.3110250908182537
+"GARCH(1,1)-t (no regimes)",51,HMM-2 real time,-0.48586330607678363
+"GARCH(1,1)-t (no regimes)",51,Jump λ=30 real time,-0.5215430287441744
+"GARCH(1,1)-t (no regimes)",52,HMM-2 real time,1.1567435074090024
+"GARCH(1,1)-t (no regimes)",52,Jump λ=30 real time,-0.06802303658661449
+"GARCH(1,1)-t (no regimes)",53,HMM-2 real time,-0.705146878025815
+"GARCH(1,1)-t (no regimes)",53,Jump λ=30 real time,0.7051666872014969
+"GARCH(1,1)-t (no regimes)",54,HMM-2 real time,-2.7220057725880333
+"GARCH(1,1)-t (no regimes)",54,Jump λ=30 real time,-1.6806769441244631
+"GARCH(1,1)-t (no regimes)",55,HMM-2 real time,-0.8822054135333328
+"GARCH(1,1)-t (no regimes)",55,Jump λ=30 real time,-1.1616692911899418
+"GARCH(1,1)-t (no regimes)",56,HMM-2 real time,-0.4635040927079386
+"GARCH(1,1)-t (no regimes)",56,Jump λ=30 real time,-1.1665076602057816
+"GARCH(1,1)-t (no regimes)",57,HMM-2 real time,1.188019069031781
+"GARCH(1,1)-t (no regimes)",57,Jump λ=30 real time,0.026435402730268946
+"GARCH(1,1)-t (no regimes)",58,HMM-2 real time,-0.20134628176036207
+"GARCH(1,1)-t (no regimes)",58,Jump λ=30 real time,-0.2582885529717419
+"GARCH(1,1)-t (no regimes)",59,HMM-2 real time,-0.788437933262084
+"GARCH(1,1)-t (no regimes)",59,Jump λ=30 real time,-1.2058955968030078
+"GARCH(1,1)-t (no regimes)",60,HMM-2 real time,1.8157663894347391
+"GARCH(1,1)-t (no regimes)",60,Jump λ=30 real time,1.5103435287613636
+"GARCH(1,1)-t (no regimes)",61,HMM-2 real time,0.8812744176883303
+"GARCH(1,1)-t (no regimes)",61,Jump λ=30 real time,-0.262454013243777
+"GARCH(1,1)-t (no regimes)",62,HMM-2 real time,1.3587358621067969
+"GARCH(1,1)-t (no regimes)",62,Jump λ=30 real time,0.24722551695590272
+"GARCH(1,1)-t (no regimes)",63,HMM-2 real time,0.5904376270753336
+"GARCH(1,1)-t (no regimes)",63,Jump λ=30 real time,-1.1449374260132816
+"GARCH(1,1)-t (no regimes)",64,HMM-2 real time,0.9815519177413252
+"GARCH(1,1)-t (no regimes)",64,Jump λ=30 real time,-0.016123019296482445
+"GARCH(1,1)-t (no regimes)",65,HMM-2 real time,-0.4872047048972168
+"GARCH(1,1)-t (no regimes)",65,Jump λ=30 real time,-1.5404274181068254
+"GARCH(1,1)-t (no regimes)",66,HMM-2 real time,-0.1151057385070633
+"GARCH(1,1)-t (no regimes)",66,Jump λ=30 real time,0.030204503505756278
+"GARCH(1,1)-t (no regimes)",67,HMM-2 real time,0.17714464081343598
+"GARCH(1,1)-t (no regimes)",67,Jump λ=30 real time,-0.2322700523018603
+"GARCH(1,1)-t (no regimes)",68,HMM-2 real time,-0.8467447162928549
+"GARCH(1,1)-t (no regimes)",68,Jump λ=30 real time,-0.9083591191290299
+"GARCH(1,1)-t (no regimes)",69,HMM-2 real time,-2.0512659048674964
+"GARCH(1,1)-t (no regimes)",69,Jump λ=30 real time,-2.282046988007888
+"GARCH(1,1)-t (no regimes)",70,HMM-2 real time,1.0568616330881297
+"GARCH(1,1)-t (no regimes)",70,Jump λ=30 real time,-1.3567040953768066
+"GARCH(1,1)-t (no regimes)",71,HMM-2 real time,-2.3589303875585235
+"GARCH(1,1)-t (no regimes)",71,Jump λ=30 real time,-2.295682489287068
+"GARCH(1,1)-t (no regimes)",72,HMM-2 real time,0.002022208496511837
+"GARCH(1,1)-t (no regimes)",72,Jump λ=30 real time,0.44778002787401605
+"GARCH(1,1)-t (no regimes)",73,HMM-2 real time,-0.5944476938163491
+"GARCH(1,1)-t (no regimes)",73,Jump λ=30 real time,-2.5368712713121457
+"GARCH(1,1)-t (no regimes)",74,HMM-2 real time,1.2184855342643044
+"GARCH(1,1)-t (no regimes)",74,Jump λ=30 real time,0.7821110685316156
+"GARCH(1,1)-t (no regimes)",75,HMM-2 real time,1.211100687073953
+"GARCH(1,1)-t (no regimes)",75,Jump λ=30 real time,0.455637878187244
+"GARCH(1,1)-t (no regimes)",76,HMM-2 real time,0.2819501253508691
+"GARCH(1,1)-t (no regimes)",76,Jump λ=30 real time,-2.1808349927500923
+"GARCH(1,1)-t (no regimes)",77,HMM-2 real time,-1.405454688172619
+"GARCH(1,1)-t (no regimes)",77,Jump λ=30 real time,0.541127491239776
+"GARCH(1,1)-t (no regimes)",78,HMM-2 real time,-1.0316363726004552
+"GARCH(1,1)-t (no regimes)",78,Jump λ=30 real time,1.0697884036394025
+"GARCH(1,1)-t (no regimes)",79,HMM-2 real time,1.2664261150634293
+"GARCH(1,1)-t (no regimes)",79,Jump λ=30 real time,1.3879266543907987
+"GARCH(1,1)-t (no regimes)",80,HMM-2 real time,-1.3481204139766703
+"GARCH(1,1)-t (no regimes)",80,Jump λ=30 real time,-1.3084245249905218
+"GARCH(1,1)-t (no regimes)",81,HMM-2 real time,0.25956895951201114
+"GARCH(1,1)-t (no regimes)",81,Jump λ=30 real time,0.014221545391045615
+"GARCH(1,1)-t (no regimes)",82,HMM-2 real time,0.2660370005277966
+"GARCH(1,1)-t (no regimes)",82,Jump λ=30 real time,-0.5249928163531389
+"GARCH(1,1)-t (no regimes)",83,HMM-2 real time,0.30545030847704935
+"GARCH(1,1)-t (no regimes)",83,Jump λ=30 real time,-0.4855828137007188
+"GARCH(1,1)-t (no regimes)",84,HMM-2 real time,-0.318877238560445
+"GARCH(1,1)-t (no regimes)",84,Jump λ=30 real time,1.8992236646021778
+"GARCH(1,1)-t (no regimes)",85,HMM-2 real time,0.238841884112289
+"GARCH(1,1)-t (no regimes)",85,Jump λ=30 real time,0.5238717202474648
+"GARCH(1,1)-t (no regimes)",86,HMM-2 real time,-0.7664725874158717
+"GARCH(1,1)-t (no regimes)",86,Jump λ=30 real time,-0.523303940965144
+"GARCH(1,1)-t (no regimes)",87,HMM-2 real time,-1.1154447318038954
+"GARCH(1,1)-t (no regimes)",87,Jump λ=30 real time,-0.699075440278412
+"GARCH(1,1)-t (no regimes)",88,HMM-2 real time,-1.968666477730658
+"GARCH(1,1)-t (no regimes)",88,Jump λ=30 real time,-0.5445408256601092
+"GARCH(1,1)-t (no regimes)",89,HMM-2 real time,-0.779094299898215
+"GARCH(1,1)-t (no regimes)",89,Jump λ=30 real time,-1.2663110149472245
+"GARCH(1,1)-t (no regimes)",90,HMM-2 real time,-0.6990833534237202
+"GARCH(1,1)-t (no regimes)",90,Jump λ=30 real time,-0.0682391056262732
+"GARCH(1,1)-t (no regimes)",91,HMM-2 real time,1.5521464748760867
+"GARCH(1,1)-t (no regimes)",91,Jump λ=30 real time,1.4335550001999209
+"GARCH(1,1)-t (no regimes)",92,HMM-2 real time,-3.487795397817197
+"GARCH(1,1)-t (no regimes)",92,Jump λ=30 real time,0.21340605013734545
+"GARCH(1,1)-t (no regimes)",93,HMM-2 real time,0.8569897616538655
+"GARCH(1,1)-t (no regimes)",93,Jump λ=30 real time,-0.0971984375224738
+"GARCH(1,1)-t (no regimes)",94,HMM-2 real time,-0.354935457550143
+"GARCH(1,1)-t (no regimes)",94,Jump λ=30 real time,-0.18890007071116866
+"GARCH(1,1)-t (no regimes)",95,HMM-2 real time,-2.39492250041747
+"GARCH(1,1)-t (no regimes)",95,Jump λ=30 real time,-1.8044559939356593
+"GARCH(1,1)-t (no regimes)",96,HMM-2 real time,-1.7970754024020699
+"GARCH(1,1)-t (no regimes)",96,Jump λ=30 real time,-1.1046907849696332
+"GARCH(1,1)-t (no regimes)",97,HMM-2 real time,1.74124131707661
+"GARCH(1,1)-t (no regimes)",97,Jump λ=30 real time,1.5941590734095565
+"GARCH(1,1)-t (no regimes)",98,HMM-2 real time,-0.20005179770553314
+"GARCH(1,1)-t (no regimes)",98,Jump λ=30 real time,-0.41203385157226685
+"GARCH(1,1)-t (no regimes)",99,HMM-2 real time,2.129115605171819
+"GARCH(1,1)-t (no regimes)",99,Jump λ=30 real time,1.4876152668952647

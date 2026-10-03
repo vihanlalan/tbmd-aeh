@@ -1,0 +1,4 @@
+Downloaded 2026-10-02T16:05:24
+^GSPC: 1950-01-03 to 2025-12-31, 19121 rows (Yahoo Finance)
+^VIX: 1990-01-02 to 2025-12-31, 9067 rows (Yahoo Finance)
+USREC: 1854-12-01 to 2026-09-01 (FRED)

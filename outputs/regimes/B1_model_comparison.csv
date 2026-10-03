@@ -1,0 +1,7 @@
+model,n_params,bic_full_sample,oos_mean_log_score,oos_diff_vs_garch_t,dm_t_vs_garch_t
+Gaussian i.i.d. (K=1),2,54156.2283,-1.7802,-0.4225,-5.4927
+"Gaussian HMM, K=2",7,47484.3438,-1.4452,-0.0876,-3.711
+"Gaussian HMM, K=3",14,46209.0083,-1.3877,-0.0301,-4.3522
+"Gaussian HMM, K=4",23,45800.3036,-1.3727,-0.015,-4.2896
+"GARCH(1,1)-normal (no regimes)",4,46520.2818,-1.3834,-0.0257,-4.771
+"GARCH(1,1)-t (no regimes)",5,45403.4997,-1.3577,0.0,

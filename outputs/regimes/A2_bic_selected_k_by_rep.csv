@@ -1,0 +1,401 @@
+dgp,rep,bic_k_raw_returns,bic_k_garch_residuals
+HMM2 (correctly specified),0,2,1
+HMM2 (correctly specified),1,2,1
+HMM2 (correctly specified),2,2,1
+HMM2 (correctly specified),3,2,1
+HMM2 (correctly specified),4,2,1
+HMM2 (correctly specified),5,2,1
+HMM2 (correctly specified),6,2,1
+HMM2 (correctly specified),7,2,1
+HMM2 (correctly specified),8,2,1
+HMM2 (correctly specified),9,2,1
+HMM2 (correctly specified),10,2,1
+HMM2 (correctly specified),11,2,1
+HMM2 (correctly specified),12,2,1
+HMM2 (correctly specified),13,2,1
+HMM2 (correctly specified),14,2,1
+HMM2 (correctly specified),15,2,1
+HMM2 (correctly specified),16,2,1
+HMM2 (correctly specified),17,2,1
+HMM2 (correctly specified),18,2,1
+HMM2 (correctly specified),19,2,1
+HMM2 (correctly specified),20,2,1
+HMM2 (correctly specified),21,2,1
+HMM2 (correctly specified),22,2,1
+HMM2 (correctly specified),23,2,1
+HMM2 (correctly specified),24,2,1
+HMM2 (correctly specified),25,2,1
+HMM2 (correctly specified),26,2,1
+HMM2 (correctly specified),27,2,1
+HMM2 (correctly specified),28,2,1
+HMM2 (correctly specified),29,2,1
+HMM2 (correctly specified),30,2,1
+HMM2 (correctly specified),31,2,1
+HMM2 (correctly specified),32,2,1
+HMM2 (correctly specified),33,2,1
+HMM2 (correctly specified),34,2,1
+HMM2 (correctly specified),35,2,1
+HMM2 (correctly specified),36,2,1
+HMM2 (correctly specified),37,2,1
+HMM2 (correctly specified),38,2,1
+HMM2 (correctly specified),39,2,1
+HMM2 (correctly specified),40,2,1
+HMM2 (correctly specified),41,2,1
+HMM2 (correctly specified),42,2,1
+HMM2 (correctly specified),43,2,1
+HMM2 (correctly specified),44,2,1
+HMM2 (correctly specified),45,2,1
+HMM2 (correctly specified),46,2,1
+HMM2 (correctly specified),47,2,1
+HMM2 (correctly specified),48,2,1
+HMM2 (correctly specified),49,2,1
+HMM2 (correctly specified),50,2,1
+HMM2 (correctly specified),51,2,1
+HMM2 (correctly specified),52,2,1
+HMM2 (correctly specified),53,2,1
+HMM2 (correctly specified),54,2,1
+HMM2 (correctly specified),55,2,1
+HMM2 (correctly specified),56,2,1
+HMM2 (correctly specified),57,2,1
+HMM2 (correctly specified),58,2,1
+HMM2 (correctly specified),59,2,1
+HMM2 (correctly specified),60,2,1
+HMM2 (correctly specified),61,2,1
+HMM2 (correctly specified),62,2,1
+HMM2 (correctly specified),63,2,1
+HMM2 (correctly specified),64,2,1
+HMM2 (correctly specified),65,2,1
+HMM2 (correctly specified),66,2,1
+HMM2 (correctly specified),67,2,1
+HMM2 (correctly specified),68,2,1
+HMM2 (correctly specified),69,2,1
+HMM2 (correctly specified),70,2,1
+HMM2 (correctly specified),71,2,1
+HMM2 (correctly specified),72,2,1
+HMM2 (correctly specified),73,2,1
+HMM2 (correctly specified),74,2,1
+HMM2 (correctly specified),75,2,1
+HMM2 (correctly specified),76,2,1
+HMM2 (correctly specified),77,2,2
+HMM2 (correctly specified),78,2,1
+HMM2 (correctly specified),79,2,1
+HMM2 (correctly specified),80,2,1
+HMM2 (correctly specified),81,2,1
+HMM2 (correctly specified),82,2,1
+HMM2 (correctly specified),83,2,1
+HMM2 (correctly specified),84,2,1
+HMM2 (correctly specified),85,2,1
+HMM2 (correctly specified),86,2,1
+HMM2 (correctly specified),87,2,1
+HMM2 (correctly specified),88,2,1
+HMM2 (correctly specified),89,2,1
+HMM2 (correctly specified),90,2,1
+HMM2 (correctly specified),91,2,1
+HMM2 (correctly specified),92,2,1
+HMM2 (correctly specified),93,2,1
+HMM2 (correctly specified),94,2,1
+HMM2 (correctly specified),95,2,1
+HMM2 (correctly specified),96,2,1
+HMM2 (correctly specified),97,2,1
+HMM2 (correctly specified),98,2,1
+HMM2 (correctly specified),99,2,1
+HMM2 with t(4) shocks (misspecified),0,4,1
+HMM2 with t(4) shocks (misspecified),1,4,1
+HMM2 with t(4) shocks (misspecified),2,4,2
+HMM2 with t(4) shocks (misspecified),3,4,1
+HMM2 with t(4) shocks (misspecified),4,4,2
+HMM2 with t(4) shocks (misspecified),5,4,1
+HMM2 with t(4) shocks (misspecified),6,4,1
+HMM2 with t(4) shocks (misspecified),7,4,1
+HMM2 with t(4) shocks (misspecified),8,4,1
+HMM2 with t(4) shocks (misspecified),9,4,1
+HMM2 with t(4) shocks (misspecified),10,4,2
+HMM2 with t(4) shocks (misspecified),11,4,1
+HMM2 with t(4) shocks (misspecified),12,4,1
+HMM2 with t(4) shocks (misspecified),13,4,1
+HMM2 with t(4) shocks (misspecified),14,4,1
+HMM2 with t(4) shocks (misspecified),15,4,1
+HMM2 with t(4) shocks (misspecified),16,4,2
+HMM2 with t(4) shocks (misspecified),17,4,3
+HMM2 with t(4) shocks (misspecified),18,4,1
+HMM2 with t(4) shocks (misspecified),19,4,1
+HMM2 with t(4) shocks (misspecified),20,4,1
+HMM2 with t(4) shocks (misspecified),21,4,1
+HMM2 with t(4) shocks (misspecified),22,4,2
+HMM2 with t(4) shocks (misspecified),23,4,1
+HMM2 with t(4) shocks (misspecified),24,4,2
+HMM2 with t(4) shocks (misspecified),25,4,1
+HMM2 with t(4) shocks (misspecified),26,4,1
+HMM2 with t(4) shocks (misspecified),27,4,1
+HMM2 with t(4) shocks (misspecified),28,4,1
+HMM2 with t(4) shocks (misspecified),29,4,1
+HMM2 with t(4) shocks (misspecified),30,4,2
+HMM2 with t(4) shocks (misspecified),31,4,1
+HMM2 with t(4) shocks (misspecified),32,4,1
+HMM2 with t(4) shocks (misspecified),33,4,1
+HMM2 with t(4) shocks (misspecified),34,4,1
+HMM2 with t(4) shocks (misspecified),35,4,1
+HMM2 with t(4) shocks (misspecified),36,4,1
+HMM2 with t(4) shocks (misspecified),37,4,1
+HMM2 with t(4) shocks (misspecified),38,4,1
+HMM2 with t(4) shocks (misspecified),39,4,1
+HMM2 with t(4) shocks (misspecified),40,4,1
+HMM2 with t(4) shocks (misspecified),41,4,1
+HMM2 with t(4) shocks (misspecified),42,4,1
+HMM2 with t(4) shocks (misspecified),43,4,1
+HMM2 with t(4) shocks (misspecified),44,4,1
+HMM2 with t(4) shocks (misspecified),45,4,2
+HMM2 with t(4) shocks (misspecified),46,4,1
+HMM2 with t(4) shocks (misspecified),47,4,1
+HMM2 with t(4) shocks (misspecified),48,4,1
+HMM2 with t(4) shocks (misspecified),49,4,1
+HMM2 with t(4) shocks (misspecified),50,4,2
+HMM2 with t(4) shocks (misspecified),51,4,1
+HMM2 with t(4) shocks (misspecified),52,4,1
+HMM2 with t(4) shocks (misspecified),53,4,1
+HMM2 with t(4) shocks (misspecified),54,4,1
+HMM2 with t(4) shocks (misspecified),55,4,1
+HMM2 with t(4) shocks (misspecified),56,4,2
+HMM2 with t(4) shocks (misspecified),57,4,2
+HMM2 with t(4) shocks (misspecified),58,4,1
+HMM2 with t(4) shocks (misspecified),59,4,2
+HMM2 with t(4) shocks (misspecified),60,4,1
+HMM2 with t(4) shocks (misspecified),61,4,1
+HMM2 with t(4) shocks (misspecified),62,4,1
+HMM2 with t(4) shocks (misspecified),63,4,1
+HMM2 with t(4) shocks (misspecified),64,4,1
+HMM2 with t(4) shocks (misspecified),65,4,2
+HMM2 with t(4) shocks (misspecified),66,4,1
+HMM2 with t(4) shocks (misspecified),67,4,1
+HMM2 with t(4) shocks (misspecified),68,4,2
+HMM2 with t(4) shocks (misspecified),69,4,1
+HMM2 with t(4) shocks (misspecified),70,4,1
+HMM2 with t(4) shocks (misspecified),71,4,1
+HMM2 with t(4) shocks (misspecified),72,4,1
+HMM2 with t(4) shocks (misspecified),73,4,1
+HMM2 with t(4) shocks (misspecified),74,4,1
+HMM2 with t(4) shocks (misspecified),75,4,1
+HMM2 with t(4) shocks (misspecified),76,4,1
+HMM2 with t(4) shocks (misspecified),77,4,1
+HMM2 with t(4) shocks (misspecified),78,4,1
+HMM2 with t(4) shocks (misspecified),79,4,1
+HMM2 with t(4) shocks (misspecified),80,4,2
+HMM2 with t(4) shocks (misspecified),81,4,1
+HMM2 with t(4) shocks (misspecified),82,4,1
+HMM2 with t(4) shocks (misspecified),83,4,1
+HMM2 with t(4) shocks (misspecified),84,4,1
+HMM2 with t(4) shocks (misspecified),85,4,1
+HMM2 with t(4) shocks (misspecified),86,4,1
+HMM2 with t(4) shocks (misspecified),87,4,1
+HMM2 with t(4) shocks (misspecified),88,4,1
+HMM2 with t(4) shocks (misspecified),89,4,2
+HMM2 with t(4) shocks (misspecified),90,4,1
+HMM2 with t(4) shocks (misspecified),91,4,1
+HMM2 with t(4) shocks (misspecified),92,4,1
+HMM2 with t(4) shocks (misspecified),93,4,1
+HMM2 with t(4) shocks (misspecified),94,4,2
+HMM2 with t(4) shocks (misspecified),95,4,1
+HMM2 with t(4) shocks (misspecified),96,4,2
+HMM2 with t(4) shocks (misspecified),97,4,2
+HMM2 with t(4) shocks (misspecified),98,4,1
+HMM2 with t(4) shocks (misspecified),99,4,1
+HMM3 (three regimes),0,3,1
+HMM3 (three regimes),1,3,1
+HMM3 (three regimes),2,3,1
+HMM3 (three regimes),3,3,1
+HMM3 (three regimes),4,3,1
+HMM3 (three regimes),5,3,1
+HMM3 (three regimes),6,3,1
+HMM3 (three regimes),7,3,1
+HMM3 (three regimes),8,3,1
+HMM3 (three regimes),9,3,1
+HMM3 (three regimes),10,3,1
+HMM3 (three regimes),11,3,1
+HMM3 (three regimes),12,3,1
+HMM3 (three regimes),13,3,1
+HMM3 (three regimes),14,3,1
+HMM3 (three regimes),15,3,1
+HMM3 (three regimes),16,3,1
+HMM3 (three regimes),17,3,1
+HMM3 (three regimes),18,3,1
+HMM3 (three regimes),19,3,2
+HMM3 (three regimes),20,3,1
+HMM3 (three regimes),21,3,1
+HMM3 (three regimes),22,3,1
+HMM3 (three regimes),23,3,1
+HMM3 (three regimes),24,3,1
+HMM3 (three regimes),25,3,1
+HMM3 (three regimes),26,3,1
+HMM3 (three regimes),27,3,1
+HMM3 (three regimes),28,3,1
+HMM3 (three regimes),29,3,1
+HMM3 (three regimes),30,3,1
+HMM3 (three regimes),31,3,1
+HMM3 (three regimes),32,3,1
+HMM3 (three regimes),33,3,1
+HMM3 (three regimes),34,3,1
+HMM3 (three regimes),35,3,1
+HMM3 (three regimes),36,3,1
+HMM3 (three regimes),37,3,1
+HMM3 (three regimes),38,3,1
+HMM3 (three regimes),39,3,1
+HMM3 (three regimes),40,3,1
+HMM3 (three regimes),41,3,1
+HMM3 (three regimes),42,3,1
+HMM3 (three regimes),43,3,1
+HMM3 (three regimes),44,3,1
+HMM3 (three regimes),45,3,1
+HMM3 (three regimes),46,3,1
+HMM3 (three regimes),47,3,1
+HMM3 (three regimes),48,3,1
+HMM3 (three regimes),49,3,1
+HMM3 (three regimes),50,3,1
+HMM3 (three regimes),51,3,1
+HMM3 (three regimes),52,3,1
+HMM3 (three regimes),53,3,1
+HMM3 (three regimes),54,3,1
+HMM3 (three regimes),55,3,1
+HMM3 (three regimes),56,3,1
+HMM3 (three regimes),57,3,1
+HMM3 (three regimes),58,3,1
+HMM3 (three regimes),59,3,1
+HMM3 (three regimes),60,3,1
+HMM3 (three regimes),61,3,1
+HMM3 (three regimes),62,3,1
+HMM3 (three regimes),63,3,1
+HMM3 (three regimes),64,3,1
+HMM3 (three regimes),65,3,1
+HMM3 (three regimes),66,3,1
+HMM3 (three regimes),67,3,1
+HMM3 (three regimes),68,3,1
+HMM3 (three regimes),69,3,1
+HMM3 (three regimes),70,3,1
+HMM3 (three regimes),71,3,1
+HMM3 (three regimes),72,3,1
+HMM3 (three regimes),73,3,1
+HMM3 (three regimes),74,3,1
+HMM3 (three regimes),75,3,1
+HMM3 (three regimes),76,3,1
+HMM3 (three regimes),77,3,1
+HMM3 (three regimes),78,3,1
+HMM3 (three regimes),79,3,1
+HMM3 (three regimes),80,3,1
+HMM3 (three regimes),81,3,1
+HMM3 (three regimes),82,3,1
+HMM3 (three regimes),83,3,1
+HMM3 (three regimes),84,3,1
+HMM3 (three regimes),85,3,1
+HMM3 (three regimes),86,3,1
+HMM3 (three regimes),87,3,1
+HMM3 (three regimes),88,3,1
+HMM3 (three regimes),89,3,1
+HMM3 (three regimes),90,3,1
+HMM3 (three regimes),91,3,1
+HMM3 (three regimes),92,3,1
+HMM3 (three regimes),93,3,1
+HMM3 (three regimes),94,3,1
+HMM3 (three regimes),95,3,1
+HMM3 (three regimes),96,3,1
+HMM3 (three regimes),97,3,1
+HMM3 (three regimes),98,3,1
+HMM3 (three regimes),99,3,1
+"GARCH(1,1)-t (no regimes)",0,4,1
+"GARCH(1,1)-t (no regimes)",1,4,1
+"GARCH(1,1)-t (no regimes)",2,4,1
+"GARCH(1,1)-t (no regimes)",3,4,1
+"GARCH(1,1)-t (no regimes)",4,4,1
+"GARCH(1,1)-t (no regimes)",5,4,1
+"GARCH(1,1)-t (no regimes)",6,4,1
+"GARCH(1,1)-t (no regimes)",7,4,1
+"GARCH(1,1)-t (no regimes)",8,4,1
+"GARCH(1,1)-t (no regimes)",9,4,1
+"GARCH(1,1)-t (no regimes)",10,4,1
+"GARCH(1,1)-t (no regimes)",11,4,1
+"GARCH(1,1)-t (no regimes)",12,4,1
+"GARCH(1,1)-t (no regimes)",13,4,1
+"GARCH(1,1)-t (no regimes)",14,4,1
+"GARCH(1,1)-t (no regimes)",15,4,1
+"GARCH(1,1)-t (no regimes)",16,4,1
+"GARCH(1,1)-t (no regimes)",17,4,1
+"GARCH(1,1)-t (no regimes)",18,4,1
+"GARCH(1,1)-t (no regimes)",19,4,1
+"GARCH(1,1)-t (no regimes)",20,4,1
+"GARCH(1,1)-t (no regimes)",21,4,1
+"GARCH(1,1)-t (no regimes)",22,4,1
+"GARCH(1,1)-t (no regimes)",23,4,1
+"GARCH(1,1)-t (no regimes)",24,4,1
+"GARCH(1,1)-t (no regimes)",25,4,1
+"GARCH(1,1)-t (no regimes)",26,4,1
+"GARCH(1,1)-t (no regimes)",27,4,1
+"GARCH(1,1)-t (no regimes)",28,4,1
+"GARCH(1,1)-t (no regimes)",29,4,1
+"GARCH(1,1)-t (no regimes)",30,4,1
+"GARCH(1,1)-t (no regimes)",31,4,1
+"GARCH(1,1)-t (no regimes)",32,4,1
+"GARCH(1,1)-t (no regimes)",33,4,1
+"GARCH(1,1)-t (no regimes)",34,4,1
+"GARCH(1,1)-t (no regimes)",35,4,1
+"GARCH(1,1)-t (no regimes)",36,4,1
+"GARCH(1,1)-t (no regimes)",37,4,1
+"GARCH(1,1)-t (no regimes)",38,4,1
+"GARCH(1,1)-t (no regimes)",39,4,1
+"GARCH(1,1)-t (no regimes)",40,4,1
+"GARCH(1,1)-t (no regimes)",41,4,1
+"GARCH(1,1)-t (no regimes)",42,4,1
+"GARCH(1,1)-t (no regimes)",43,4,1
+"GARCH(1,1)-t (no regimes)",44,4,1
+"GARCH(1,1)-t (no regimes)",45,4,1
+"GARCH(1,1)-t (no regimes)",46,4,1
+"GARCH(1,1)-t (no regimes)",47,4,1
+"GARCH(1,1)-t (no regimes)",48,4,1
+"GARCH(1,1)-t (no regimes)",49,4,1
+"GARCH(1,1)-t (no regimes)",50,4,1
+"GARCH(1,1)-t (no regimes)",51,4,1
+"GARCH(1,1)-t (no regimes)",52,4,1
+"GARCH(1,1)-t (no regimes)",53,4,1
+"GARCH(1,1)-t (no regimes)",54,4,1
+"GARCH(1,1)-t (no regimes)",55,4,1
+"GARCH(1,1)-t (no regimes)",56,4,1
+"GARCH(1,1)-t (no regimes)",57,4,1
+"GARCH(1,1)-t (no regimes)",58,4,1
+"GARCH(1,1)-t (no regimes)",59,4,1
+"GARCH(1,1)-t (no regimes)",60,4,1
+"GARCH(1,1)-t (no regimes)",61,4,1
+"GARCH(1,1)-t (no regimes)",62,4,1
+"GARCH(1,1)-t (no regimes)",63,4,1
+"GARCH(1,1)-t (no regimes)",64,4,1
+"GARCH(1,1)-t (no regimes)",65,4,1
+"GARCH(1,1)-t (no regimes)",66,4,1
+"GARCH(1,1)-t (no regimes)",67,4,1
+"GARCH(1,1)-t (no regimes)",68,4,1
+"GARCH(1,1)-t (no regimes)",69,4,1
+"GARCH(1,1)-t (no regimes)",70,4,1
+"GARCH(1,1)-t (no regimes)",71,4,1
+"GARCH(1,1)-t (no regimes)",72,4,1
+"GARCH(1,1)-t (no regimes)",73,4,1
+"GARCH(1,1)-t (no regimes)",74,4,1
+"GARCH(1,1)-t (no regimes)",75,4,1
+"GARCH(1,1)-t (no regimes)",76,4,1
+"GARCH(1,1)-t (no regimes)",77,4,1
+"GARCH(1,1)-t (no regimes)",78,4,1
+"GARCH(1,1)-t (no regimes)",79,4,1
+"GARCH(1,1)-t (no regimes)",80,4,1
+"GARCH(1,1)-t (no regimes)",81,4,1
+"GARCH(1,1)-t (no regimes)",82,4,1
+"GARCH(1,1)-t (no regimes)",83,4,1
+"GARCH(1,1)-t (no regimes)",84,4,1
+"GARCH(1,1)-t (no regimes)",85,4,1
+"GARCH(1,1)-t (no regimes)",86,4,1
+"GARCH(1,1)-t (no regimes)",87,4,1
+"GARCH(1,1)-t (no regimes)",88,4,1
+"GARCH(1,1)-t (no regimes)",89,4,1
+"GARCH(1,1)-t (no regimes)",90,4,1
+"GARCH(1,1)-t (no regimes)",91,4,1
+"GARCH(1,1)-t (no regimes)",92,4,1
+"GARCH(1,1)-t (no regimes)",93,4,1
+"GARCH(1,1)-t (no regimes)",94,4,1
+"GARCH(1,1)-t (no regimes)",95,4,1
+"GARCH(1,1)-t (no regimes)",96,4,1
+"GARCH(1,1)-t (no regimes)",97,4,1
+"GARCH(1,1)-t (no regimes)",98,4,1
+"GARCH(1,1)-t (no regimes)",99,4,1

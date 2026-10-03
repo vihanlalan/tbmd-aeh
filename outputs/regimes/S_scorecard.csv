@@ -1,0 +1,19 @@
+group,criterion,value,threshold,result
+"1 Detector accuracy (sim, true 2-regime data)",HMM-2 real time (filtered): balanced accuracy,0.907,>= 0.80,PASS
+"1 Detector accuracy (sim, true 2-regime data)",Jump λ=30 real time: balanced accuracy,0.676,>= 0.80,FAIL
+"1 Detector accuracy (sim, true 2-regime data)",HMM-2 ex post (smoothed): balanced accuracy,0.951,>= 0.80,PASS
+"1 Detector accuracy (sim, true 2-regime data)",Jump λ=30 ex post: balanced accuracy,0.736,>= 0.80,FAIL
+2 No false regimes,BIC on raw returns finds K>=2 in GARCH-t data (no regimes),1.0,<= 0.05,FAIL
+2 No false regimes,BIC on GARCH-t residuals finds K>=2 in GARCH-t data (size),0.0,<= 0.10,PASS
+2 No false regimes,BIC on GARCH-t residuals finds K>=2 in true 2-regime data (power),0.01,>= 0.80,FAIL
+3 Regimes in the S&P 500,BIC on GARCH-t residuals of the S&P 500 selects K>=2,K = 4,K >= 2 (valid only if size and power pass),PASS
+3 Regimes in the S&P 500,"Best HMM (Gaussian HMM, K=4) beats GARCH-t out of sample (DM t)",-4.29,>= 1.96,FAIL
+3 Regimes in the S&P 500,Agreement HMM-2 vs Jump λ=30: real kappa vs no-regime (GARCH-t) 95th pct,0.68 vs 0.67,real > null p95,PASS
+3 Regimes in the S&P 500,Agreement HMM-2 vs Change-point (PELT): real kappa vs no-regime (GARCH-t) 95th pct,0.65 vs 0.74,real > null p95,FAIL
+3 Regimes in the S&P 500,Agreement Jump λ=30 vs Change-point (PELT): real kappa vs no-regime (GARCH-t) 95th pct,0.58 vs 0.73,real > null p95,FAIL
+4 Real-time usability,HMM-2 real time vs ex post: kappa (1970-2025),0.649,>= 0.70,FAIL
+4 Real-time usability,Jump λ=30 real time vs ex post: kappa (1970-2025),0.576,>= 0.70,FAIL
+5 Efficiency differs by regime,HMM-2 real time: test false-positive rate in GARCH-t data,0.09,<= 0.10,PASS
+5 Efficiency differs by regime,"HMM-2 real time: AR(1) high minus low (all (1970-2025)), White t",-0.086 (t = -3.12),|t| >= 1.96 (valid only if false-positive rate passes),PASS
+5 Efficiency differs by regime,Jump λ=30 real time: test false-positive rate in GARCH-t data,0.06,<= 0.10,PASS
+5 Efficiency differs by regime,"Jump λ=30 real time: AR(1) high minus low (all (1970-2025)), White t",-0.063 (t = -2.12),|t| >= 1.96 (valid only if false-positive rate passes),PASS

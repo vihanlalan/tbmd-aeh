@@ -1,0 +1,3 @@
+real_time_method,ex_post_reference,period,agreement_pct,kappa,real_time_switches_per_year,ex_post_switches_per_year
+HMM-2 real time,HMM-2,1970-2025,84.18,0.649,21.504,4.176
+Jump λ=30 real time,Jump λ=30,1970-2025,79.987,0.576,3.694,1.785

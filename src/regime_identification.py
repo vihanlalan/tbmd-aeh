@@ -777,10 +777,15 @@ def part_c(r, base, B):
         lab = lab.reindex(idx)
         avail = lab.notna().values
         periods = {f'all ({span(idx[avail])})': avail}
-        periods.update({k: v & avail for k, v in eras_for(idx).items() if (v & avail).sum() > 300})
+        for v in eras_for(idx).values():
+            m = v & avail
+            if m.sum() > 300:     # label with the years that have labels (real-time labels start later)
+                periods[span(idx[m])] = m
         for per, m in periods.items():
             rows.append({'labels': name, 'type': kind, 'period': per, **ar_diff_test(x, lab.values, m)})
     eff = save(pd.DataFrame(rows).round(3), 'C1_ar1_by_regime.csv')
+    race = save(volatility_horse_race(r, B['rt_labels']), 'C3_regime_vs_volatility.csv')
+    print('\nRegime label vs continuous volatility (added after the first full run):\n', race.to_string(index=False))
     print('\nAR(1) by regime, r_t on r_{t-1} interacted with the label at t-1 (White t):\n', eff.to_string(index=False))
 
     def rejection_rate(y, w=252, step=21):
@@ -800,7 +805,44 @@ def part_c(r, base, B):
     art.append({'series': 'Nominal size of the test', 'pct_windows_rejecting': 5.0, 'sim_p95': np.nan})
     art = save(pd.DataFrame(art).round(1), 'C2_rolling_vr_rejections.csv')
     print('\nRolling 1-year Lo-MacKinlay VR(2) tests, % of windows rejecting the random walk at 5%:\n', art.to_string(index=False))
-    return dict(eff=eff, vr=art)
+    return dict(eff=eff, vr=art, race=race)
+
+
+def volatility_horse_race(r, labels_rt):
+    """Does the real-time regime label explain the AR(1) change beyond the volatility level?
+    r_t on r_{t-1} interacted with (a) the regime label at t-1, (b) standardized log RiskMetrics
+    EWMA volatility at t-1 (lambda = 0.94, known at t-1), (c) both. White (HC0) t statistics.
+    Added after the first full run; not one of the pre-specified scorecard criteria."""
+    sig = np.sqrt((r ** 2).ewm(alpha=0.06, adjust=False).mean())
+
+    def ols(y, X):
+        XtXi = np.linalg.inv(X.T @ X)
+        b = XtXi @ X.T @ y
+        e = y - X @ b
+        V = XtXi @ (X.T * e ** 2) @ X @ XtXi
+        return b, b / np.sqrt(np.diag(V))
+
+    rows = []
+    for name in labels_rt.columns:
+        lab = labels_rt[name]
+        start, end = lab.first_valid_index().year, r.index[-1].year
+        periods = {f'{start}-{end}': (start, end)}
+        if start < 2000 <= end:
+            periods.update({f'{start}-1999': (start, 1999), f'2000-{end}': (2000, end)})
+        for per, (a, b_) in periods.items():
+            d = pd.DataFrame({'y': r, 'x': r.shift(1), 's': lab.shift(1),
+                              'lv': np.log(sig).shift(1)}).loc[str(a):str(b_)].dropna()
+            d['lv'] = (d.lv - d.lv.mean()) / d.lv.std()
+            y, one = d.y.values, np.ones(len(d))
+            b1, t1 = ols(y, np.column_stack([one, d.x, d.s, d.s * d.x]))
+            b2, t2 = ols(y, np.column_stack([one, d.x, d.lv, d.lv * d.x]))
+            b3, t3 = ols(y, np.column_stack([one, d.x, d.s, d.s * d.x, d.lv, d.lv * d.x]))
+            rows.append({'labels': name, 'period': per, 'n': len(d),
+                         'regime_only_coef': b1[3], 'regime_only_t': t1[3],
+                         'vol_only_coef': b2[3], 'vol_only_t': t2[3],
+                         'both_regime_coef': b3[3], 'both_regime_t': t3[3],
+                         'both_vol_coef': b3[5], 'both_vol_t': t3[5]})
+    return pd.DataFrame(rows).round(3)
 
 
 # ------------------------------------------------------------------
@@ -833,8 +875,10 @@ def scorecard(A, B, C):
     add('2 No false regimes', 'BIC on GARCH-t residuals finds K>=2 in GARCH-t data (size)', size, '<= 0.10', size <= 0.10)
     power = rates.loc[DGPS[0], 'share_K>=2_garch_residuals']
     add('2 No false regimes', 'BIC on GARCH-t residuals finds K>=2 in true 2-regime data (power)', power, '>= 0.80', power >= 0.80)
-    add('3 Regimes in the S&P 500', 'BIC on GARCH-t residuals of the S&P 500 selects K>=2', f'K = {B["pit_k"]}',
-        'K >= 2 (valid only if size and power pass)', B['pit_k'] >= 2)
+    valid = size <= 0.10 and power >= 0.80
+    rows.append({'group': '3 Regimes in the S&P 500', 'criterion': 'BIC on GARCH-t residuals of the S&P 500 selects K>=2',
+                 'value': f'K = {B["pit_k"]}', 'threshold': 'K >= 2 (valid only if size and power pass)',
+                 'result': ('PASS' if B['pit_k'] >= 2 else 'FAIL') if valid else 'INCONCLUSIVE (test lacks size or power)'})
     bh = B['best_hmm']
     add('3 Regimes in the S&P 500', f'Best HMM ({bh.model}) beats GARCH-t out of sample (DM t)',
         round(bh.dm_t_vs_garch_t, 2), '>= 1.96', bh.dm_t_vs_garch_t >= 1.96)
@@ -991,6 +1035,9 @@ def write_report(r, info, validation, A, B, C, sc, figs):
           '### C1. AR(1) in low- vs high-volatility states (label at t-1; White t statistics)', '',
           md_table(C['eff']), '',
           '### C2. Rolling one-year variance-ratio tests', '', md_table(C['vr']), '',
+          '### C3. Regime label vs continuous volatility (added after the first full run; not a scorecard criterion)', '',
+          'Coefficient and White t of r_{t-1} x label_{t-1} and of r_{t-1} x log EWMA volatility_{t-1} '
+          '(standardized), alone and together.', '', md_table(C['race']), '',
           '## Figures', ''] + [f'![{f}]({f})' for f in figs] + ['',
           '## Methods (for the paper)', '',
           '- Returns: 100 x daily log change of the S&P 500 index close.',

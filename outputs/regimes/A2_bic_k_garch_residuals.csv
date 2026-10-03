@@ -1,0 +1,5 @@
+dgp,K=1,K=2,K=3,K=4
+"GARCH(1,1)-t (no regimes)",100,0,0,0
+HMM2 (correctly specified),99,1,0,0
+HMM2 with t(4) shocks (misspecified),80,19,1,0
+HMM3 (three regimes),99,1,0,0

@@ -1,0 +1,11 @@
+method,episode,date,ex_post_lag_days,real_time_lag_days
+HMM-2,1987 crash,1987-10-14,0,0
+HMM-2,2008 Lehman,2008-09-15,0,0
+HMM-2,2011 US downgrade,2011-08-01,0,1
+HMM-2,2020 Covid,2020-02-21,0,1
+HMM-2,2022 rate shock,2022-01-18,0,0
+Jump λ=30,1987 crash,1987-10-14,0,0
+Jump λ=30,2008 Lehman,2008-09-15,0,0
+Jump λ=30,2011 US downgrade,2011-08-01,0,0
+Jump λ=30,2020 Covid,2020-02-21,1,3
+Jump λ=30,2022 rate shock,2022-01-18,0,4

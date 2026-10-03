@@ -1,0 +1,18 @@
+check,torch,reference,passed
+HMM K=2 log likelihood (hmmlearn),-6941.09,-6941.09,True
+HMM K=2 state sd,"[0.6790000200271606, 2.0799999237060547]","[0.679, 2.08]",True
+HMM K=2 smoothed-state kappa vs hmmlearn,1.0,> 0.95,True
+HMM K=2 filter max abs error vs numpy,3.4e-05,< 0.0001,True
+HMM K=2 predictive density max rel. error vs numpy,1.2e-05,< 0.0001,True
+HMM K=3 log likelihood (hmmlearn),-6669.49,-6669.45,True
+HMM K=3 state sd,"[0.5199999809265137, 1.1959999799728394, 3.2179999351501465]","[0.516, 1.187, 3.178]",True
+HMM K=3 smoothed-state kappa vs hmmlearn,0.9826,> 0.95,True
+HMM K=3 filter max abs error vs numpy,4.7e-05,< 0.0001,True
+HMM K=3 predictive density max rel. error vs numpy,6.2e-05,< 0.0001,True
+Padded batching: short series in batch vs alone,-2441.6561,-2441.6562,True
+Jump λ=10 objective (jumpmodels),9354.83,9354.83,True
+Jump λ=10 ex-post / online label kappa vs jumpmodels,1.0000 / 1.0000,> 0.95,True
+Jump λ=30 objective (jumpmodels),10228.08,10228.08,True
+Jump λ=30 ex-post / online label kappa vs jumpmodels,1.0000 / 1.0000,> 0.95,True
+Jump λ=100 objective (jumpmodels),11655.78,11655.78,True
+Jump λ=100 ex-post / online label kappa vs jumpmodels,1.0000 / 1.0000,> 0.95,True

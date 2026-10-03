@@ -1,0 +1,9 @@
+series,pct_windows_rejecting,sim_p95
+"Real S&P 500, 1950-2025",28.7,
+"Real S&P 500, 1950-1979",53.9,
+"Real S&P 500, 1980-1999",6.1,
+"Real S&P 500, 2000-2025",18.3,
+"Simulated HMM-2 (regimes, no predictability), mean of 20",4.7,7.1
+"Simulated HMM-3 (regimes, no predictability), mean of 20",4.7,7.6
+"Simulated GARCH(1,1)-t (no regimes, no predictability), mean of 20",5.3,7.4
+Nominal size of the test,5.0,

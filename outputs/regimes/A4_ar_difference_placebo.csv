@@ -1,0 +1,9 @@
+dgp,labels,n_reps,rejection_rate_5pct,mean_t
+"GARCH(1,1)-t (no regimes)",HMM-2 real time,100,0.09,-0.148
+"GARCH(1,1)-t (no regimes)",Jump λ=30 real time,100,0.06,-0.17
+HMM2 (correctly specified),HMM-2 real time,100,0.04,0.137
+HMM2 (correctly specified),Jump λ=30 real time,100,0.04,0.07
+HMM2 with t(4) shocks (misspecified),HMM-2 real time,100,0.06,-0.001
+HMM2 with t(4) shocks (misspecified),Jump λ=30 real time,100,0.07,0.184
+HMM3 (three regimes),HMM-2 real time,100,0.06,0.03
+HMM3 (three regimes),Jump λ=30 real time,100,0.05,0.035
